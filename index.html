@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ana ama lucas ♡</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0015;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Press Start 2P', monospace;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Stars background */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 0;
+  }
+
+  /* Main container */
+  .scene {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* Pixel canvas */
+  canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  /* Text messages */
+  .msg-top {
+    font-size: 11px;
+    color: #ff6eb4;
+    text-shadow: 2px 2px #7b003a, 0 0 20px #ff6eb4;
+    letter-spacing: 2px;
+    margin-bottom: 18px;
+    animation: blink-soft 2s infinite;
+  }
+
+  .msg-bottom {
+    font-size: 9px;
+    color: #c97dff;
+    text-shadow: 1px 1px #3a006f, 0 0 14px #c97dff;
+    letter-spacing: 3px;
+    margin-top: 18px;
+    animation: blink-soft 2.6s infinite reverse;
+  }
+
+  .msg-names {
+    font-size: 8px;
+    color: #ff9ed6;
+    text-shadow: 1px 1px #7b003a, 0 0 10px #ff9ed6;
+    letter-spacing: 4px;
+    margin-top: 8px;
+  }
+
+  @keyframes blink-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+
+  /* Floating hearts */
+  .float-heart {
+    position: fixed;
+    font-size: 16px;
+    animation: floatUp linear infinite;
+    pointer-events: none;
+    z-index: 1;
+    filter: drop-shadow(0 0 6px #ff6eb4);
+  }
+
+  @keyframes floatUp {
+    0%   { transform: translateY(100vh) scale(1); opacity: 0.9; }
+    80%  { opacity: 0.7; }
+    100% { transform: translateY(-80px) scale(0.4); opacity: 0; }
+  }
+
+  /* CRT scanlines */
+  .crt {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.12) 2px,
+      rgba(0,0,0,0.12) 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+
+<div class="crt"></div>
+<div class="stars" id="stars"></div>
+
+<div class="scene">
+  <div class="msg-top">✦ eu te amo ✦</div>
+  <canvas id="pixel" width="160" height="120"></canvas>
+  <div class="msg-bottom">♡ s2 ♡</div>
+  <div class="msg-names">ana ama lucas</div>
+</div>
+
+<script>
+// ─── Stars ───────────────────────────────────────────────────
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() < 0.3 ? 2 : 1;
+  s.style.cssText = `
+    width:${size}px; height:${size}px;
+    top:${Math.random()*100}%; left:${Math.random()*100}%;
+    opacity:${0.3+Math.random()*0.7};
+    animation: blink-soft ${1.5+Math.random()*3}s infinite ${Math.random()*3}s;
+  `;
+  starsEl.appendChild(s);
+}
+
+// ─── Floating pixel hearts ────────────────────────────────────
+const HEARTS = ['♥','♡','❤','💕'];
+function spawnHeart() {
+  const h = document.createElement('div');
+  h.className = 'float-heart';
+  h.textContent = HEARTS[Math.floor(Math.random()*HEARTS.length)];
+  h.style.left = (Math.random()*96) + '%';
+  const dur = 5 + Math.random()*8;
+  h.style.animationDuration = dur + 's';
+  h.style.animationDelay = '0s';
+  h.style.fontSize = (10 + Math.random()*18) + 'px';
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), dur * 1000);
+}
+setInterval(spawnHeart, 700);
+spawnHeart(); spawnHeart(); spawnHeart();
+
+// ─── Pixel art canvas ────────────────────────────────────────
+const canvas = document.getElementById('pixel');
+const ctx = canvas.getContext('2d');
+const S = 4; // each pixel = 4×4 display px
+const W = canvas.width / S;   // 40 cols
+const H = canvas.height / S;  // 30 rows
+
+// Palette
+const _ = null;          // transparent
+const P = '#ff6eb4';     // pink
+const D = '#d63384';     // deep pink
+const R = '#ff2255';     // red
+const W2= '#ffffff';     // white
+const Y = '#ffe066';     // yellow
+const S2= '#ffb3d9';     // soft pink skin
+const BL= '#1a0030';     // dark bg
+const PU= '#c97dff';     // purple
+const LV= '#ff9ed6';     // lavender pink
+
+// ─── Heart shape (frame 0 = small, frame 1 = big) ─────────────
+// 9×8 pixel hearts, centered at (20,8)
+function drawHeart(frame) {
+  // Heart bitmap (9 wide, 8 tall)
+  const small = [
+    [_,P,P,_,_,_,P,P,_],
+    [P,R,R,P,_,P,R,R,P],
+    [P,R,R,R,P,R,R,R,P],
+    [_,P,R,R,R,R,R,P,_],
+    [_,_,P,R,R,R,P,_,_],
+    [_,_,_,P,R,P,_,_,_],
+    [_,_,_,_,P,_,_,_,_],
+    [_,_,_,_,_,_,_,_,_],
+  ];
+  const big = [
+    [_,P,P,_,_,_,P,P,_],
+    [P,D,D,P,_,P,D,D,P],
+    [P,D,R,D,P,D,R,D,P],
+    [P,R,R,R,D,R,R,R,P],
+    [_,P,R,R,R,R,R,P,_],
+    [_,_,P,R,R,R,P,_,_],
+    [_,_,_,P,R,P,_,_,_],
+    [_,_,_,_,P,_,_,_,_],
+  ];
+  const h = frame === 0 ? small : big;
+  const ox = 16, oy = 1;
+  h.forEach((row, ry) => row.forEach((c, rx) => {
+    if (c) px(ox+rx, oy+ry, c);
+  }));
+}
+
+// ─── Two pixel characters ────────────────────────────────────
+// Girl (Ana) — left side
+function drawGirl(bounce) {
+  const ox = 3, oy = 10 + bounce;
+  // hair
+  [[3,0],[4,0],[5,0],[6,0],[7,0],
+   [2,1],[3,1],[4,1],[5,1],[6,1],[7,1],[8,1],
+   [2,2],[8,2],[2,3]].forEach(([x,y])=>px(ox+x,oy+y,'#8B1A5E'));
+  // face
+  [[3,2],[4,2],[5,2],[6,2],[7,2],
+   [3,3],[4,3],[5,3],[6,3],[7,3],
+   [3,4],[4,4],[5,4],[6,4],[7,4]].forEach(([x,y])=>px(ox+x,oy+y,S2));
+  // eyes
+  px(ox+4,oy+2,'#220033'); px(ox+6,oy+2,'#220033');
+  // blush
+  px(ox+3,oy+4,LV); px(ox+7,oy+4,LV);
+  // smile
+  px(ox+4,oy+4,D); px(ox+5,oy+4,D); px(ox+6,oy+4,D);
+  // body (pink dress)
+  [[3,5],[4,5],[5,5],[6,5],[7,5],
+   [2,6],[3,6],[4,6],[5,6],[6,6],[7,6],[8,6],
+   [2,7],[3,7],[4,7],[5,7],[6,7],[7,7],[8,7],
+   [1,8],[2,8],[3,8],[4,8],[5,8],[6,8],[7,8],[8,8],[9,8]].forEach(([x,y])=>px(ox+x,oy+y,P));
+  // arms stretched toward center
+  px(ox+9,oy+5,S2); px(ox+10,oy+6,S2);
+  // legs
+  px(ox+4,oy+9,S2); px(ox+6,oy+9,S2);
+  px(ox+4,oy+10,Y); px(ox+6,oy+10,Y); // shoes
+}
+
+// Boy (Lucas) — right side
+function drawBoy(bounce) {
+  const ox = 25, oy = 10 + bounce;
+  // hair
+  [[2,0],[3,0],[4,0],[5,0],[6,0],
+   [1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[7,1],
+   [1,2],[7,2]].forEach(([x,y])=>px(ox+x,oy+y,'#3a1500'));
+  // face
+  [[2,2],[3,2],[4,2],[5,2],[6,2],
+   [2,3],[3,3],[4,3],[5,3],[6,3],
+   [2,4],[3,4],[4,4],[5,4],[6,4]].forEach(([x,y])=>px(ox+x,oy+y,S2));
+  // eyes
+  px(ox+3,oy+2,'#220033'); px(ox+5,oy+2,'#220033');
+  // blush
+  px(ox+2,oy+4,LV); px(ox+6,oy+4,LV);
+  // smile
+  px(ox+3,oy+4,D); px(ox+4,oy+4,D); px(ox+5,oy+4,D);
+  // body (purple shirt)
+  [[2,5],[3,5],[4,5],[5,5],[6,5],
+   [2,6],[3,6],[4,6],[5,6],[6,6],
+   [2,7],[3,7],[4,7],[5,7],[6,7]].forEach(([x,y])=>px(ox+x,oy+y,PU));
+  // pants
+  [[2,8],[3,8],[4,8],[5,8],[6,8]].forEach(([x,y])=>px(ox+x,oy+y,'#2d0060'));
+  // arm stretched toward center
+  px(ox+1,oy+5,S2); px(ox+0,oy+6,S2);
+  // legs
+  px(ox+3,oy+9,S2); px(ox+5,oy+9,S2);
+  px(ox+3,oy+10,'#2d0060'); px(ox+5,oy+10,'#2d0060');
+  px(ox+3,oy+11,Y); px(ox+5,oy+11,Y); // shoes
+}
+
+// ─── Helper ──────────────────────────────────────────────────
+function px(x, y, color) {
+  if (!color || x < 0 || y < 0 || x >= W || y >= H) return;
+  ctx.fillStyle = color;
+  ctx.fillRect(x*S, y*S, S, S);
+}
+
+// ─── Ground / grass ──────────────────────────────────────────
+function drawGround() {
+  for (let x = 0; x < W; x++) {
+    px(x, 22, '#1a4d00');
+    px(x, 23, '#2a6600');
+    // little flowers
+    if (x % 5 === 2) { px(x, 22, '#ffe066'); }
+    if (x % 7 === 4) { px(x, 22, LV); }
+  }
+}
+
+// ─── Sparkles around heart ────────────────────────────────────
+const sparklePos = [
+  [13,2],[27,2],[12,5],[28,5],[14,8],[26,8],[11,3],[29,3]
+];
+function drawSparkles(t) {
+  sparklePos.forEach(([x,y], i) => {
+    const on = Math.floor((t/6 + i) % 3) !== 2;
+    if (on) px(x, y, Y);
+  });
+}
+
+// ─── "S2" pixel text ─────────────────────────────────────────
+// drawn as pixel font below characters
+function drawS2() {
+  // small "s2" below heart area
+  // actually rendered via CSS; skip here
+}
+
+// ─── Animation loop ──────────────────────────────────────────
+let t = 0;
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Background
+  ctx.fillStyle = BL;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Ground
+  drawGround();
+
+  // Sparkles
+  drawSparkles(t);
+
+  // Heart (beats every 30 frames)
+  const heartFrame = (Math.floor(t/15) % 2);
+  drawHeart(heartFrame);
+
+  // Characters bounce
+  const bounce = Math.floor(Math.abs(Math.sin(t/20)) * 2);
+  drawGirl(bounce);
+  drawBoy(bounce);
+
+  t++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>
