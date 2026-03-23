@@ -19,7 +19,7 @@ interface Ward {
 type Phase = 'playing' | 'dragon' | 'victory'
 
 export default function BotLaneWorld() {
-  const { setWorld, triggerHeartBurst, addNotification } = useStore()
+  const { setWorld, triggerHeartBurst, addNotification, unlockEasterEgg, easterEggs } = useStore()
 
   const [minions, setMinions] = useState<Minion[]>([])
   const [wards, setWards] = useState<Ward[]>([])
@@ -30,6 +30,8 @@ export default function BotLaneWorld() {
   const [dragonMsg, setDragonMsg] = useState('')
   const [fireworks, setFireworks] = useState(false)
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null)
+  // Rastrear se algum dragão escapou nessa partida
+  const dragonEscapedRef = useRef(false)
 
   const minionIdRef = useRef(0)
   const wardIdRef = useRef(0)
@@ -39,7 +41,7 @@ export default function BotLaneWorld() {
     if (phase !== 'playing') return
     const t = setInterval(() => {
       setTimer((s) => {
-        if (s >= 59) {
+        if (s >= 89) {
           setPhase('victory')
           setFireworks(true)
           return s
@@ -50,12 +52,27 @@ export default function BotLaneWorld() {
     return () => clearInterval(t)
   }, [phase])
 
-  // Dragon spawn at 30s
+  // Dragon spawn a cada 30s
   useEffect(() => {
-    if (timer === 30 && phase === 'playing') {
+    if ((timer === 30 || timer === 60) && phase === 'playing') {
       setPhase('dragon')
       setDragonHp(100)
       addNotification('DRAGÃO APARECEU! 🐉 clique rápido!', '🐉')
+
+      // Timeout: se não matar em 10s, o dragão escapa
+      const escapeTimer = setTimeout(() => {
+        setPhase((p) => {
+          if (p === 'dragon') {
+            dragonEscapedRef.current = true
+            addNotification('o dragão escapou... próxima vez 😔', '🐉')
+            setDragonMsg('escaped... próxima vez 😔')
+            setTimeout(() => setDragonMsg(''), 3000)
+            return 'playing'
+          }
+          return p
+        })
+      }, 10000)
+      return () => clearTimeout(escapeTimer)
     }
   }, [timer, phase, addNotification])
 
@@ -67,7 +84,6 @@ export default function BotLaneWorld() {
       const lane = Math.random() > 0.5 ? 'ana' : 'lucas'
       setMinions((prev) => [...prev, { id, x: 0, lane, hp: 3 }])
     }, 5000)
-    // First spawn immediately
     const first = setTimeout(() => {
       setMinions([
         { id: minionIdRef.current++, x: 5, lane: 'ana', hp: 3 },
@@ -105,7 +121,6 @@ export default function BotLaneWorld() {
     const rect = e.currentTarget.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
-    // Only in river area (middle)
     if (y > 35 && y < 65) {
       const id = wardIdRef.current++
       setWards((prev) => [...prev, { id, x, y }])
@@ -119,7 +134,7 @@ export default function BotLaneWorld() {
       const next = Math.max(0, hp - 8)
       if (next <= 0) {
         setPhase('playing')
-        setDragonMsg('DRAGÃO ABATIDO ♡')
+        setDragonMsg('DRAGON SLAIN ♡')
         triggerHeartBurst(e.clientX, e.clientY)
         addNotification('DRAGON SLAIN ♡ duo unbeatable!!', '🐉')
         setTimeout(() => setDragonMsg(''), 3000)
@@ -127,6 +142,24 @@ export default function BotLaneWorld() {
       return next
     })
   }, [triggerHeartBurst, addNotification])
+
+  // Verificar egg #3 na vitória
+  const handleVictory = useCallback(() => {
+    if (!dragonEscapedRef.current && !easterEggs.includes('bot_lane_inseparavel')) {
+      unlockEasterEgg('bot_lane_inseparavel')
+      addNotification("🏆 Bot Lane Inseparável — duo perfeito. como sempre. ♡", '🏆')
+    }
+  }, [easterEggs, unlockEasterEgg, addNotification])
+
+  const handleRestart = () => {
+    setPhase('playing')
+    setTimer(0)
+    setScore({ minions: 0, kills: 0 })
+    setMinions([])
+    setWards([])
+    setDragonHp(100)
+    dragonEscapedRef.current = false
+  }
 
   return (
     <div className="screen" style={{ background: '#0a1a0a' }}>
@@ -146,25 +179,22 @@ export default function BotLaneWorld() {
           🏆 BOT LANE
         </div>
         <div className="flex-1" />
-        {/* Timer */}
         <div className="pixel-font" style={{ fontSize: '9px', color: 'var(--lol)' }}>
           {String(Math.floor(timer / 60)).padStart(2,'0')}:{String(timer % 60).padStart(2,'0')}
         </div>
-        {/* Stats */}
         <div className="mono-font text-xs" style={{ color: 'var(--tx3)' }}>
           CS: {score.minions} | Duo: ∞ | Losses: 0
         </div>
       </div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Game map */}
+        {/* Mapa */}
         <div
           className="flex-1 relative overflow-hidden cursor-crosshair"
           style={{ background: '#0d200d' }}
           onClick={placeWard}
         >
-          {/* Lane backgrounds */}
-          {/* Ana's lane (top, pink) */}
+          {/* Lane da Ana (top, rosa) */}
           <div
             className="absolute"
             style={{
@@ -173,7 +203,6 @@ export default function BotLaneWorld() {
               borderBottom: '2px solid rgba(255,110,180,0.2)',
             }}
           />
-          {/* Lane labels */}
           <div className="absolute top-2 left-3 pixel-font" style={{ fontSize: '7px', color: 'var(--pk)', opacity: 0.6 }}>
             ♡ ANA lane (ADC)
           </div>
@@ -181,7 +210,7 @@ export default function BotLaneWorld() {
             ♡ LUCAS lane (Support)
           </div>
 
-          {/* River */}
+          {/* Rio */}
           <div
             className="absolute"
             style={{
@@ -197,7 +226,7 @@ export default function BotLaneWorld() {
             </div>
           </div>
 
-          {/* Lucas's lane (bottom, purple) */}
+          {/* Lane do Lucas (bottom, roxo) */}
           <div
             className="absolute"
             style={{
@@ -207,7 +236,7 @@ export default function BotLaneWorld() {
             }}
           />
 
-          {/* Nexus (right side) with heart */}
+          {/* Nexus */}
           <div
             className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1"
             title="Nexus — coração invencível"
@@ -226,7 +255,7 @@ export default function BotLaneWorld() {
             <div className="pixel-font" style={{ fontSize: '6px', color: 'var(--pu)', opacity: 0.7 }}>nexus</div>
           </div>
 
-          {/* Towers */}
+          {/* Torres */}
           {['15%', '65%'].map((top, i) => (
             <div
               key={i}
@@ -290,7 +319,7 @@ export default function BotLaneWorld() {
             </div>
           ))}
 
-          {/* Dragon (phase) */}
+          {/* Dragão */}
           <AnimatePresence>
             {phase === 'dragon' && (
               <motion.div
@@ -324,7 +353,7 @@ export default function BotLaneWorld() {
             )}
           </AnimatePresence>
 
-          {/* Dragon slain message */}
+          {/* Mensagem dragão abatido / escapou */}
           <AnimatePresence>
             {dragonMsg && (
               <motion.div
@@ -335,7 +364,11 @@ export default function BotLaneWorld() {
               >
                 <div
                   className="pixel-font text-center"
-                  style={{ fontSize: 'clamp(14px, 3vw, 24px)', color: 'var(--pk)', textShadow: '0 0 20px var(--pk)' }}
+                  style={{
+                    fontSize: 'clamp(14px, 3vw, 24px)',
+                    color: dragonMsg.includes('escaped') ? 'var(--tx2)' : 'var(--pk)',
+                    textShadow: `0 0 20px ${dragonMsg.includes('escaped') ? 'var(--tx2)' : 'var(--pk)'}`,
+                  }}
                 >
                   {dragonMsg}
                 </div>
@@ -365,7 +398,6 @@ export default function BotLaneWorld() {
             <div className="mono-font" style={{ fontSize: '9px', color: 'var(--tx2)' }}>Losses: 0</div>
           </div>
 
-          {/* Ward hint */}
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 pixel-font text-center" style={{ fontSize: '7px', color: 'rgba(100,150,200,0.5)' }}>
             clique no rio para colocar ward
           </div>
@@ -374,12 +406,13 @@ export default function BotLaneWorld() {
         <SpotifyPlayer />
       </div>
 
-      {/* Victory Screen */}
+      {/* Tela de vitória */}
       <AnimatePresence>
         {phase === 'victory' && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            onAnimationComplete={handleVictory}
             className="fixed inset-0 flex items-center justify-center z-50"
             style={{ background: 'rgba(5,15,5,0.95)' }}
           >
@@ -389,7 +422,7 @@ export default function BotLaneWorld() {
               transition={{ type: 'spring', damping: 12 }}
               className="text-center p-8"
             >
-              {/* Fireworks */}
+              {/* Fogos */}
               {fireworks && (
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
                   {Array.from({ length: 20 }, (_, i) => (
@@ -413,6 +446,11 @@ export default function BotLaneWorld() {
               <div className="pixel-font mb-2" style={{ fontSize: '12px', color: 'var(--pk)' }}>
                 ♡ duo invencível ♡
               </div>
+              {!dragonEscapedRef.current && (
+                <div className="pixel-font mb-3" style={{ fontSize: '8px', color: 'var(--yl)', textShadow: '0 0 8px var(--yl)' }}>
+                  ★ bot lane inseparável — nenhum dragão escapou ♡
+                </div>
+              )}
               <div className="mono-font mb-6" style={{ color: 'var(--tx2)', fontSize: '14px' }}>
                 CS: {score.minions} | Duo games: ∞ | Losses: 0
               </div>
@@ -421,7 +459,7 @@ export default function BotLaneWorld() {
               </div>
               <div className="flex gap-4 justify-center">
                 <button
-                  onClick={() => { setPhase('playing'); setTimer(0); setScore({ minions: 0, kills: 0 }); setMinions([]); setWards([]) }}
+                  onClick={handleRestart}
                   className="pixel-font px-6 py-2 rounded"
                   style={{ fontSize: '9px', background: 'var(--lol)', color: '#000', border: 'none', cursor: 'pointer' }}
                 >

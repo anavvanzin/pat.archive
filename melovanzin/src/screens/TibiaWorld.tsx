@@ -5,18 +5,26 @@ import PixelChar from '../components/PixelChar'
 import SpotifyPlayer from '../components/SpotifyPlayer'
 
 const CHEST_MESSAGES = [
-  { title: 'tesouro encontrado!', text: 'dentro do baú tinha uma nota: "você é o tesouro mais raro que já dropei nessa vida. amor lvl 999." ♡' },
-  { title: 'item raro!', text: '"cada dia com você é um drop épico. e eu coleciono cada momento como se fosse o item mais valioso do jogo." ⚔' },
-  { title: 'loot especial!', text: '"eles dizem que amor verdadeiro é raro de dropar. acho que dropei logo de primeira, e nunca mais vou largar." 🌟' },
-  { title: 'baú aberto!', text: '"se o Tibia tivesse uma skill chamada Amar você seria lvl 999 e eu ia ser o mob mais feliz do servidor." 🐾' },
-  { title: 'surpresa!', text: '"vamo si ama??" — diz a capivara dentro do baú, usando um chapéu de aventureira. sim. sempre sim. ♡' },
+  'você sabia que o diamante roxo era o mais feio do servidor? pois é. foi assim que começou. 💎',
+  'a pessoa do mal nos colocou no mesmo lugar. obrigada, pessoa do mal. 🙏',
+  'primeira call de voz: a gente ficou horas falando. eu já sabia que era você. 🎙',
+  'os talheres eram cinco. ou eram doze? a ciência nunca vai saber. 🍴✨',
+  'amor lvl 999. never dies. esse sou eu, esse é você, esse somos nós. ♡',
+]
+
+const CAPY_MESSAGES = [
+  '🐾 vamo si ama!!',
+  '🐾 você tem brownie?',
+  '🐾 gg wp',
+  '🐾 bora tibia?',
 ]
 
 const LOOT_ITEMS = [
-  { icon: '♡', name: 'Coração Encantado', desc: 'dropado com amor. +999 de carinho ao equipar.' },
+  { icon: '♡', name: 'Coração Encantado', desc: 'coração +999 amor. dropado com carinho.' },
   { icon: '★', name: 'Estrela de Guardar', desc: 'para guardar os momentos bons. peso: 0. valor: infinito.' },
   { icon: '♪', name: 'Nota Musical', desc: 'uma nota de um beat feito só pra você. toca suave.' },
-  { icon: '⚔', name: 'Espada do Amor', desc: 'arma +10 de afeto. causa dano de "saudade" em inimigos.' },
+  { icon: '⚔', name: 'Espada do Amor', desc: 'espada — ainda mais feio que o diamante roxo.' },
+  { icon: '🍫', name: 'Brownie Lendário', desc: 'brownie — item lendário. efeito: +999 felicidade.' },
 ]
 
 function TileMap() {
@@ -45,7 +53,6 @@ function TileMap() {
     const cols = Math.ceil(W / TILE)
     const rows = Math.ceil(H / TILE)
 
-    // Draw grass/dungeon floor
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         const isEdge = x === 0 || y === 0 || x === cols - 1 || y === rows - 1
@@ -61,14 +68,14 @@ function TileMap() {
       }
     }
 
-    // Draw path
+    // Caminho
     for (let x = 3; x < cols - 3; x++) {
       const y = Math.floor(rows / 2)
       ctx.fillStyle = '#3a2a10'
       ctx.fillRect(x * TILE, y * TILE - TILE, TILE, TILE * 3)
     }
 
-    // Flowers
+    // Flores
     const flowers = [
       { x: 2, y: 2 }, { x: cols - 3, y: 2 }, { x: 2, y: rows - 3 }, { x: cols - 3, y: rows - 3 },
       { x: 4, y: 4 }, { x: cols - 5, y: rows - 5 },
@@ -139,16 +146,19 @@ function FireflyEffect() {
 }
 
 export default function TibiaWorld() {
-  const { setWorld, addToInventory, inventory, addNotification, triggerHeartBurst } = useStore()
+  const { setWorld, addToInventory, inventory, addNotification, triggerHeartBurst, unlockEasterEgg, easterEggs } = useStore()
 
   const [chestOpen, setChestOpen] = useState(false)
   const [chestIdx, setChestIdx] = useState(0)
+  const [capyMsgIdx, setCapyMsgIdx] = useState(0)
   const [capyTalking, setCapyTalking] = useState(false)
+  const [capyClickCount, setCapyClickCount] = useState(0)
+  const [showEgg2Msg, setShowEgg2Msg] = useState(false)
   const [dropItems, setDropItems] = useState<{ id: number; item: typeof LOOT_ITEMS[0]; x: number; y: number }[]>([])
-  const [timeOfDay, setTimeOfDay] = useState(0) // 0=day, 1=night
+  const [timeOfDay, setTimeOfDay] = useState(0)
   const [showInventory, setShowInventory] = useState(false)
 
-  // Day/night cycle
+  // Ciclo dia/noite
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeOfDay((t) => (t + 0.005) % 2)
@@ -156,17 +166,13 @@ export default function TibiaWorld() {
     return () => clearInterval(timer)
   }, [])
 
-  // Loot drops
+  // Drops
   useEffect(() => {
     const timer = setInterval(() => {
       const item = LOOT_ITEMS[Math.floor(Math.random() * LOOT_ITEMS.length)]
       const id = Date.now()
-      setDropItems((prev) => [
-        ...prev,
-        { id, item, x: 15 + Math.random() * 70, y: 10 + Math.random() * 50 },
-      ])
+      setDropItems((prev) => [...prev, { id, item, x: 15 + Math.random() * 70, y: 10 + Math.random() * 50 }])
     }, 30000)
-    // First drop after 10s for demo
     const first = setTimeout(() => {
       const item = LOOT_ITEMS[Math.floor(Math.random() * LOOT_ITEMS.length)]
       setDropItems([{ id: Date.now(), item, x: 40 + Math.random() * 20, y: 20 + Math.random() * 30 }])
@@ -188,6 +194,23 @@ export default function TibiaWorld() {
   const closeChest = () => {
     setChestOpen(false)
     setChestIdx((i) => (i + 1) % CHEST_MESSAGES.length)
+  }
+
+  // Clicar na capivara — easter egg #2 (5x seguidas)
+  const handleCapyClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const next = capyClickCount + 1
+    setCapyClickCount(next)
+    setCapyMsgIdx((i) => (i + 1) % CAPY_MESSAGES.length)
+    setCapyTalking(true)
+
+    if (next >= 5 && !easterEggs.includes('diamante_roxo')) {
+      unlockEasterEgg('diamante_roxo')
+      addNotification("💎 Easter Egg: 'Diamante Roxo' — o original", '💎')
+      triggerHeartBurst(e.clientX, e.clientY)
+      setShowEgg2Msg(true)
+      setTimeout(() => setShowEgg2Msg(false), 4000)
+    }
   }
 
   const nightAlpha = Math.max(0, Math.min(1, (timeOfDay - 0.8) * 3))
@@ -232,13 +255,13 @@ export default function TibiaWorld() {
 
           <FireflyEffect />
 
-          {/* Capybara NPC */}
+          {/* Capivara NPC */}
           <motion.div
             className="absolute cursor-pointer"
             style={{ bottom: '30%', left: '15%' }}
             animate={{ x: [0, 80, 0] }}
             transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut' }}
-            onClick={() => setCapyTalking(true)}
+            onClick={handleCapyClick}
           >
             <PixelChar char="capybara" size={3} />
             <AnimatePresence>
@@ -256,13 +279,13 @@ export default function TibiaWorld() {
                   }}
                   onAnimationComplete={() => setTimeout(() => setCapyTalking(false), 2000)}
                 >
-                  🐾 vamo si ama!!
+                  {showEgg2Msg ? '🐾 ...esse diamante roxo era realmente muito feio né' : CAPY_MESSAGES[capyMsgIdx]}
                 </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
 
-          {/* Ana and Lucas characters */}
+          {/* Ana e Lucas */}
           <div className="absolute" style={{ bottom: '25%', left: '40%' }}>
             <PixelChar char="ana" size={4} />
           </div>
@@ -270,7 +293,7 @@ export default function TibiaWorld() {
             <PixelChar char="lucas" size={4} />
           </div>
 
-          {/* Treasure chest */}
+          {/* Baú */}
           <motion.div
             className="absolute cursor-pointer"
             style={{ bottom: '28%', left: '50%', transform: 'translateX(-50%)' }}
@@ -307,7 +330,7 @@ export default function TibiaWorld() {
             </motion.button>
           ))}
 
-          {/* HUD bars */}
+          {/* HUD Tibia */}
           <div
             className="absolute top-2 left-2 p-2 rounded"
             style={{ background: 'rgba(10,5,0,0.9)', border: '2px solid var(--tibia)', minWidth: '140px' }}
@@ -336,7 +359,7 @@ export default function TibiaWorld() {
             </div>
           </div>
 
-          {/* Time indicator */}
+          {/* Indicador de hora */}
           <div className="absolute top-2 right-2 pixel-font" style={{ fontSize: '7px', color: 'var(--tx3)' }}>
             {timeOfDay < 1 ? '☀ dia' : '🌙 noite'}
           </div>
@@ -345,7 +368,7 @@ export default function TibiaWorld() {
         <SpotifyPlayer />
       </div>
 
-      {/* Chest modal */}
+      {/* Modal do baú */}
       <AnimatePresence>
         {chestOpen && (
           <motion.div
@@ -364,11 +387,11 @@ export default function TibiaWorld() {
               style={{ background: 'linear-gradient(135deg, #1a0a00, #2a1500)', border: '3px solid var(--yl)', boxShadow: '0 0 40px rgba(255,224,102,0.3)' }}
             >
               <div className="text-4xl mb-4">📦✨</div>
-              <div className="pixel-font mb-4" style={{ fontSize: '11px', color: 'var(--yl)', textShadow: '0 0 10px var(--yl)' }}>
-                {CHEST_MESSAGES[chestIdx].title}
+              <div className="pixel-font mb-4" style={{ fontSize: '9px', color: 'var(--yl)', textShadow: '0 0 10px var(--yl)' }}>
+                tesouro encontrado!
               </div>
-              <p className="leading-relaxed mb-6" style={{ color: 'var(--tx)', fontSize: '14px', lineHeight: '1.8' }}>
-                {CHEST_MESSAGES[chestIdx].text}
+              <p className="leading-relaxed mb-6" style={{ color: 'var(--tx)', fontSize: '14px', lineHeight: '1.9' }}>
+                {CHEST_MESSAGES[chestIdx]}
               </p>
               <button
                 onClick={closeChest}
@@ -382,7 +405,7 @@ export default function TibiaWorld() {
         )}
       </AnimatePresence>
 
-      {/* Inventory panel */}
+      {/* Inventário */}
       <AnimatePresence>
         {showInventory && (
           <motion.div

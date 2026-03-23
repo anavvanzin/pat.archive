@@ -13,6 +13,7 @@ function makeEmpty() {
 
 const EASTER_KICK = [0, 4, 8, 12]
 const EASTER_SNARE = [4, 12]
+const EASTER_HIHAT = [2, 6, 10, 14]
 
 function Waveform({ playing, activeStep }: { playing: boolean; activeStep: number }) {
   const bars = Array.from({ length: 32 }, (_, i) => i)
@@ -36,7 +37,7 @@ function Waveform({ playing, activeStep }: { playing: boolean; activeStep: numbe
 }
 
 export default function FruitLoopsWorld() {
-  const { setWorld, savedBeats, saveBeat, addNotification } = useStore()
+  const { setWorld, savedBeats, saveBeat, addNotification, unlockEasterEgg, easterEggs, triggerHeartBurst } = useStore()
 
   const [kick, setKick] = useState<boolean[]>(makeEmpty())
   const [snare, setSnare] = useState<boolean[]>(makeEmpty())
@@ -59,15 +60,23 @@ export default function FruitLoopsWorld() {
   snareRef.current = snare
   hihatRef.current = hihat
 
-  // Check easter egg
+  // Check easter egg #1 — O Beat Clássico
   useEffect(() => {
     const isEgg =
       EASTER_KICK.every((i) => kick[i]) &&
       EASTER_SNARE.every((i) => snare[i]) &&
+      EASTER_HIHAT.every((i) => hihat[i]) &&
       kick.filter(Boolean).length === 4 &&
-      snare.filter(Boolean).length === 2
+      snare.filter(Boolean).length === 2 &&
+      hihat.filter(Boolean).length === 4
+    const wasEgg = easterEgg
     setEasterEgg(isEgg)
-  }, [kick, snare])
+    if (isEgg && !wasEgg && !easterEggs.includes('beat_classico')) {
+      unlockEasterEgg('beat_classico')
+      addNotification("🏆 Easter Egg: 'O Beat Clássico'", '🏆')
+      triggerHeartBurst(window.innerWidth / 2, window.innerHeight / 2)
+    }
+  }, [kick, snare, hihat, easterEgg, easterEggs, unlockEasterEgg, addNotification, triggerHeartBurst])
 
   const tick = useCallback(() => {
     const interval = (60 / bpm / 4) * 1000
