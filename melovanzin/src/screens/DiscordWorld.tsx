@@ -10,87 +10,121 @@ interface Message {
   timestamp: string
 }
 
-type Channel = 'primeiro-contato' | 'fruit-loops' | 'tibia-gg' | 'gg-bot-lane' | 'lofi-vibes' | 'vamo-si-ama'
+type Channel =
+  | 'primeiro-contato'
+  | 'diamante-roxo'
+  | 'fruit-loops'
+  | 'tibia-gg'
+  | 'gg-bot-lane'
+  | 'talheres-e-outros-misterios'
+  | 'geral'
 
 const CHANNELS: { id: Channel; icon: string; label: string; unread?: boolean }[] = [
   { id: 'primeiro-contato', icon: '#', label: 'primeiro-contato', unread: true },
+  { id: 'diamante-roxo', icon: '#', label: 'diamante-roxo' },
   { id: 'fruit-loops', icon: '#', label: 'fruit-loops' },
   { id: 'tibia-gg', icon: '#', label: 'tibia-gg' },
   { id: 'gg-bot-lane', icon: '#', label: 'gg-bot-lane' },
-  { id: 'lofi-vibes', icon: '#', label: 'lofi-vibes' },
-  { id: 'vamo-si-ama', icon: '🎙', label: 'vamo-si-ama' },
+  { id: 'talheres-e-outros-misterios', icon: '#', label: 'talheres-e-outros-misterios' },
+  { id: 'geral', icon: '#', label: 'geral' },
 ]
 
 const CHANNEL_MESSAGES: Record<Channel, Omit<Message, 'id'>[]> = {
   'primeiro-contato': [
-    { author: 'lucas', content: 'oi! vi você lá no servidor do Tibia Brasil', timestamp: '20:14' },
-    { author: 'ana', content: 'oi!! sim sim eu jogo às vezes haha', timestamp: '20:15' },
-    { author: 'lucas', content: 'que coincidência. também faço umas coisas no FL Studio, vi que você comentou sobre música', timestamp: '20:16' },
-    { author: 'ana', content: 'ai que legal!! eu amo música mas não sei fazer nada kk', timestamp: '20:17' },
-    { author: 'lucas', content: 'posso te ensinar alguma coisa se quiser 👀', timestamp: '20:18' },
-    { author: 'ana', content: 'com certeza sim!! mas me avisa, não noia sozinho haha', timestamp: '20:19' },
-    { author: 'lucas', content: 'haha combinado. ei, você toparia sair de dia algum dia?', timestamp: '20:31' },
-    { author: 'ana', content: '...', timestamp: '20:32' },
-    { author: 'ana', content: 'sim 🌸', timestamp: '20:32' },
-    { author: 'lucas', content: 'que bom 🥹', timestamp: '20:33' },
-    { author: 'capy', content: '🐾 VAMO SI AMA!!', timestamp: '20:33' },
+    { author: 'lucas', content: 'oi', timestamp: '20:14' },
+    { author: 'lucas', content: 'seu diamante roxo é muito feio', timestamp: '20:14' },
+    { author: 'ana', content: 'com licença???', timestamp: '20:15' },
+    { author: 'lucas', content: 'desculpa kkkk mas é verdade', timestamp: '20:15' },
+    { author: 'lucas', content: 'posso te mandar um efeito melhor', timestamp: '20:16' },
+    { author: 'ana', content: '...pode', timestamp: '20:16' },
+    { author: 'ana', content: '[recebeu: Efeito de Perfil — Chama Etérea]', timestamp: '20:17' },
+    { author: 'ana', content: 'ok esse é bonito', timestamp: '20:17' },
+    { author: 'lucas', content: 'né', timestamp: '20:18' },
+    { author: 'lucas', content: 'eu sou lucas btw', timestamp: '20:18' },
+    { author: 'ana', content: 'eu sei quem você é', timestamp: '20:19' },
+    { author: 'lucas', content: 'mentira', timestamp: '20:19' },
+    { author: 'ana', content: 'mentira', timestamp: '20:19' },
+    { author: 'ana', content: 'kkkkkkkkk', timestamp: '20:19' },
+    { author: 'lucas', content: 'kkkkkkkkk', timestamp: '20:19' },
+    { author: 'capy', content: '🐾 vamo si ama!!', timestamp: '20:20' },
+  ],
+  'diamante-roxo': [
+    { author: 'capy', content: '📌 esse canal existe em homenagem ao diamante roxo mais feio do servidor', timestamp: '00:00' },
+    { author: 'lucas', content: 'eu não me arrependo de nada', timestamp: '21:30' },
+    { author: 'ana', content: 'você literalmente abriu conversa falando mal do meu efeito', timestamp: '21:31' },
+    { author: 'lucas', content: 'e funcionou', timestamp: '21:31' },
+    { author: 'ana', content: '...funcionou', timestamp: '21:32' },
+    { author: 'capy', content: '🐾 a capivara aprova', timestamp: '21:32' },
   ],
   'fruit-loops': [
-    { author: 'lucas', content: 'então, o FL Studio tem esse conceito de "fruit loops" pra os samples', timestamp: '15:20' },
-    { author: 'ana', content: 'fruit loops igual o cereal kkkk', timestamp: '15:21' },
-    { author: 'lucas', content: 'exatamente KKKK', timestamp: '15:21' },
-    { author: 'ana', content: 'eu to tentando fazer um beat mas ta ficando horrível hjdbsajdsa', timestamp: '15:35' },
-    { author: 'lucas', content: 'manda aqui eu vejo', timestamp: '15:35' },
-    { author: 'ana', content: '[beat_ana_v1.flp]', timestamp: '15:36' },
-    { author: 'lucas', content: 'ESPERA ISSO TA MUITO BOM', timestamp: '15:37' },
-    { author: 'ana', content: 'para mentira', timestamp: '15:37' },
-    { author: 'lucas', content: 'juro! o hi-hat tá perfeito. você tem talento', timestamp: '15:38' },
-    { author: 'ana', content: 'vai demais 🥺 obrigada', timestamp: '15:39' },
-    { author: 'capy', content: '🎵 beat aprovado pela capivara', timestamp: '15:39' },
+    { author: 'lucas', content: 'escuta essa aqui', timestamp: '15:20' },
+    { author: 'lucas', content: '[anexo: beat_wip_03.mp3]', timestamp: '15:20' },
+    { author: 'ana', content: 'espera isso é bom', timestamp: '15:22' },
+    { author: 'lucas', content: 'fruit loops™ na hora', timestamp: '15:23' },
+    { author: 'ana', content: 'você chama o fl studio de fruit loops', timestamp: '15:23' },
+    { author: 'lucas', content: 'como cereal', timestamp: '15:23' },
+    { author: 'ana', content: 'isso é a coisa mais você que já ouvi', timestamp: '15:24' },
+    { author: 'lucas', content: 'obrigada', timestamp: '15:24' },
+    { author: 'ana', content: 'não era elogio', timestamp: '15:25' },
+    { author: 'ana', content: 'era elogio', timestamp: '15:25' },
+    { author: 'capy', content: '🎵 beat aprovado pela capivara', timestamp: '15:25' },
   ],
   'tibia-gg': [
-    { author: 'lucas', content: 'ei, tô farmando em Venore, passa lá se quiser', timestamp: '22:05' },
-    { author: 'ana', content: 'tô vindo!! char dela é mage tá', timestamp: '22:06' },
-    { author: 'lucas', content: 'perfeito, eu tô de knight. você cura e eu tanko', timestamp: '22:07' },
-    { author: 'ana', content: 'COMBINAÇÃO PERFEITA', timestamp: '22:08' },
-    { author: 'lucas', content: '...igual a gente né', timestamp: '22:09' },
-    { author: 'ana', content: '...', timestamp: '22:10' },
-    { author: 'ana', content: '🥺🥺🥺', timestamp: '22:10' },
-    { author: 'lucas', content: 'haha bora farmar', timestamp: '22:10' },
-    { author: 'capy', content: '⚔ amor lvl 999 detected', timestamp: '22:11' },
+    { author: 'ana', content: 'você joga tibia há quanto tempo', timestamp: '22:05' },
+    { author: 'lucas', content: 'desde que eu tinha 12 anos', timestamp: '22:06' },
+    { author: 'lucas', content: 'passei mais tempo no tibia do que na escola', timestamp: '22:06' },
+    { author: 'ana', content: 'isso explica muita coisa', timestamp: '22:07' },
+    { author: 'lucas', content: 'kkkkk verdade', timestamp: '22:07' },
+    { author: 'lucas', content: 'bora jogar juntos?', timestamp: '22:08' },
+    { author: 'ana', content: 'eu sou horrível', timestamp: '22:08' },
+    { author: 'lucas', content: 'não tem problema eu protejo você', timestamp: '22:09' },
+    { author: 'ana', content: '🥹', timestamp: '22:09' },
+    { author: 'capy', content: '⚔ amor lvl 999 detected', timestamp: '22:10' },
   ],
   'gg-bot-lane': [
-    { author: 'lucas', content: 'ei quer dualar bot lane? eu posso de suporte', timestamp: '19:00' },
-    { author: 'ana', content: 'SIM! adoro adc. faz tempo que não jogo', timestamp: '19:01' },
-    { author: 'lucas', content: 'bora! te protejo a partida inteira prometido', timestamp: '19:02' },
-    { author: 'ana', content: 'kkkkk que pressão', timestamp: '19:02' },
-    { author: 'lucas', content: 'GG EZ que duo hein', timestamp: '19:54' },
-    { author: 'ana', content: 'SOMOS IMPARÁVEIS KKKK', timestamp: '19:54' },
-    { author: 'lucas', content: 'duo games: ∞. losses: 0. gg forever', timestamp: '19:55' },
-    { author: 'ana', content: '♡♡♡', timestamp: '19:55' },
-    { author: 'capy', content: '🏆 VICTORY ROYALE (é de outro jogo mas tanto faz)', timestamp: '19:56' },
+    { author: 'lucas', content: 'você joga adc eu jogo support', timestamp: '19:00' },
+    { author: 'ana', content: 'por quê você support', timestamp: '19:01' },
+    { author: 'lucas', content: 'porque eu cuido de você', timestamp: '19:01' },
+    { author: 'ana', content: 'para', timestamp: '19:02' },
+    { author: 'lucas', content: 'gg bot lane ♡', timestamp: '19:02' },
+    { author: 'ana', content: 'gg ♡', timestamp: '19:02' },
+    { author: 'capy', content: '🏆 VICTORY (duo perfeito)', timestamp: '19:03' },
   ],
-  'lofi-vibes': [
-    { author: 'ana', content: 'ouvindo SORRY do Nemzzz no loopinho', timestamp: '01:30' },
-    { author: 'lucas', content: 'que música boa', timestamp: '01:31' },
-    { author: 'ana', content: 'combina muito com essa hora', timestamp: '01:31' },
-    { author: 'lucas', content: 'combina com você também', timestamp: '01:32' },
-    { author: 'ana', content: '...vai demais kk', timestamp: '01:32' },
-    { author: 'lucas', content: 'é verdade haha', timestamp: '01:33' },
-    { author: 'ana', content: 'to fazendo brownie quer?', timestamp: '01:45' },
-    { author: 'lucas', content: 'SEMPRE quero brownie seu', timestamp: '01:45' },
-    { author: 'capy', content: '🍫 capivara também quer brownie', timestamp: '01:46' },
+  'talheres-e-outros-misterios': [
+    { author: 'ana', content: 'espera quantos talheres têm nessa mesa', timestamp: '23:10' },
+    { author: 'lucas', content: 'cinco', timestamp: '23:10' },
+    { author: 'ana', content: 'tem cinco?', timestamp: '23:11' },
+    { author: 'lucas', content: 'tem cinco', timestamp: '23:11' },
+    { author: 'ana', content: 'lucas', timestamp: '23:12' },
+    { author: 'lucas', content: 'ana', timestamp: '23:12' },
+    { author: 'ana', content: 'são TRÊS talheres', timestamp: '23:12' },
+    { author: 'lucas', content: '...', timestamp: '23:13' },
+    { author: 'lucas', content: 'a física não se aplica aqui', timestamp: '23:13' },
+    { author: 'ana', content: 'a gente tá chapado', timestamp: '23:14' },
+    { author: 'lucas', content: 'a gente tá chapado', timestamp: '23:14' },
+    { author: 'ana', content: 'KKKKKKKKKKKK', timestamp: '23:14' },
+    { author: 'lucas', content: 'KKKKKKKKKKKK', timestamp: '23:14' },
+    { author: 'ana', content: 'histórico pra contar pros filhos', timestamp: '23:15' },
+    { author: 'lucas', content: 'histórico pra contar pros filhos', timestamp: '23:15' },
+    { author: 'capy', content: '🍴 a capivara contou: eram três', timestamp: '23:15' },
   ],
-  'vamo-si-ama': [
-    { author: 'capy', content: '🎙 vamo-si-ama ativado', timestamp: '00:00' },
-    { author: 'lucas', content: '🎙 Lucas entrou em voz', timestamp: '00:01' },
-    { author: 'ana', content: '🎙 Ana entrou em voz', timestamp: '00:02' },
-    { author: 'capy', content: '🐾 vamo si ama, desde sempre!!', timestamp: '00:03' },
-    { author: 'ana', content: 'haha a capivara bot é demais kk', timestamp: '00:04' },
-    { author: 'lucas', content: 'ela sabe das coisas', timestamp: '00:04' },
-    { author: 'ana', content: 'vamo si ama mesmo 🥺', timestamp: '00:05' },
-    { author: 'lucas', content: 'vamo si ama. sempre. ♡', timestamp: '00:05' },
-    { author: 'capy', content: '🐾 ♡♡♡', timestamp: '00:05' },
+  'geral': [
+    { author: 'capy', content: 'bem-vindos ao melovanzin 🫧', timestamp: '00:00' },
+    { author: 'lucas', content: 'ei', timestamp: '01:00' },
+    { author: 'ana', content: 'ei', timestamp: '01:01' },
+    { author: 'lucas', content: 'eu gosto muito de você sabe', timestamp: '01:02' },
+    { author: 'ana', content: 'kkkkk do nada', timestamp: '01:02' },
+    { author: 'lucas', content: 'do nada não', timestamp: '01:03' },
+    { author: 'lucas', content: 'você sabe que não é do nada', timestamp: '01:03' },
+    { author: 'ana', content: 'eu sei', timestamp: '01:04' },
+    { author: 'ana', content: 'eu também gosto muito de você', timestamp: '01:04' },
+    { author: 'lucas', content: 'muito?', timestamp: '01:05' },
+    { author: 'ana', content: 'muito muito', timestamp: '01:05' },
+    { author: 'lucas', content: 'que bom', timestamp: '01:06' },
+    { author: 'ana', content: 'que bom', timestamp: '01:06' },
+    { author: 'lucas', content: 'vamo si ama?', timestamp: '01:07' },
+    { author: 'ana', content: 'vamo si ama ♡', timestamp: '01:07' },
+    { author: 'capy', content: '🐾 finalmente', timestamp: '01:07' },
   ],
 }
 
@@ -109,19 +143,19 @@ const AUTHOR_CONFIG = {
     dot: '#c97dff',
     status: 'online',
     avatar: '🎵',
-    tooltip: 'fruit loops aficionado • tibia veteran • ama a ana demais',
+    tooltip: 'fruit loops aficionado • tibia veteran • bigodinho iconic • ama a ana demais',
   },
   capy: {
-    name: 'Capivara Bot',
+    name: 'CapivaraBot',
     color: '#1db954',
     dot: '#1db954',
     status: 'bot',
     avatar: '🐾',
-    tooltip: 'vamo si ama!! • bot oficial do MeloVanzin',
+    tooltip: '🐾 — bot oficial do MeloVanzin',
   },
 }
 
-function Avatar({ author }: { author: 'ana' | 'lucas' | 'capy'; showTooltip?: boolean }) {
+function Avatar({ author }: { author: 'ana' | 'lucas' | 'capy' }) {
   const [tip, setTip] = useState(false)
   const cfg = AUTHOR_CONFIG[author]
 
@@ -139,10 +173,7 @@ function Avatar({ author }: { author: 'ana' | 'lucas' | 'capy'; showTooltip?: bo
       </div>
       <div
         className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2"
-        style={{
-          background: cfg.dot,
-          borderColor: '#1e2124',
-        }}
+        style={{ background: cfg.dot, borderColor: '#1e2124' }}
       />
       {tip && (
         <div
@@ -156,7 +187,7 @@ function Avatar({ author }: { author: 'ana' | 'lucas' | 'capy'; showTooltip?: bo
           }}
         >
           <strong style={{ color: cfg.color }}>{cfg.name}</strong>
-          {cfg.status === 'bot' && (
+          {author === 'capy' && (
             <span
               className="ml-1 px-1 rounded text-xs"
               style={{ background: cfg.dot, color: '#000', fontSize: '9px' }}
@@ -173,33 +204,51 @@ function Avatar({ author }: { author: 'ana' | 'lucas' | 'capy'; showTooltip?: bo
 }
 
 export default function DiscordWorld() {
-  const { setWorld } = useStore()
+  const { setWorld, unlockEasterEgg, easterEggs, addNotification, triggerHeartBurst } = useStore()
 
   const [activeChannel, setActiveChannel] = useState<Channel>('primeiro-contato')
   const [visibleMessages, setVisibleMessages] = useState<Message[]>([])
   const [isTyping, setIsTyping] = useState<'ana' | 'lucas' | 'capy' | null>(null)
   const [msgIndex, setMsgIndex] = useState(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  // Rastrear canais que o user leu até o fim
+  const readChannels = useRef<Set<Channel>>(new Set())
 
   const allMessages = CHANNEL_MESSAGES[activeChannel]
 
-  // Reset and replay messages when channel changes
+  // Resetar ao mudar de canal
   useEffect(() => {
     setVisibleMessages([])
     setMsgIndex(0)
     setIsTyping(null)
   }, [activeChannel])
 
-  // Message reveal effect
+  // Revelar mensagens uma por uma
   useEffect(() => {
-    if (msgIndex >= allMessages.length) return
+    if (msgIndex >= allMessages.length) {
+      // Canal lido até o final
+      readChannels.current.add(activeChannel)
+
+      // Easter egg #4 — "A Origem": ler todos os canais até o fim do #geral
+      if (
+        activeChannel === 'geral' &&
+        !easterEggs.includes('a_origem')
+      ) {
+        setTimeout(() => {
+          unlockEasterEgg('a_origem')
+          addNotification("🫧 Easter Egg: 'A Origem' — você leu tudo. obrigada por existir. ♡", '🫧')
+          triggerHeartBurst(window.innerWidth / 2, window.innerHeight / 2)
+        }, 800)
+      }
+      return
+    }
 
     const msg = allMessages[msgIndex]
-    const delay = msgIndex === 0 ? 500 : 800
+    const delay = msgIndex === 0 ? 500 : 700
 
     const typingTimer = setTimeout(() => {
       setIsTyping(msg.author)
-    }, delay - 400)
+    }, delay - 350)
 
     const msgTimer = setTimeout(() => {
       setIsTyping(null)
@@ -211,7 +260,7 @@ export default function DiscordWorld() {
       clearTimeout(typingTimer)
       clearTimeout(msgTimer)
     }
-  }, [msgIndex, allMessages, activeChannel])
+  }, [msgIndex, allMessages, activeChannel, easterEggs, unlockEasterEgg, addNotification, triggerHeartBurst])
 
   // Auto-scroll
   useEffect(() => {
@@ -226,7 +275,6 @@ export default function DiscordWorld() {
           className="flex flex-col shrink-0"
           style={{ width: '220px', background: '#2f3136', borderRight: '1px solid #1e2124' }}
         >
-          {/* Back button */}
           <button
             onClick={() => setWorld('hub')}
             className="pixel-font text-left px-3 py-2 text-xs transition-colors hover:text-white"
@@ -235,7 +283,7 @@ export default function DiscordWorld() {
             ← hub
           </button>
 
-          {/* Server header */}
+          {/* Cabeçalho do servidor */}
           <div
             className="flex items-center gap-2 px-3 py-3"
             style={{ borderBottom: '1px solid #1e2124', background: '#2f3136' }}
@@ -252,14 +300,14 @@ export default function DiscordWorld() {
             </div>
           </div>
 
-          {/* Pinned */}
+          {/* Mensagem fixada */}
           <div className="px-3 py-2" style={{ borderBottom: '1px solid #1e2124' }}>
             <div className="text-xs" style={{ color: 'var(--tx3)', fontFamily: 'JetBrains Mono, monospace' }}>
               📌 foi aqui que tudo começou 🫧
             </div>
           </div>
 
-          {/* Channels */}
+          {/* Canais */}
           <div className="flex-1 overflow-y-auto py-2">
             <div className="px-3 py-1 text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--tx3)' }}>
               Canais de texto
@@ -275,24 +323,37 @@ export default function DiscordWorld() {
                   color: activeChannel === ch.id ? '#fff' : 'var(--tx3)',
                   cursor: 'pointer',
                   fontFamily: 'JetBrains Mono, monospace',
-                  fontSize: '13px',
+                  fontSize: '12px',
                   textAlign: 'left',
                   width: 'calc(100% - 8px)',
                 }}
               >
-                <span style={{ color: 'var(--tx3)' }}>{ch.icon}</span>
-                <span>{ch.label}</span>
+                <span style={{ color: 'var(--tx3)', fontSize: '11px' }}>{ch.icon}</span>
+                <span className="truncate">{ch.label}</span>
                 {ch.unread && (
                   <span
-                    className="ml-auto w-2 h-2 rounded-full"
-                    style={{ background: 'var(--dc)', flexShrink: 0 }}
+                    className="ml-auto w-2 h-2 rounded-full shrink-0"
+                    style={{ background: 'var(--dc)' }}
                   />
                 )}
               </button>
             ))}
+
+            {/* Voice channel */}
+            <div className="px-3 py-1 text-xs font-semibold uppercase tracking-wider mt-2 mb-1" style={{ color: 'var(--tx3)' }}>
+              Canais de voz
+            </div>
+            <div
+              className="flex items-center gap-1.5 px-3 py-1.5 mx-1 rounded"
+              style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: 'var(--tx3)' }}
+            >
+              <span>🎙</span>
+              <span>vamo-si-ama</span>
+              <span className="ml-auto text-xs" style={{ color: 'var(--grn)' }}>2</span>
+            </div>
           </div>
 
-          {/* Users */}
+          {/* Usuários online */}
           <div
             className="p-3 flex flex-col gap-2"
             style={{ borderTop: '1px solid #1e2124', background: '#292b2f' }}
@@ -302,10 +363,18 @@ export default function DiscordWorld() {
             </div>
             {(['ana', 'lucas', 'capy'] as const).map((u) => (
               <div key={u} className="flex items-center gap-2">
-                <Avatar author={u} showTooltip />
+                <Avatar author={u} />
                 <div>
                   <div className="text-xs font-medium" style={{ color: AUTHOR_CONFIG[u].color }}>
                     {AUTHOR_CONFIG[u].name}
+                    {u === 'capy' && (
+                      <span
+                        className="ml-1 px-1 rounded"
+                        style={{ background: 'var(--grn)', color: '#000', fontSize: '8px' }}
+                      >
+                        BOT
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs" style={{ color: 'var(--tx3)' }}>
                     {AUTHOR_CONFIG[u].status}
@@ -316,9 +385,9 @@ export default function DiscordWorld() {
           </div>
         </div>
 
-        {/* Main chat */}
-        <div className="flex-1 flex flex-col" style={{ background: '#36393f' }}>
-          {/* Channel header */}
+        {/* Chat principal */}
+        <div className="flex-1 flex flex-col" style={{ background: '#36393f', minWidth: 0 }}>
+          {/* Cabeçalho do canal */}
           <div
             className="flex items-center gap-2 px-4 py-3 shrink-0"
             style={{ borderBottom: '1px solid #1e2124', background: '#36393f' }}
@@ -326,10 +395,10 @@ export default function DiscordWorld() {
             <span style={{ color: 'var(--tx3)', fontSize: '16px' }}>
               {CHANNELS.find((c) => c.id === activeChannel)?.icon}
             </span>
-            <span className="font-semibold text-white">
+            <span className="font-semibold text-white text-sm truncate">
               {activeChannel}
             </span>
-            <div className="ml-auto flex items-center gap-3">
+            <div className="ml-auto flex items-center gap-3 shrink-0">
               <div
                 className="text-xs px-2 py-1 rounded"
                 style={{
@@ -337,16 +406,17 @@ export default function DiscordWorld() {
                   border: '1px solid rgba(88,101,242,0.4)',
                   color: 'var(--dc2)',
                   fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '11px',
                 }}
               >
-                MeloVanzin Server
+                MeloVanzin
               </div>
             </div>
           </div>
 
-          {/* Messages */}
+          {/* Mensagens */}
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
-            {/* Pinned banner */}
+            {/* Banner especial para #primeiro-contato */}
             {activeChannel === 'primeiro-contato' && (
               <div
                 className="px-4 py-3 rounded-lg mb-2"
@@ -374,7 +444,7 @@ export default function DiscordWorld() {
                   transition={{ duration: 0.3 }}
                   className="flex items-start gap-3 dc-message"
                 >
-                  <Avatar author={msg.author} showTooltip />
+                  <Avatar author={msg.author} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-0.5">
                       <span className="font-medium text-sm" style={{ color: cfg.color }}>
@@ -389,7 +459,7 @@ export default function DiscordWorld() {
                         )}
                       </span>
                       <span
-                        className="text-xs"
+                        className="text-xs shrink-0"
                         style={{ color: 'var(--tx3)', fontFamily: 'JetBrains Mono, monospace' }}
                       >
                         {msg.timestamp}
@@ -438,7 +508,7 @@ export default function DiscordWorld() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input (decorative) */}
+          {/* Input decorativo */}
           <div className="px-4 pb-4 shrink-0">
             <div
               className="flex items-center gap-3 px-4 py-3 rounded-lg"

@@ -3,46 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useStore } from '../store/useStore'
 
 const LOVE_MESSAGES = [
-  {
-    title: 'desde o primeiro "oi"',
-    body: 'foi no Discord que tudo começou. uma mensagem, depois outra, e de repente você virou a minha pessoa favorita no mundo inteiro. obrigada por entrar no servidor. ♡',
-  },
-  {
-    title: 'não noia sozinho',
-    body: 'você sempre fala isso quando tô em espiral. e funciona toda vez. porque quando você fala, eu acredito. você é meu lugar seguro, Lucas. sempre. 🫧',
-  },
-  {
-    title: 'fruit loops forever',
-    body: 'eu não sabia que aprender sobre FL Studio seria tão romântico. mas ouvir você explicar cada batida enquanto eu tentava entender... foi quando percebi que ia me apaixonar muito. 🎵',
-  },
-  {
-    title: 'tibia & nós',
-    body: 'amor nível 999. nunca morre. HP e MP sempre cheios porque você recarrega minha energia só de existir. obrigada por ser meu duo nesse jogo enorme que é a vida. ⚔',
-  },
-  {
-    title: 'sair de dia ☀',
-    body: 'lembra quando você perguntou se eu queria sair de dia? aquela frase simples mudou tudo. eu disse sim e ganhou meu coração inteiro. a gente vai sair de dia pra sempre. 🌞',
-  },
-  {
-    title: 'bot lane duo',
-    body: 'eu sou o suporte, você é o carry — ou vice-versa, depende do dia. mas o importante é que a gente nunca perde quando tá junto. zero derrotas quando somos parceiros. 🏆',
-  },
-  {
-    title: 'brownies & você',
-    body: 'toda vez que faço brownie penso em você. não porque você pediu, mas porque fazer coisas gostosas quando penso em você faz sentido. você é minha coisa favorita. 🍫',
-  },
-  {
-    title: 'vamo si ama!!',
-    body: 'a Capivara sabia antes de nós dois. olha ela aí, com a mochilinha, já mandando mensagem de amor. obrigada por amarmos tanto um ao outro. vamo si ama, pra sempre. 🐾',
-  },
-  {
-    title: 'meu universo',
-    body: 'essa coisa toda — o Discord, o Tibia, o FL Studio, o bot lane — é o universo só nosso que a gente construiu. e ele é lindo demais. igual você. te amo, Lucas. 🫧',
-  },
-  {
-    title: 'meu amor é maior',
-    body: 'não importa o que você faça, o quanto você tente medir, meu amor por você sempre vai ser maior. maior que qualquer palavra, qualquer beat, qualquer mapa de Tibia. sempre. ♡',
-  },
+  'não noia sozinho. fala comigo. a gente resolve qualquer coisa conversando. meu amor é maior que qualquer insegurança. ♡',
+  'você começou falando mal do meu diamante roxo e terminou sendo a pessoa mais importante da minha vida. poetic cinema.',
+  'eu cuido de você assim como você joga support pra mim. sempre. gg bot lane. ♡',
+  'fruit loops, tibia, discord, bot lane, talheres que eram cinco e eram três. cada detalhe nosso é meu favorito.',
+  'a pessoa do mal fez uma coisa boa. a melhor coisa. 🙏',
+  'te amo no dia e na noite, no dungeon e na lane, no discord e fora dele. te amo em todos os servidores. ♡',
+  'você é o beat que eu nunca consigo parar de ouvir.',
+  'amor lvl 999. never dies. esse sou eu, esse é você, esse somos nós. 🫧',
+  'quando eu falar que vou ficar bem, mas não estiver, você já sabe: fala comigo. sempre. meu amor quebra qualquer insegurança na porrada. ♡',
+  'vamo si ama. hoje, amanhã, e em todos os servidores do universo. — ana',
 ]
 
 export default function LoveMessageOverlay() {
@@ -63,7 +33,7 @@ export default function LoveMessageOverlay() {
 
   return (
     <>
-      {/* Floating ✦ button */}
+      {/* Botão flutuante ✦ */}
       <button
         onClick={() => setShowLoveMessage(true)}
         className="fixed z-40 w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all hover:scale-110"
@@ -105,7 +75,7 @@ export default function LoveMessageOverlay() {
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Decorative hearts */}
+              {/* Corações decorativos */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
                 {['♡', '♡', '♡', '✦', '♡'].map((c, i) => (
                   <div
@@ -130,18 +100,11 @@ export default function LoveMessageOverlay() {
                 ♡ mensagem {loveMessageIndex + 1}/10 ♡
               </div>
 
-              <h2
-                className="pixel-font mb-6 leading-relaxed"
-                style={{ fontSize: '16px', color: 'var(--pu)', textShadow: '0 0 16px var(--pu)' }}
-              >
-                {msg.title}
-              </h2>
-
               <p
                 className="leading-relaxed mb-8"
-                style={{ color: 'var(--tx)', fontSize: '15px', lineHeight: '1.8' }}
+                style={{ color: 'var(--tx)', fontSize: '15px', lineHeight: '1.9' }}
               >
-                {msg.body}
+                {msg}
               </p>
 
               <div className="flex gap-3 justify-center">

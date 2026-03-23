@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useStore } from '../store/useStore'
 import type { World } from '../store/useStore'
 import PixelChar from '../components/PixelChar'
@@ -27,7 +27,7 @@ const DOORS: Door[] = [
     color: 'var(--yl)',
     glow: 'rgba(255,224,102,0.4)',
     border: 'rgba(255,224,102,0.5)',
-    tooltip: 'faça um beat com o lucas ♪',
+    tooltip: 'fruit loops™ — bora fazer um beat',
   },
   {
     id: 'tibia',
@@ -66,8 +66,17 @@ const DOORS: Door[] = [
 
 export default function HubScreen() {
   const setWorld = useStore((s) => s.setWorld)
+  const easterEggs = useStore((s) => s.easterEggs)
+  const unlockEasterEgg = useStore((s) => s.unlockEasterEgg)
+  const addNotification = useStore((s) => s.addNotification)
+  const triggerHeartBurst = useStore((s) => s.triggerHeartBurst)
+
   const [hovered, setHovered] = useState<World | null>(null)
   const [entered, setEntered] = useState<World | null>(null)
+
+  // Easter egg #5 — talher escondido (clicar 3x)
+  const [talherClicks, setTalherClicks] = useState(0)
+  const [showTalherMsg, setShowTalherMsg] = useState(false)
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -84,6 +93,19 @@ export default function HubScreen() {
   const handleDoorClick = (id: World) => {
     setEntered(id)
     setTimeout(() => setWorld(id), 400)
+  }
+
+  const handleTalherClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const next = talherClicks + 1
+    setTalherClicks(next)
+    if (next >= 3) {
+      unlockEasterEgg('talheres')
+      addNotification('🍴 talheres desbloqueados! eram cinco. ou três.', '🍴')
+      triggerHeartBurst(e.clientX, e.clientY)
+      setShowTalherMsg(true)
+      setTimeout(() => setShowTalherMsg(false), 4000)
+    }
   }
 
   return (
@@ -106,6 +128,51 @@ export default function HubScreen() {
         }}
       />
 
+      {/* Talher escondido — easter egg #5 (quase invisível no canto) */}
+      <button
+        onClick={handleTalherClick}
+        title=""
+        style={{
+          position: 'absolute',
+          bottom: '80px',
+          right: '20px',
+          background: 'none',
+          border: 'none',
+          cursor: 'default',
+          opacity: talherClicks > 0 ? 0.12 : 0.04,
+          fontSize: '10px',
+          color: 'var(--tx3)',
+          zIndex: 5,
+          transition: 'opacity 0.3s',
+          fontFamily: 'monospace',
+        }}
+      >
+        🍴
+      </button>
+
+      {/* Mensagem do talher */}
+      <AnimatePresence>
+        {showTalherMsg && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="fixed z-50 pixel-font text-center px-4 py-3 rounded-lg"
+            style={{
+              bottom: '80px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              background: 'rgba(22,0,42,0.97)',
+              border: '1px solid var(--pu)',
+              fontSize: '8px',
+              color: 'var(--yl)',
+            }}
+          >
+            🍴 eram cinco. ou três. nunca vamos saber.
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="flex flex-col h-full" style={{ zIndex: 2, position: 'relative' }}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-3 shrink-0">
@@ -118,9 +185,19 @@ export default function HubScreen() {
           >
             ♡ hub ♡
           </div>
-          <div className="pixel-font text-xs" style={{ color: 'var(--tx3)' }}>
-            [1][2][3][4]
-          </div>
+          {/* Easter egg counter */}
+          <motion.div
+            className="pixel-font"
+            style={{
+              fontSize: '9px',
+              color: easterEggs.length === 6 ? 'var(--yl)' : 'var(--tx3)',
+              textShadow: easterEggs.length === 6 ? '0 0 8px var(--yl)' : 'none',
+            }}
+            animate={easterEggs.length === 6 ? { opacity: [1, 0.6, 1] } : {}}
+            transition={{ repeat: Infinity, duration: 1.5 }}
+          >
+            ✦ {easterEggs.length}/6
+          </motion.div>
         </div>
 
         {/* Main area */}

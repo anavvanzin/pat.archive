@@ -60,6 +60,10 @@ interface AppState {
   heartBurstPos: { x: number; y: number } | null
   triggerHeartBurst: (x: number, y: number) => void
   clearHeartBurst: () => void
+
+  // Easter eggs (max 6)
+  easterEggs: string[]
+  unlockEasterEgg: (id: string) => void
 }
 
 export const useStore = create<AppState>()(
@@ -115,6 +119,13 @@ export const useStore = create<AppState>()(
         setTimeout(() => set({ heartBurstPos: null }), 1200)
       },
       clearHeartBurst: () => set({ heartBurstPos: null }),
+
+      easterEggs: [],
+      unlockEasterEgg: (id) => {
+        const current = get().easterEggs
+        if (current.includes(id)) return
+        set({ easterEggs: [...current, id] })
+      },
     }),
     {
       name: 'melovanzin-storage',
@@ -122,6 +133,7 @@ export const useStore = create<AppState>()(
         savedBeats: s.savedBeats,
         inventory: s.inventory,
         highScoreMinions: s.highScoreMinions,
+        easterEggs: s.easterEggs,
       }),
     }
   )
