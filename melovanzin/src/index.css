@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0d0015;
+  --bg2: #110020;
+  --panel: #16002a;
+  --panel2: #1e0038;
+  --border: #2e0055;
+  --pu: #c97dff;
+  --pu2: #a855f7;
+  --pu3: #7c3aed;
+  --pk: #ff6eb4;
+  --pk2: #ff9ed6;
+  --grn: #1db954;
+  --yl: #ffe066;
+  --dc: #5865F2;
+  --dc2: #7289da;
+  --lol: #c89b3c;
+  --lol2: #f0e6d3;
+  --tibia: #a0522d;
+  --tibia2: #deb887;
+  --tx: #e2d4ff;
+  --tx2: #9b78cc;
+  --tx3: #5a3a7a;
+  font-family: 'Inter', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--tx);
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  text-align: left;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.4); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes heartburst {
+  0% { transform: scale(0) translateY(0); opacity: 1; }
+  100% { transform: scale(2) translateY(-60px); opacity: 0; }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes lolGlow {
+  0%, 100% { text-shadow: 0 0 8px var(--lol); }
+  50% { text-shadow: 0 0 18px var(--lol), 0 0 32px rgba(200,155,60,.4); }
+}
+
+@keyframes discordPing {
+  0% { box-shadow: 0 0 0 0 rgba(88,101,242,.6); }
+  70% { box-shadow: 0 0 0 8px rgba(88,101,242,0); }
+  100% { box-shadow: 0 0 0 0 rgba(88,101,242,0); }
+}
+
+@keyframes typing {
+  0%, 100% { opacity: 0.2; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
+}
+
+@keyframes waveform {
+  0%, 100% { height: 4px; }
+  50% { height: 20px; }
+}
+
+.pixel-font {
+  font-family: 'Press Start 2P', monospace;
+}
+
+.mono-font {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.07) 3px,
+    rgba(0, 0, 0, 0.07) 6px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pixel art image rendering */
+canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--panel);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pu3);
+  border-radius: 2px;
+}
+
+/* Sequencer pads */
+.seq-pad {
+  cursor: pointer;
+  transition: all 0.1s;
+  border-radius: 2px;
+}
+
+.seq-pad:hover {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+/* Discord message animation */
+.dc-message {
+  animation: slideInUp 0.3s ease;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  background: rgba(13,0,21,0.95);
+  border: 1px solid var(--pu3);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--tx);
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glow effects */
+.glow-pu { text-shadow: 0 0 10px var(--pu), 0 0 20px var(--pu); }
+.glow-pk { text-shadow: 0 0 10px var(--pk), 0 0 20px var(--pk); }
+.glow-yl { text-shadow: 0 0 10px var(--yl), 0 0 20px var(--yl); }
+.glow-grn { text-shadow: 0 0 10px var(--grn), 0 0 20px var(--grn); }
+
+.box-glow-pu { box-shadow: 0 0 12px rgba(201,125,255,0.5); }
+.box-glow-pk { box-shadow: 0 0 12px rgba(255,110,180,0.5); }
+.box-glow-dc { box-shadow: 0 0 12px rgba(88,101,242,0.5); }

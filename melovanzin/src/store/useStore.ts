@@ -1,0 +1,128 @@
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+
+export type World = 'title' | 'hub' | 'fruitloops' | 'tibia' | 'botlane' | 'discord'
+
+export interface BeatPattern {
+  id: string
+  name: string
+  kick: boolean[]
+  snare: boolean[]
+  hihat: boolean[]
+  bpm: number
+}
+
+export interface InventoryItem {
+  id: string
+  icon: string
+  name: string
+  description: string
+  collectedAt: number
+}
+
+interface AppState {
+  // Navigation
+  currentWorld: World
+  setWorld: (w: World) => void
+
+  // Spotify player
+  spotifyPlaying: boolean
+  setSpotifyPlaying: (v: boolean) => void
+  spotifyProgress: number
+  setSpotifyProgress: (v: number) => void
+
+  // Notifications
+  notifications: { id: string; message: string; icon: string }[]
+  addNotification: (msg: string, icon?: string) => void
+  removeNotification: (id: string) => void
+
+  // Love message overlay
+  showLoveMessage: boolean
+  loveMessageIndex: number
+  setShowLoveMessage: (v: boolean) => void
+  nextLoveMessage: () => void
+
+  // Fruit Loops
+  savedBeats: BeatPattern[]
+  saveBeat: (beat: BeatPattern) => void
+  deleteBeat: (id: string) => void
+
+  // Tibia inventory
+  inventory: InventoryItem[]
+  addToInventory: (item: Omit<InventoryItem, 'id' | 'collectedAt'>) => void
+
+  // Bot Lane
+  botLaneScore: { kills: number; deaths: number; assists: number; minions: number }
+  updateBotLaneScore: (delta: Partial<AppState['botLaneScore']>) => void
+  highScoreMinions: number
+
+  // Heart burst event
+  heartBurstPos: { x: number; y: number } | null
+  triggerHeartBurst: (x: number, y: number) => void
+  clearHeartBurst: () => void
+}
+
+export const useStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      currentWorld: 'title',
+      setWorld: (w) => set({ currentWorld: w }),
+
+      spotifyPlaying: true,
+      setSpotifyPlaying: (v) => set({ spotifyPlaying: v }),
+      spotifyProgress: 0,
+      setSpotifyProgress: (v) => set({ spotifyProgress: v }),
+
+      notifications: [],
+      addNotification: (message, icon = '✦') => {
+        const id = Math.random().toString(36).slice(2)
+        set((s) => ({ notifications: [...s.notifications, { id, message, icon }] }))
+        setTimeout(() => get().removeNotification(id), 4000)
+      },
+      removeNotification: (id) =>
+        set((s) => ({ notifications: s.notifications.filter((n) => n.id !== id) })),
+
+      showLoveMessage: false,
+      loveMessageIndex: 0,
+      setShowLoveMessage: (v) => set({ showLoveMessage: v }),
+      nextLoveMessage: () =>
+        set((s) => ({ loveMessageIndex: (s.loveMessageIndex + 1) % 10 })),
+
+      savedBeats: [],
+      saveBeat: (beat) =>
+        set((s) => ({
+          savedBeats: [...s.savedBeats.filter((b) => b.id !== beat.id), beat],
+        })),
+      deleteBeat: (id) =>
+        set((s) => ({ savedBeats: s.savedBeats.filter((b) => b.id !== id) })),
+
+      inventory: [],
+      addToInventory: (item) => {
+        const id = Math.random().toString(36).slice(2)
+        set((s) => ({
+          inventory: [...s.inventory, { ...item, id, collectedAt: Date.now() }],
+        }))
+      },
+
+      botLaneScore: { kills: 0, deaths: 0, assists: 0, minions: 0 },
+      updateBotLaneScore: (delta) =>
+        set((s) => ({ botLaneScore: { ...s.botLaneScore, ...delta } })),
+      highScoreMinions: 0,
+
+      heartBurstPos: null,
+      triggerHeartBurst: (x, y) => {
+        set({ heartBurstPos: { x, y } })
+        setTimeout(() => set({ heartBurstPos: null }), 1200)
+      },
+      clearHeartBurst: () => set({ heartBurstPos: null }),
+    }),
+    {
+      name: 'melovanzin-storage',
+      partialize: (s) => ({
+        savedBeats: s.savedBeats,
+        inventory: s.inventory,
+        highScoreMinions: s.highScoreMinions,
+      }),
+    }
+  )
+)
