@@ -1,77 +1,51 @@
-// ============================================================
-// STUDIO SCREEN - Componente principal que compõe todos os painéis
-// ============================================================
+import { useEffect } from 'react'
 
-import { useEffect, useCallback } from 'react'
-import { StudioHeader } from './components/StudioHeader'
+import { studioEngine } from './engine'
+import { useActiveProject, useStudioStore } from './useStudioStore'
 import { ChannelRack } from './components/ChannelRack'
+import { GeniusButton } from './components/GeniusButton'
 import { MixerPanel } from './components/MixerPanel'
 import { PatternBar } from './components/PatternBar'
 import { Playlist } from './components/Playlist'
-import { ProjectManager } from './components/ProjectManager'
-import { GeniusButton } from './components/GeniusButton'
-import { useStudioStore, useActiveProject } from './useStudioStore'
-import { studioEngine } from './engine'
+import { SourceBrowser } from './components/SourceBrowser'
+import { StudioHeader } from './components/StudioHeader'
 import './studio.css'
 
-export function StudioScreen() {
-  const project = useActiveProject()
-  const { createProject } = useStudioStore()
+interface StudioScreenProps {
+  onExit: () => void
+  onOpenWorld: (world: 'hub' | 'discord' | 'tibia' | 'botlane') => void
+}
 
-  // Initialize engine callback
-  const handleStep = useCallback((step: number, bar: number) => {
-    useStudioStore.getState().setCurrentStep(step)
-    useStudioStore.getState().setCurrentBar(bar)
-  }, [])
+export function StudioScreen({ onExit, onOpenWorld }: StudioScreenProps) {
+  const project = useActiveProject()
 
   useEffect(() => {
-    studioEngine.setStepCallback(handleStep)
+    studioEngine.setStepCallback((step, bar) => {
+      useStudioStore.getState().setCurrentStep(step)
+      useStudioStore.getState().setCurrentBar(bar)
+    })
+
     return () => {
       studioEngine.dispose()
     }
-  }, [handleStep])
+  }, [])
 
-  // Auto-create project on first load
   useEffect(() => {
-    const state = useStudioStore.getState()
-    if (!state.activeProjectId && Object.keys(state.projects).length === 0) {
-      createProject('Meu Primeiro Beat')
-    }
-  }, [createProject])
-
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Space to play/pause
-      if (e.code === 'Space' && !e.target?.toString().includes('Input')) {
-        e.preventDefault()
-        const state = useStudioStore.getState()
-        if (state.transport.isPlaying) {
-          studioEngine.stop()
-          state.setPlaying(false)
-        } else if (project) {
-          studioEngine.start(project)
-          state.setPlaying(true)
-        }
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    void studioEngine.syncProject(project)
   }, [project])
 
   return (
     <div className="studio-container">
-      <StudioHeader />
-
-      <div className="studio-main">
-        <ChannelRack />
-        <PatternBar />
-        <Playlist />
+      <StudioHeader onExit={onExit} onOpenWorld={onOpenWorld} />
+      <div className="studio-layout">
+        <SourceBrowser />
+        <main className="studio-center">
+          <PatternBar />
+          <ChannelRack />
+          <Playlist />
+        </main>
         <MixerPanel />
       </div>
-
-      <ProjectManager />
       <GeniusButton />
     </div>
   )

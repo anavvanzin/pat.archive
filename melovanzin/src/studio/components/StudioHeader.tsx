@@ -1,29 +1,36 @@
-// ============================================================
-// STUDIO HEADER - Barra de título, transporte e BPM
-// ============================================================
+import { useState } from 'react'
 
-import { useStudioStore, useActiveProject } from '../useStudioStore'
+import { downloadProjectJson, downloadProjectWav } from '../export'
 import { studioEngine } from '../engine'
-import { downloadProjectJson } from '../export'
+import { useActiveProject, useStudioStore } from '../useStudioStore'
 
-export function StudioHeader() {
+interface StudioHeaderProps {
+  onExit: () => void
+  onOpenWorld: (world: 'hub' | 'discord' | 'tibia' | 'botlane') => void
+}
+
+const WORLD_SHORTCUTS = [
+  { id: 'hub', label: 'hub' },
+  { id: 'discord', label: 'discord' },
+  { id: 'tibia', label: 'tibia' },
+  { id: 'botlane', label: 'bot lane' },
+] as const
+
+export function StudioHeader({ onExit, onOpenWorld }: StudioHeaderProps) {
   const project = useActiveProject()
-  const { transport, setPlaying, setBpm, setStudioActive } = useStudioStore()
+  const { transport, renameProject, setBpm, setBars, setPlaying, resetSession } = useStudioStore()
+  const [exporting, setExporting] = useState(false)
 
-  const handlePlayPause = async () => {
-    if (!project) return
-
+  const handlePlayToggle = async () => {
     if (transport.isPlaying) {
       studioEngine.stop()
       setPlaying(false)
-    } else {
-      // Load channels and start
-      for (const channel of project.channels) {
-        await studioEngine.loadChannel(channel)
-      }
-      await studioEngine.start(project)
-      setPlaying(true)
+      return
     }
+
+    await studioEngine.syncProject(project)
+    await studioEngine.play()
+    setPlaying(true)
   }
 
   const handleStop = () => {
@@ -33,58 +40,100 @@ export function StudioHeader() {
     useStudioStore.getState().setCurrentBar(0)
   }
 
-  const handleExport = () => {
-    if (project) {
-      downloadProjectJson(project)
+  const handleExportWav = async () => {
+    try {
+      setExporting(true)
+      await studioEngine.syncProject(project)
+      await downloadProjectWav(project)
+    } finally {
+      setExporting(false)
     }
   }
 
   const handleExit = () => {
-    studioEngine.stop()
-    setPlaying(false)
-    setStudioActive(false)
+    handleStop()
+    onExit()
   }
 
-  if (!project) return null
-
   return (
-    <div className="studio-header">
-      <div className="header-left">
-        <span className="project-name">{project.name}</span>
+    <header className="studio-header">
+      <div className="studio-identity">
+        <span className="studio-kicker pixel-font">Lucas Melo Producer Pack</span>
+        <input
+          className="project-name-input"
+          value={project.name}
+          onChange={(event) => renameProject(event.target.value)}
+          aria-label="Nome da sessao"
+        />
+        <p className="studio-dedication">
+          um presente da Ana para o Lucas: aprender, samplear e deixar o coracao virar beat.
+        </p>
       </div>
 
-      <div className="header-center">
-        <button className="transport-btn" onClick={handleStop}>
-          ⏹
+      <div className="studio-transport">
+        <button className="transport-button stop" onClick={handleStop}>
+          stop
         </button>
-        <button className="transport-btn play" onClick={handlePlayPause}>
-          {transport.isPlaying ? '⏸' : '▶'}
+        <button className="transport-button play" onClick={() => void handlePlayToggle()}>
+          {transport.isPlaying ? 'pause' : 'play'}
         </button>
-        <div className="step-indicator">
-          <span className="step">{transport.currentStep + 1}</span>
-          <span className="sep">/</span>
-          <span className="bar">{transport.currentBar + 1}</span>
+        <div className="transport-readout">
+          <span>bar {transport.currentBar + 1}</span>
+          <span>step {transport.currentStep + 1}</span>
         </div>
       </div>
 
-      <div className="header-right">
-        <div className="bpm-control">
-          <label>BPM</label>
+      <div className="studio-controls">
+        <div className="world-shortcuts">
+          <span>outros mundos</span>
+          <div className="world-shortcuts-list">
+            {WORLD_SHORTCUTS.map((world) => (
+              <button
+                key={world.id}
+                className="world-shortcut"
+                onClick={() => onOpenWorld(world.id)}
+              >
+                {world.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <label className="header-field">
+          <span>BPM</span>
           <input
             type="number"
             min={60}
-            max={200}
+            max={180}
             value={project.bpm}
-            onChange={(e) => setBpm(Number(e.target.value))}
+            onChange={(event) => setBpm(Number(event.target.value))}
           />
-        </div>
-        <button className="header-btn" onClick={handleExport}>
-          💾
+        </label>
+
+        <label className="header-field">
+          <span>Bars</span>
+          <input
+            type="number"
+            min={2}
+            max={16}
+            value={project.bars}
+            onChange={(event) => setBars(Number(event.target.value))}
+          />
+        </label>
+
+        <button className="header-action" onClick={() => downloadProjectJson(project)}>
+          JSON
         </button>
-        <button className="header-btn exit" onClick={handleExit}>
-          ✕
+        <button className="header-action strong" onClick={() => void handleExportWav()}>
+          {exporting ? 'render...' : 'WAV'}
+        </button>
+        <button className="header-action" onClick={resetSession}>
+          reset
+        </button>
+        <button className="header-action exit" onClick={handleExit}>
+          mundos
         </button>
       </div>
-    </div>
+    </header>
   )
 }

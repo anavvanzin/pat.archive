@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useStore } from '../store/useStore'
 import type { World } from '../store/useStore'
+import { pixelLoveAudio } from '../audio/pixelLoveAudio'
 import PixelChar from '../components/PixelChar'
 import SpotifyPlayer from '../components/SpotifyPlayer'
+import { loveuPortal } from '../config/portals'
 
 interface Door {
   id: World
@@ -105,6 +107,18 @@ export default function HubScreen() {
       triggerHeartBurst(e.clientX, e.clientY)
       setShowTalherMsg(true)
       setTimeout(() => setShowTalherMsg(false), 4000)
+    }
+  }
+
+  const handleLoveuPortal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    pixelLoveAudio.primeFromGesture()
+    pixelLoveAudio.playBlip()
+    addNotification('☁ abrindo o lyra lounge...', '☁')
+    triggerHeartBurst(e.clientX, e.clientY)
+
+    const popup = window.open(loveuPortal.url, '_blank', 'noopener,noreferrer')
+    if (!popup) {
+      window.location.href = loveuPortal.url
     }
   }
 
@@ -292,6 +306,88 @@ export default function HubScreen() {
               </motion.button>
             ))}
           </div>
+
+          <motion.button
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            whileHover={{ y: -3, scale: 1.01 }}
+            whileTap={{ scale: 0.985 }}
+            onClick={handleLoveuPortal}
+            className="relative w-full max-w-2xl overflow-hidden rounded-2xl px-5 py-4 text-left"
+            style={{
+              border: '1px solid rgba(201,125,255,0.42)',
+              background:
+                'linear-gradient(135deg, rgba(19,0,40,0.96) 0%, rgba(42,8,72,0.92) 48%, rgba(18,0,38,0.98) 100%)',
+              boxShadow: '0 0 28px rgba(124,58,237,0.18), inset 0 0 0 1px rgba(255,255,255,0.03)',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  'radial-gradient(circle at 12% 30%, rgba(255,110,180,0.22) 0%, transparent 28%), radial-gradient(circle at 82% 20%, rgba(201,125,255,0.22) 0%, transparent 30%), linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
+              }}
+            />
+
+            <div className="relative flex items-center justify-between gap-4">
+              <div className="min-w-0">
+                <div
+                  className="pixel-font mb-2 inline-flex items-center gap-2"
+                  style={{ fontSize: '8px', color: 'var(--yl)', textShadow: '0 0 10px rgba(255,224,102,0.5)' }}
+                >
+                  <span>✦</span>
+                  <span>novo portal</span>
+                </div>
+
+                <div
+                  className="pixel-font"
+                  style={{
+                    fontSize: 'clamp(10px, 1.8vw, 14px)',
+                    color: 'var(--pk2)',
+                    textShadow: '0 0 16px rgba(255,110,180,0.28)',
+                    letterSpacing: '0.8px',
+                  }}
+                >
+                  {loveuPortal.title}
+                </div>
+
+                <div className="mono-font mt-1 text-sm" style={{ color: 'var(--tx2)' }}>
+                  {loveuPortal.subtitle}
+                </div>
+
+                <p
+                  className="mt-3"
+                  style={{
+                    color: 'var(--tx)',
+                    fontSize: '13px',
+                    lineHeight: 1.65,
+                    maxWidth: '560px',
+                  }}
+                >
+                  {loveuPortal.description}
+                </p>
+              </div>
+
+              <div className="shrink-0 text-right">
+                <motion.div
+                  className="pixel-font"
+                  animate={{ y: [0, -4, 0], rotate: [0, 2, 0] }}
+                  transition={{ repeat: Infinity, duration: 2.8, ease: 'easeInOut' }}
+                  style={{ fontSize: '34px', filter: 'drop-shadow(0 0 12px rgba(201,125,255,0.45))' }}
+                >
+                  ☁
+                </motion.div>
+                <div
+                  className="pixel-font mt-2"
+                  style={{ fontSize: '8px', color: 'var(--pu)', textShadow: '0 0 10px rgba(201,125,255,0.4)' }}
+                >
+                  {loveuPortal.cta}
+                </div>
+              </div>
+            </div>
+          </motion.button>
 
           {/* Characters */}
           <motion.div

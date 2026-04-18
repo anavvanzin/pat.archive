@@ -1,49 +1,36 @@
-// ============================================================
-// PATTERN BAR - Seletor de patterns e duplicar
-// ============================================================
-
-import { useStudioStore, useActiveProject } from '../useStudioStore'
+import { useActiveProject, useStudioStore } from '../useStudioStore'
 
 export function PatternBar() {
   const project = useActiveProject()
-  const { selection, selectPattern, addPattern, deletePattern } = useStudioStore()
-
-  if (!project) return null
+  const { selection, selectPattern, duplicateSelectedPattern } = useStudioStore()
 
   return (
-    <div className="pattern-bar">
-      <div className="pattern-header">
-        <h3>Patterns</h3>
+    <section className="pattern-bar panel-card">
+      <div className="panel-heading">
+        <div>
+          <h3>Patterns</h3>
+          <p>Duplica ideias e testa variacoes como quem descobre um refrão novo.</p>
+        </div>
+        <button className="tiny-button" onClick={duplicateSelectedPattern}>
+          duplicar
+        </button>
       </div>
 
       <div className="pattern-list">
-        {project.patternOrder.map((patternId, index) => (
-          <button
-            key={patternId}
-            className={`pattern-btn ${selection.selectedPatternId === patternId ? 'active' : ''}`}
-            onClick={() => selectPattern(patternId)}
-          >
-            {String.fromCharCode(97 + index)}
-          </button>
-        ))}
-
-        <button className="pattern-btn add" onClick={addPattern}>
-          +
-        </button>
+        {project.patternOrder.map((patternId, index) => {
+          const pattern = project.patterns[patternId]
+          return (
+            <button
+              key={patternId}
+              className={`pattern-pill ${selection.selectedPatternId === patternId ? 'active' : ''}`}
+              onClick={() => selectPattern(patternId)}
+            >
+              <span className="pattern-letter">{String.fromCharCode(65 + index)}</span>
+              <span>{pattern.name}</span>
+            </button>
+          )
+        })}
       </div>
-
-      {project.patternOrder.length > 1 && (
-        <button
-          className="delete-pattern-btn"
-          onClick={() => {
-            if (selection.selectedPatternId) {
-              deletePattern(selection.selectedPatternId)
-            }
-          }}
-        >
-          🗑
-        </button>
-      )}
-    </div>
+    </section>
   )
 }

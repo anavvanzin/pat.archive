@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
 ## Repository Structure
 
@@ -45,5 +45,5 @@ npm run preview    # preview production build
 
 ## Deployment
 
-- **Frontend → GitHub Pages**: `.github/workflows/deploy.yml` triggers on push to `main`, `master`, or `claude/melovanzin-retro-game-iULVz`. Builds from `melovanzin/` and deploys `dist/` to Pages.
+- **Frontend → GitHub Pages**: `.github/workflows/deploy.yml` triggers on push to `main`, `master`, or `Codex/melovanzin-retro-game-iULVz`. Builds from `melovanzin/` and deploys `dist/` to Pages.
 - **Backend → optional future Cloud Run path**: documentation may reference `GCP_PROJECT_ID`, `GCP_WORKLOAD_IDENTITY_PROVIDER`, and `GCP_SERVICE_ACCOUNT`, but there is no active backend deploy workflow checked into this repo at the moment.

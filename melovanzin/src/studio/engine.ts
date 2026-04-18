@@ -1,308 +1,222 @@
-// ============================================================
-// STUDIO ENGINE - Tone.js audio engine para o FruitLoops Studio
-// ============================================================
-
 import * as Tone from 'tone'
-import type {
-  StudioChannel,
-  StudioProject,
-  ChannelFxState,
-} from './types'
-import { resolveChannelStepsAtSongStep } from './project'
 
-// --- Estado interno ---
-interface ChannelState {
-  player: Tone.Player | null
-  volume: Tone.Volume | null
-  pan: Tone.Panner | null
-  filter: Tone.Filter | null
-  delay: Tone.FeedbackDelay | null
-  reverb: Tone.Reverb | null
-  chain: Tone.Channel | null
+import { resolveChannelStepAtSongPosition } from './project'
+import { renderProjectToWav } from './export'
+import type { ChannelSource, StudioProject } from './types'
+
+interface ChannelRuntime {
+  sourceKey: string
+  buffer: AudioBuffer | null
+  input: Tone.Gain
+  filter: Tone.Filter
+  delay: Tone.FeedbackDelay
+  reverb: Tone.Reverb
+  panner: Tone.Panner
+  volume: Tone.Volume
+}
+
+function getSourceKey(source: ChannelSource): string {
+  return [source.type, source.remoteUrl ?? '', source.sampleDataUrl ?? '', source.fileName].join('::')
+}
+
+function dataUrlToArrayBuffer(dataUrl: string): ArrayBuffer {
+  const base64 = dataUrl.split(',')[1] ?? ''
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index)
+  }
+  return bytes.buffer
+}
+
+async function decodeSource(source: ChannelSource): Promise<AudioBuffer | null> {
+  const url = source.sampleDataUrl ?? source.remoteUrl
+  if (!url) return null
+
+  if (source.sampleDataUrl) {
+    const arrayBuffer = dataUrlToArrayBuffer(source.sampleDataUrl)
+    return Tone.getContext().rawContext.decodeAudioData(arrayBuffer.slice(0))
+  }
+
+  const response = await fetch(url)
+  const arrayBuffer = await response.arrayBuffer()
+  return Tone.getContext().rawContext.decodeAudioData(arrayBuffer)
 }
 
 class StudioEngine {
-  private channels: Map<string, ChannelState> = new Map()
-  private masterVolume: Tone.Volume | null = null
-  private sequence: Tone.Sequence | null = null
-  private isInitialized = false
-  private currentStep = 0
-  private currentBar = 0
-
-  // Callbacks
-  private onStepCallback: ((step: number, bar: number) => void) | null = null
+  private master: Tone.Gain | null = null
+  private channels = new Map<string, ChannelRuntime>()
+  private project: StudioProject | null = null
+  private step = 0
+  private bar = 0
+  private tick = 0
+  private callback: ((step: number, bar: number) => void) | null = null
+  private initialized = false
+  private previewPlayer: Tone.Player | null = null
 
   async initialize(): Promise<void> {
-    if (this.isInitialized) return
-
+    if (this.initialized) return
     await Tone.start()
-    this.masterVolume = new Tone.Volume(-6).toDestination()
-    this.isInitialized = true
-    console.log('[StudioEngine] Initialized')
+    this.master = new Tone.Gain(0.9).toDestination()
+    this.initialized = true
   }
 
   setStepCallback(callback: (step: number, bar: number) => void): void {
-    this.onStepCallback = callback
+    this.callback = callback
   }
 
-  // --- Gestão de Canais ---
+  private createRuntime(): ChannelRuntime {
+    const input = new Tone.Gain()
+    const filter = new Tone.Filter({ type: 'lowpass', frequency: 22000, Q: 0.7 })
+    const delay = new Tone.FeedbackDelay({ delayTime: 0.2, feedback: 0.25, wet: 0 })
+    const reverb = new Tone.Reverb({ decay: 2.2, wet: 0 })
+    const panner = new Tone.Panner(0)
+    const volume = new Tone.Volume(0)
 
-  async loadChannel(channel: StudioChannel): Promise<void> {
-    if (!this.isInitialized) {
-      await this.initialize()
-    }
+    input.chain(filter, delay, reverb, panner, volume, this.master!)
 
-    // Cleanup existing
-    this.unloadChannel(channel.id)
-
-    if (!channel.source?.sampleDataUrl) {
-      console.warn(`[StudioEngine] No sample for channel ${channel.name}`)
-      return
-    }
-
-    try {
-      const player = new Tone.Player({
-        url: channel.source.sampleDataUrl,
-        loop: false,
-        onload: () => console.log(`[StudioEngine] Loaded: ${channel.name}`),
-        onerror: (err: Error) => console.error(`[StudioEngine] Error loading ${channel.name}:`, err),
-      }).connect(this.masterVolume!)
-
-      // FX Chain (nodes, não precisam de .start())
-      const filter = new Tone.Filter({
-        frequency: channel.fx.filter.frequency,
-        Q: channel.fx.filter.resonance,
-        type: 'lowpass',
-      })
-
-      const delay = new Tone.FeedbackDelay({
-        delayTime: channel.fx.delay.time,
-        feedback: channel.fx.delay.feedback,
-      })
-
-      const reverb = new Tone.Reverb({
-        decay: channel.fx.reverb.decay,
-        wet: channel.fx.reverb.wet,
-      })
-
-      // Routing: player -> filter -> delay -> reverb -> volume -> pan -> master
-      const volume = new Tone.Volume(channel.volume).connect(filter)
-      const pan = new Tone.Panner(channel.pan).connect(reverb)
-
-      // Connect FX based on enabled state
-      if (channel.fx.filter.enabled) {
-        player.connect(filter)
-      } else {
-        player.connect(volume)
-      }
-
-      if (channel.fx.delay.enabled) {
-        delay.wet.value = channel.fx.delay.wet
-        filter.connect(delay)
-        delay.connect(reverb)
-      }
-
-      if (channel.fx.reverb.enabled) {
-        reverb.wet.value = channel.fx.reverb.wet
-      }
-
-      this.channels.set(channel.id, {
-        player,
-        volume,
-        pan,
-        filter,
-        delay,
-        reverb,
-        chain: null,
-      })
-    } catch (err) {
-      console.error(`[StudioEngine] Failed to load channel ${channel.name}:`, err)
+    return {
+      sourceKey: '',
+      buffer: null,
+      input,
+      filter,
+      delay,
+      reverb,
+      panner,
+      volume,
     }
   }
 
-  unloadChannel(channelId: string): void {
-    const state = this.channels.get(channelId)
-    if (state) {
-      state.player?.dispose()
-      state.volume?.dispose()
-      state.pan?.dispose()
-      state.filter?.dispose()
-      state.delay?.dispose()
-      state.reverb?.dispose()
-      state.chain?.dispose()
-      this.channels.delete(channelId)
-    }
-  }
+  async syncProject(project: StudioProject): Promise<void> {
+    await this.initialize()
+    this.project = project
 
-  // --- Mixer Controls ---
-
-  setChannelVolume(channelId: string, volume: number): void {
-    const state = this.channels.get(channelId)
-    if (state?.volume) {
-      state.volume.volume.value = volume
-    }
-  }
-
-  setChannelPan(channelId: string, pan: number): void {
-    const state = this.channels.get(channelId)
-    if (state?.pan) {
-      state.pan.pan.value = pan
-    }
-  }
-
-  setChannelMute(channelId: string, mute: boolean): void {
-    const state = this.channels.get(channelId)
-    if (state?.volume) {
-      state.volume.mute = mute
-    }
-  }
-
-  setChannelSolo(channelIds: string[]): void {
-    // If any channel is solo'd, only those play
-    const allIds = Array.from(this.channels.keys())
-    for (const id of allIds) {
-      const state = this.channels.get(id)
-      if (state?.volume) {
-        const isSoloed = channelIds.includes(id)
-        // If any solo exists, mute non-soloed
-        if (channelIds.length > 0 && !isSoloed) {
-          state.volume.mute = true
-        } else if (channelIds.length === 0) {
-          // No solos - unmute all
-          state.volume.mute = false
-        }
+    const activeIds = new Set(project.channels.map((channel) => channel.id))
+    for (const [channelId, runtime] of this.channels.entries()) {
+      if (!activeIds.has(channelId)) {
+        runtime.input.dispose()
+        runtime.filter.dispose()
+        runtime.delay.dispose()
+        runtime.reverb.dispose()
+        runtime.panner.dispose()
+        runtime.volume.dispose()
+        this.channels.delete(channelId)
       }
     }
-  }
-
-  // --- FX Controls ---
-
-  setChannelFx(channelId: string, fx: ChannelFxState): void {
-    const state = this.channels.get(channelId)
-    if (!state) return
-
-    if (state.filter) {
-      state.filter.frequency.value = fx.filter.frequency
-      state.filter.Q.value = fx.filter.resonance
-    }
-
-    if (state.delay) {
-      state.delay.wet.value = fx.delay.enabled ? fx.delay.wet : 0
-      state.delay.feedback.value = fx.delay.feedback
-    }
-
-    if (state.reverb) {
-      state.reverb.wet.value = fx.reverb.enabled ? fx.reverb.wet : 0
-    }
-  }
-
-  // --- Playback ---
-
-  async start(project: StudioProject): Promise<void> {
-    if (!this.isInitialized) {
-      await this.initialize()
-    }
-
-    // Stop existing
-    this.stop()
-
-    const stepDuration = `=${Math.floor(project.patternLength / 4)}n`
-
-    // Create sequence
-    this.sequence = new Tone.Sequence(
-      (_time, step) => {
-        this.currentStep = step + 1
-
-        if (this.currentStep >= project.patternLength) {
-          this.currentStep = 0
-          this.currentBar += 1
-        }
-        if (this.currentBar >= project.bars) {
-          this.currentBar = 0
-        }
-
-        // Notify UI
-        this.onStepCallback?.(this.currentStep, this.currentBar)
-
-        // Trigger active channels
-        this.triggerStep(project, step)
-      },
-      [...Array(project.patternLength).keys()],
-      stepDuration
-    )
-
-    Tone.getTransport().bpm.value = project.bpm
-    this.sequence.start(0)
-    Tone.getTransport().start()
-
-    console.log('[StudioEngine] Playback started')
-  }
-
-  private triggerStep(project: StudioProject, step: number): void {
-    const hasSolo = project.channels.some(ch => ch.solo)
 
     for (const channel of project.channels) {
-      const state = this.channels.get(channel.id)
-      if (!state?.player) continue
+      let runtime = this.channels.get(channel.id)
+      if (!runtime) {
+        runtime = this.createRuntime()
+        this.channels.set(channel.id, runtime)
+      }
 
-      // Check mute/solo
+      const nextSourceKey = getSourceKey(channel.source)
+      if (runtime.sourceKey !== nextSourceKey) {
+        runtime.buffer = await decodeSource(channel.source)
+        runtime.sourceKey = nextSourceKey
+      }
+
+      runtime.filter.frequency.value = channel.fx.filter.enabled ? channel.fx.filter.frequency : 22000
+      runtime.filter.Q.value = channel.fx.filter.resonance
+      runtime.delay.delayTime.value = channel.fx.delay.time
+      runtime.delay.feedback.value = channel.fx.delay.feedback
+      runtime.delay.wet.value = channel.fx.delay.enabled ? channel.fx.delay.wet : 0
+      runtime.reverb.decay = channel.fx.reverb.decay
+      runtime.reverb.wet.value = channel.fx.reverb.enabled ? channel.fx.reverb.wet : 0
+      runtime.panner.pan.value = channel.pan
+      runtime.volume.volume.value = channel.volume
+      runtime.volume.mute = channel.mute
+    }
+  }
+
+  async previewSource(source: ChannelSource): Promise<void> {
+    await this.initialize()
+    const buffer = await decodeSource(source)
+    if (!buffer) return
+
+    this.previewPlayer?.dispose()
+    this.previewPlayer = new Tone.Player(buffer).toDestination()
+    this.previewPlayer.volume.value = -4
+    this.previewPlayer.start()
+    this.previewPlayer.onstop = () => {
+      this.previewPlayer?.dispose()
+      this.previewPlayer = null
+    }
+  }
+
+  async play(): Promise<void> {
+    if (!this.project) return
+    await this.initialize()
+    await this.syncProject(this.project)
+
+    this.stop()
+    this.tick = 0
+    Tone.getTransport().bpm.value = this.project.bpm
+    Tone.getTransport().scheduleRepeat((time) => {
+      if (!this.project) return
+      const totalSteps = this.project.bars * this.project.patternLength
+      const songTick = this.tick % totalSteps
+      this.bar = Math.floor(songTick / this.project.patternLength)
+      this.step = songTick % this.project.patternLength
+      this.callback?.(this.step, this.bar)
+      this.triggerTick(time, this.bar, this.step)
+      this.tick += 1
+    }, '16n')
+    Tone.getTransport().start()
+  }
+
+  private triggerTick(time: number, barIndex: number, stepIndex: number): void {
+    if (!this.project) return
+    const soloed = this.project.channels.filter((channel) => channel.solo).map((channel) => channel.id)
+    const hasSolo = soloed.length > 0
+
+    for (const channel of this.project.channels) {
       if (channel.mute) continue
       if (hasSolo && !channel.solo) continue
+      if (!resolveChannelStepAtSongPosition(this.project, channel.id, barIndex, stepIndex)) continue
 
-      // Check step
-      const active = resolveChannelStepsAtSongStep(project, channel.id, step)
-      if (active) {
-        state.player.start()
-      }
+      const runtime = this.channels.get(channel.id)
+      if (!runtime?.buffer) continue
+
+      const player = new Tone.Player(runtime.buffer)
+      player.connect(runtime.input)
+      player.start(time)
+      player.onstop = () => player.dispose()
     }
   }
 
   stop(): void {
-    if (this.sequence) {
-      this.sequence.stop()
-      this.sequence.dispose()
-      this.sequence = null
-    }
     Tone.getTransport().stop()
-    this.currentStep = 0
-    this.currentBar = 0
+    Tone.getTransport().cancel()
+    this.tick = 0
+    this.step = 0
+    this.bar = 0
+    this.callback?.(0, 0)
   }
 
-  pause(): void {
-    Tone.getTransport().pause()
+  async exportWav(): Promise<Blob | null> {
+    if (!this.project) return null
+    return renderProjectToWav(this.project)
   }
-
-  setBpm(bpm: number): void {
-    Tone.getTransport().bpm.value = bpm
-  }
-
-  // --- Estado ---
-
-  getCurrentStep(): number {
-    return this.currentStep
-  }
-
-  getCurrentBar(): number {
-    return this.currentBar
-  }
-
-  isPlaying(): boolean {
-    return Tone.getTransport().state === 'started'
-  }
-
-  // --- Cleanup ---
 
   dispose(): void {
     this.stop()
-    for (const [id] of this.channels) {
-      this.unloadChannel(id)
+    this.previewPlayer?.dispose()
+    this.previewPlayer = null
+    for (const runtime of this.channels.values()) {
+      runtime.input.dispose()
+      runtime.filter.dispose()
+      runtime.delay.dispose()
+      runtime.reverb.dispose()
+      runtime.panner.dispose()
+      runtime.volume.dispose()
     }
-    this.masterVolume?.dispose()
-    this.masterVolume = null
-    this.isInitialized = false
-    console.log('[StudioEngine] Disposed')
+    this.channels.clear()
+    this.master?.dispose()
+    this.master = null
+    this.initialized = false
   }
 }
 
-// Singleton
 export const studioEngine = new StudioEngine()

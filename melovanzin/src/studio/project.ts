@@ -1,183 +1,246 @@
-// ============================================================
-// STUDIO PROJECT - Funções de domínio para projetos
-// ============================================================
-
 import type {
   ChannelFxState,
+  ChannelSource,
+  Pattern,
   PlaylistClip,
   StepPattern,
   StudioChannel,
   StudioProject,
 } from './types'
 import {
+  CHANNEL_COLORS,
   DEFAULT_BARS,
+  DEFAULT_BPM,
   DEFAULT_PATTERN_ID,
   DEFAULT_PATTERN_LENGTH,
 } from './types'
 
-// --- Utilitários ---
-
 export function makeId(prefix: string): string {
-  return `${prefix}-${Math.random().toString(36).slice(2, 8)}`
+  return `${prefix}-${Math.random().toString(36).slice(2, 9)}`
 }
 
-export function clonePatterns(patterns: Record<string, StepPattern>): Record<string, StepPattern> {
-  return Object.fromEntries(Object.entries(patterns).map(([id, pattern]) => [id, [...pattern]]))
+export function createPattern(
+  id = DEFAULT_PATTERN_ID,
+  length = DEFAULT_PATTERN_LENGTH,
+  name = 'Pattern A'
+): Pattern {
+  return { id, length, name }
+}
+
+export function createEmptySteps(length = DEFAULT_PATTERN_LENGTH): StepPattern {
+  return Array.from({ length }, () => false)
 }
 
 export function emptyFx(): ChannelFxState {
   return {
-    filter: { enabled: false, frequency: 1200, resonance: 1 },
-    delay: { enabled: false, wet: 0, time: '8n', feedback: 0.25 },
-    reverb: { enabled: false, wet: 0, decay: 1.2 },
+    filter: { enabled: false, frequency: 18000, resonance: 0.7 },
+    delay: { enabled: false, wet: 0, time: 0.2, feedback: 0.25 },
+    reverb: { enabled: false, wet: 0, decay: 2.2 },
   }
 }
 
-// --- Constructors ---
-
-export function createPattern(length = DEFAULT_PATTERN_LENGTH): StepPattern {
-  return Array.from({ length }, () => false)
-}
-
-export interface NewChannelInput {
-  name: string
+export interface UploadSourceInput {
   fileName: string
   mimeType: string
   sampleDataUrl: string
 }
 
-export function createSampleChannel(input: NewChannelInput): StudioChannel {
+export interface LyraSourceInput extends UploadSourceInput {
+  remoteUrl?: string
+  sourceLabel?: string
+}
+
+export function createSourceFromUpload(input: UploadSourceInput): ChannelSource {
+  return {
+    type: 'upload',
+    fileName: input.fileName,
+    mimeType: input.mimeType,
+    sampleDataUrl: input.sampleDataUrl,
+    sourceLabel: 'upload',
+  }
+}
+
+export function createSourceFromLyra(input: LyraSourceInput): ChannelSource {
+  return {
+    type: 'lyra',
+    fileName: input.fileName,
+    mimeType: input.mimeType,
+    sampleDataUrl: input.sampleDataUrl,
+    remoteUrl: input.remoteUrl,
+    sourceLabel: input.sourceLabel ?? 'Lyra cloud',
+  }
+}
+
+export interface NewChannelInput {
+  name: string
+  source: ChannelSource
+  color?: string
+}
+
+export function createStudioChannel(input: NewChannelInput): StudioChannel {
   return {
     id: makeId('channel'),
     name: input.name,
-    color: 'var(--pu)',
-    source: {
-      fileName: input.fileName,
-      mimeType: input.mimeType,
-      sampleDataUrl: input.sampleDataUrl,
-    },
+    color: input.color ?? CHANNEL_COLORS[Math.floor(Math.random() * CHANNEL_COLORS.length)],
+    source: input.source,
     volume: 0,
     pan: 0,
     mute: false,
     solo: false,
     fx: emptyFx(),
     steps: {
-      [DEFAULT_PATTERN_ID]: createPattern(),
+      [DEFAULT_PATTERN_ID]: createEmptySteps(),
     },
   }
 }
 
-export function createEmptyProject(name = 'Projeto Novo'): StudioProject {
+export function createEmptyProject(name = 'Lucas Melo Session'): StudioProject {
+  const starter = createPattern(DEFAULT_PATTERN_ID, DEFAULT_PATTERN_LENGTH, 'Pattern A')
   const now = Date.now()
+
   return {
     version: 1,
     id: makeId('project'),
     name,
-    bpm: 128,
+    bpm: DEFAULT_BPM,
     bars: DEFAULT_BARS,
     patternLength: DEFAULT_PATTERN_LENGTH,
-    patternOrder: [DEFAULT_PATTERN_ID],
-    patterns: {
-      [DEFAULT_PATTERN_ID]: createPattern(),
-    },
+    patternOrder: [starter.id],
+    patterns: { [starter.id]: starter },
     channels: [],
     playlist: [],
-    selectedPatternId: DEFAULT_PATTERN_ID,
+    selectedPatternId: starter.id,
     createdAt: now,
     updatedAt: now,
   }
 }
 
-// --- mutations ---
-
-export interface PlaceClipInput {
-  patternId: string
-  barIndex: number
-  channelId: string
+function cloneChannelSteps(steps: Record<string, StepPattern>): Record<string, StepPattern> {
+  return Object.fromEntries(Object.entries(steps).map(([id, pattern]) => [id, [...pattern]]))
 }
 
-export function addChannelToProject(
-  project: StudioProject,
-  channel: StudioChannel
-): StudioProject {
-  const steps: Record<string, StepPattern> = {}
-  for (const pid of project.patternOrder) {
-    steps[pid] = channel.steps[pid] ?? createPattern(project.patternLength)
-  }
+function nextPatternIndex(project: StudioProject): number {
+  return project.patternOrder.length
+}
+
+function patternNameFromIndex(index: number): string {
+  const letter = String.fromCharCode(65 + index)
+  return `Pattern ${letter}`
+}
+
+function patternIdFromIndex(index: number): string {
+  const letter = String.fromCharCode(97 + index)
+  return `pattern-${letter}`
+}
+
+export function addChannelToProject(project: StudioProject, channel: StudioChannel): StudioProject {
+  const normalizedSteps = Object.fromEntries(
+    project.patternOrder.map((patternId) => [
+      patternId,
+      [...(channel.steps[patternId] ?? createEmptySteps(project.patternLength))],
+    ])
+  )
+
   return {
     ...project,
     updatedAt: Date.now(),
-    channels: [...project.channels, { ...channel, steps }],
+    channels: [...project.channels, { ...channel, steps: normalizedSteps }],
   }
 }
 
 export function duplicatePattern(project: StudioProject, sourcePatternId: string): StudioProject {
-  const source = project.patterns[sourcePatternId]
-  if (!source) return project
+  const sourcePattern = project.patterns[sourcePatternId]
+  if (!sourcePattern) return project
 
-  const nextLetter = String.fromCharCode(97 + project.patternOrder.length)
-  const nextPatternId = `pattern-${nextLetter}`
-  const now = Date.now()
+  const nextIndex = nextPatternIndex(project)
+  const nextId = patternIdFromIndex(nextIndex)
+  const nextPattern = createPattern(nextId, sourcePattern.length, patternNameFromIndex(nextIndex))
 
   return {
     ...project,
-    updatedAt: now,
-    patternOrder: [...project.patternOrder, nextPatternId],
+    updatedAt: Date.now(),
+    selectedPatternId: nextId,
+    patternOrder: [...project.patternOrder, nextId],
     patterns: {
-      ...clonePatterns(project.patterns),
-      [nextPatternId]: [...source],
+      ...project.patterns,
+      [nextId]: nextPattern,
     },
     channels: project.channels.map((channel) => ({
       ...channel,
       steps: {
-        ...clonePatterns(channel.steps),
-        [nextPatternId]: [...(channel.steps[sourcePatternId] ?? createPattern(project.patternLength))],
+        ...cloneChannelSteps(channel.steps),
+        [nextId]: [...(channel.steps[sourcePatternId] ?? createEmptySteps(project.patternLength))],
       },
     })),
   }
 }
 
-export function placeClip(project: StudioProject, clip: PlaceClipInput): StudioProject {
-  const now = Date.now()
-  const nextClip: PlaylistClip = {
-    id: makeId('clip'),
-    ...clip,
+export function toggleStepInProject(
+  project: StudioProject,
+  channelId: string,
+  patternId: string,
+  stepIndex: number
+): StudioProject {
+  return {
+    ...project,
+    updatedAt: Date.now(),
+    channels: project.channels.map((channel) => {
+      if (channel.id !== channelId) return channel
+      const current = [...(channel.steps[patternId] ?? createEmptySteps(project.patternLength))]
+      current[stepIndex] = !current[stepIndex]
+      return { ...channel, steps: { ...channel.steps, [patternId]: current } }
+    }),
   }
+}
 
+export interface ClipPlacementInput {
+  patternId: string
+  channelId: string
+  barIndex: number
+}
+
+export function placeClip(project: StudioProject, input: ClipPlacementInput): StudioProject {
+  const nextClip: PlaylistClip = { id: makeId('clip'), ...input }
   const filtered = project.playlist.filter(
-    (item) => !(item.channelId === clip.channelId && item.barIndex === clip.barIndex)
+    (clip) => !(clip.channelId === input.channelId && clip.barIndex === input.barIndex)
   )
 
   return {
     ...project,
-    updatedAt: now,
+    updatedAt: Date.now(),
     playlist: [...filtered, nextClip].sort((a, b) => a.barIndex - b.barIndex),
   }
 }
 
-// --- Queries ---
+export function removeClip(
+  project: StudioProject,
+  input: Pick<ClipPlacementInput, 'channelId' | 'barIndex'>
+): StudioProject {
+  return {
+    ...project,
+    updatedAt: Date.now(),
+    playlist: project.playlist.filter(
+      (clip) => !(clip.channelId === input.channelId && clip.barIndex === input.barIndex)
+    ),
+  }
+}
 
-export function resolveChannelStepsAtSongStep(
+export function resolveChannelStepAtSongPosition(
   project: StudioProject,
   channelId: string,
-  songStep: number
+  barIndex: number,
+  stepIndex: number
 ): boolean {
   const channel = project.channels.find((entry) => entry.id === channelId)
   if (!channel) return false
-
-  const barLength = project.patternLength
-  const barIndex = Math.floor(songStep / barLength)
-  const localStep = songStep % barLength
 
   const clip = project.playlist.find(
     (entry) => entry.channelId === channelId && entry.barIndex === barIndex
   )
   if (!clip) return false
 
-  return Boolean(channel.steps[clip.patternId]?.[localStep])
+  return Boolean(channel.steps[clip.patternId]?.[stepIndex])
 }
-
-// --- Serialização ---
 
 export function serializeProject(project: StudioProject): string {
   return JSON.stringify(project, null, 2)

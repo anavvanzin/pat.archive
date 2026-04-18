@@ -1,18 +1,20 @@
-// ============================================================
-// STUDIO TYPES - Tipos canônicos para o FruitLoops Studio
-// ============================================================
-
-// --- Padrões ---
 export type StepPattern = boolean[]
 
-// --- Source de Áudio ---
-export interface ChannelSource {
-  fileName: string
-  mimeType: string
-  sampleDataUrl: string
+export interface Pattern {
+  id: string
+  name: string
+  length: number
 }
 
-// --- Estados de FX ---
+export interface ChannelSource {
+  type: 'upload' | 'lyra'
+  fileName: string
+  mimeType: string
+  sampleDataUrl?: string
+  remoteUrl?: string
+  sourceLabel: string
+}
+
 export interface FilterFxState {
   enabled: boolean
   frequency: number
@@ -22,7 +24,7 @@ export interface FilterFxState {
 export interface DelayFxState {
   enabled: boolean
   wet: number
-  time: string
+  time: number
   feedback: number
 }
 
@@ -38,12 +40,11 @@ export interface ChannelFxState {
   reverb: ReverbFxState
 }
 
-// --- Canal (Track) ---
 export interface StudioChannel {
   id: string
   name: string
   color: string
-  source: ChannelSource | null
+  source: ChannelSource
   volume: number
   pan: number
   mute: boolean
@@ -52,15 +53,13 @@ export interface StudioChannel {
   steps: Record<string, StepPattern>
 }
 
-// --- Playlist ---
 export interface PlaylistClip {
   id: string
   patternId: string
-  barIndex: number
   channelId: string
+  barIndex: number
 }
 
-// --- Projeto ---
 export interface StudioProject {
   version: 1
   id: string
@@ -69,7 +68,7 @@ export interface StudioProject {
   bars: number
   patternLength: number
   patternOrder: string[]
-  patterns: Record<string, StepPattern>
+  patterns: Record<string, Pattern>
   channels: StudioChannel[]
   playlist: PlaylistClip[]
   selectedPatternId: string
@@ -77,57 +76,21 @@ export interface StudioProject {
   updatedAt: number
 }
 
-// --- Engine (runtime) ---
-export interface EngineState {
+export interface TransportState {
   isPlaying: boolean
   currentStep: number
   currentBar: number
 }
 
-export interface ChannelPlaybackState {
-  channelId: string
-  isMuted: boolean
-  volume: number
-  pan: number
-}
-
-// --- UI State ---
-export interface TransportControls {
-  isPlaying: boolean
-  isRecording: boolean
-  bpm: number
-  currentStep: number
-  currentBar: number
-}
-
-export interface SelectionState {
+export interface StudioSelectionState {
+  selectedPatternId: string
   selectedChannelId: string | null
-  selectedPatternId: string | null
   selectedBarIndex: number | null
 }
 
-// --- Export ---
-export interface ExportFormat {
-  type: 'json' | 'wav'
-  includeSamples: boolean
-}
-
-// --- Persistência ---
-export interface StoredProject {
-  id: string
-  name: string
-  data: StudioProject
-  savedAt: number
-}
-
-export interface StudioState {
-  projects: Record<string, StudioProject>
-  activeProjectId: string | null
-  isStudioActive: boolean
-}
-
-// --- Constantes ---
-export const DEFAULT_PATTERN_LENGTH = 16
+export const DEFAULT_BPM = 124
 export const DEFAULT_BARS = 8
-export const DEFAULT_BPM = 128
+export const DEFAULT_PATTERN_LENGTH = 16
 export const DEFAULT_PATTERN_ID = 'pattern-a'
+
+export const CHANNEL_COLORS = ['#ff6eb4', '#c97dff', '#ffe066', '#7c3aed', '#1db954', '#ff9ed6']

@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import { pixelLoveAudio } from './audio/pixelLoveAudio'
 import { useStore } from './store/useStore'
 import CRTOverlay from './components/CRTOverlay'
 import NotificationSystem from './components/NotificationSystem'
@@ -211,11 +212,13 @@ export default function App() {
   const easterEggs = useStore((s) => s.easterEggs)
   const unlockEasterEgg = useStore((s) => s.unlockEasterEgg)
   const addNotification = useStore((s) => s.addNotification)
+  const spotifyPlaying = useStore((s) => s.spotifyPlaying)
   const Component = WORLDS[currentWorld]
 
   const [showKonami, setShowKonami] = useState(false)
   const [showCompletion, setShowCompletion] = useState(false)
   const konamiBuf = useRef<string[]>([])
+  const audioBootstrapped = useRef(false)
   // Ref para não capturar o valor inicial de easterEggs no closure do effect de completion
   const prevEggCount = useRef(easterEggs.length)
 
@@ -241,6 +244,26 @@ export default function App() {
     }
     prevEggCount.current = easterEggs.length
   }, [easterEggs.length])
+
+  useEffect(() => {
+    const bootstrapAudio = () => {
+      if (audioBootstrapped.current) return
+      audioBootstrapped.current = true
+
+      pixelLoveAudio.primeFromGesture()
+      if (spotifyPlaying) {
+        pixelLoveAudio.playMusic()
+      }
+    }
+
+    window.addEventListener('pointerdown', bootstrapAudio, { passive: true })
+    window.addEventListener('keydown', bootstrapAudio)
+
+    return () => {
+      window.removeEventListener('pointerdown', bootstrapAudio)
+      window.removeEventListener('keydown', bootstrapAudio)
+    }
+  }, [spotifyPlaying])
 
   return (
     <div

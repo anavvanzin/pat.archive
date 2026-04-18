@@ -1,83 +1,54 @@
-// ============================================================
-// PLAYLIST - Grade de clips por barra/canal
-// ============================================================
-
-import { useStudioStore, useActiveProject } from '../useStudioStore'
+import { useActiveProject, useStudioStore } from '../useStudioStore'
 
 export function Playlist() {
   const project = useActiveProject()
-  const { selection, addClip, removeClip, setSelectedBar } = useStudioStore()
-
-  if (!project) return null
-
-  const handleCellClick = (barIndex: number, channelId: string) => {
-    const existingClip = project.playlist.find(
-      clip => clip.barIndex === barIndex && clip.channelId === channelId
-    )
-
-    if (existingClip) {
-      // Toggle off - remove clip
-      removeClip(barIndex, channelId)
-    } else {
-      // Toggle on - add clip with current pattern
-      addClip(project.selectedPatternId, barIndex, channelId)
-    }
-    setSelectedBar(barIndex)
-  }
+  const selection = useStudioStore((state) => state.selection)
+  const transport = useStudioStore((state) => state.transport)
+  const toggleClip = useStudioStore((state) => state.toggleClip)
 
   return (
-    <div className="playlist">
-      <div className="playlist-header">
-        <h3>Playlist</h3>
-        <span className="bars-count">{project.bars} bars</span>
+    <section className="playlist panel-card">
+      <div className="panel-heading">
+        <div>
+          <h3>Playlist</h3>
+          <p>Organiza os patterns em barras e deixa o beat contar uma historia inteira.</p>
+        </div>
+        <div className="playlist-badge">Pattern atual: {project.patterns[selection.selectedPatternId].name}</div>
       </div>
 
-      <div className="playlist-grid">
-        {/* Header row - bar numbers */}
-        <div className="playlist-corner">
-          <span></span>
-        </div>
-        <div className="bar-numbers">
+      <div className="playlist-scroll">
+        <div className="playlist-grid">
+          <div className="playlist-label heading-cell">canal</div>
           {Array.from({ length: project.bars }).map((_, barIndex) => (
-            <div key={barIndex} className="bar-num">
+            <div key={`bar-${barIndex}`} className="playlist-bar-header">
               {barIndex + 1}
             </div>
           ))}
-        </div>
 
-        {/* Channel rows */}
-        {project.channels.map((channel) => (
-          <div key={channel.id} className="playlist-row">
-            <div className="channel-label">{channel.name}</div>
-            <div className="playlist-cells">
+          {project.channels.map((channel) => (
+            <div className="playlist-row" key={channel.id}>
+              <div className="playlist-label">{channel.name}</div>
               {Array.from({ length: project.bars }).map((_, barIndex) => {
                 const clip = project.playlist.find(
-                  c => c.barIndex === barIndex && c.channelId === channel.id
+                  (entry) => entry.channelId === channel.id && entry.barIndex === barIndex
                 )
-                const isSelected = selection.selectedBarIndex === barIndex
-
                 return (
                   <button
-                    key={barIndex}
-                    className={`playlist-cell ${clip ? 'filled' : ''} ${isSelected ? 'selected' : ''}`}
-                    style={{ backgroundColor: clip ? channel.color : undefined }}
-                    onClick={() => handleCellClick(barIndex, channel.id)}
+                    key={`${channel.id}-${barIndex}`}
+                    className={`playlist-cell ${clip ? 'filled' : ''} ${
+                      transport.currentBar === barIndex ? 'now' : ''
+                    }`}
+                    style={clip ? { borderColor: channel.color, boxShadow: `inset 0 0 0 1px ${channel.color}` } : undefined}
+                    onClick={() => toggleClip(channel.id, barIndex)}
                   >
-                    {clip && <span className="cell-pattern">{clip.patternId}</span>}
+                    {clip ? project.patterns[clip.patternId].name.replace('Pattern ', 'P') : '·'}
                   </button>
                 )
               })}
             </div>
-          </div>
-        ))}
-
-        {/* Empty state */}
-        {project.channels.length === 0 && (
-          <div className="empty-playlist">
-            <p>Adicione canais para criar a playlist</p>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }

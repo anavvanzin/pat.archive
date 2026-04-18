@@ -1,42 +1,53 @@
 # pixel-love
 core data <3
 
-## Deploy to Cloud Run
+Este repositório tem duas partes diferentes:
 
-This project is automatically deployed to [Google Cloud Run](https://cloud.google.com/run) on every push to the `main` branch.
+1. `melovanzin/` — a experiência principal, feita em `Vite + React + TypeScript`.
+2. raiz do repo — um servidor Express mínimo (`server.js`), hoje útil como base para backend futuro.
 
-### Prerequisites
+## Deploy atual
 
-1. A Google Cloud project with Cloud Run and Artifact Registry APIs enabled.
-2. A Google Cloud service account with the following roles:
-   - `roles/run.admin`
-   - `roles/artifactregistry.writer`
-   - `roles/iam.serviceAccountUser`
-3. A [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) pool and provider configured for GitHub Actions.
-4. An Artifact Registry Docker repository named `pixel-love` in your project and region (default: `us-central1`).
+O deploy ativo deste projeto é o frontend em **GitHub Pages** via [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml).
 
-### GitHub Secrets
+- branchs monitoradas: `main`, `master` e `claude/melovanzin-retro-game-iULVz`
+- diretório de build: `melovanzin/dist`
+- publicação: GitHub Pages
 
-Add the following secrets to your GitHub repository settings:
+Hoje, o site público **não depende de Cloud Run** para funcionar.
 
-| Secret | Description |
-|--------|-------------|
-| `GCP_PROJECT_ID` | Your Google Cloud project ID |
-| `GCP_WORKLOAD_IDENTITY_PROVIDER` | Full resource name of the Workload Identity Provider (e.g. `projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID`) |
-| `GCP_SERVICE_ACCOUNT` | Email of the Google Cloud service account (e.g. `name@project-id.iam.gserviceaccount.com`) |
+## Rodando localmente
 
-### Local Development
+### Frontend principal
+
+```bash
+cd melovanzin
+npm install
+npm run dev
+```
+
+Abra `http://localhost:5173`.
+
+### Servidor raiz
 
 ```bash
 npm install
 npm start
 ```
 
-The server listens on port `8080` by default (configurable via the `PORT` environment variable).
+O servidor escuta na porta `8080` por padrão (ou `PORT`).
 
-### Build & Run with Docker
+## Sobre Google / Lyra / Gemini
 
-```bash
-docker build -t pixel-love .
-docker run -p 8080:8080 pixel-love
-```
+Se a ideia for aproximar o projeto do `loveu` baseado em Lyra:
+
+- o app `loveu` usa `GEMINI_API_KEY` no frontend para protótipo/local;
+- um **service account** como `1066380962084-compute@developer.gserviceaccount.com` **não** entra direto no browser;
+- para produção pública, o caminho correto é criar um backend (por exemplo em Cloud Run) e deixar o frontend chamar esse backend.
+
+Resumo rápido:
+
+- `GEMINI_API_KEY` → protótipo local / AI Studio / app cliente
+- `GCP_SERVICE_ACCOUNT` → deploy backend / autenticação server-to-server
+
+Detalhes e próximos passos estão em [docs/google-audio-integration.md](./docs/google-audio-integration.md).

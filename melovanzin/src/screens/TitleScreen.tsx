@@ -123,7 +123,7 @@ export default function TitleScreen() {
     const handler = () => {
       if (!pressed) {
         setPressed(true)
-        setTimeout(() => setWorld('hub'), 600)
+        setTimeout(() => setWorld('fruitloops'), 600)
       }
     }
     window.addEventListener('keydown', handler)
