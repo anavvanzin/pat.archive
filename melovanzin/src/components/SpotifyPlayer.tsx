@@ -1,30 +1,43 @@
 import { useEffect, useRef } from 'react'
+import { pixelLoveAudio } from '../audio/pixelLoveAudio'
 import { useStore } from '../store/useStore'
 
-const TRACK_DURATION = 195 // ~3:15 seconds for SORRY - Nemzzz
+const TRACK_DURATION = pixelLoveAudio.pixelLoveTrackDuration
 
 export default function SpotifyPlayer() {
   const { spotifyPlaying, setSpotifyPlaying, spotifyProgress, setSpotifyProgress } = useStore()
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
+    pixelLoveAudio.primeFromGesture()
+  }, [])
+
+  useEffect(() => {
     if (spotifyPlaying) {
-      let cur = spotifyProgress
+      pixelLoveAudio.playMusic()
       intervalRef.current = setInterval(() => {
-        cur = cur >= TRACK_DURATION ? 0 : cur + 1
-        setSpotifyProgress(cur)
-      }, 1000)
+        setSpotifyProgress(Math.floor(pixelLoveAudio.getMusicPosition()))
+      }, 150)
     } else {
+      pixelLoveAudio.pauseMusic()
       if (intervalRef.current) clearInterval(intervalRef.current)
     }
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
   }, [spotifyPlaying, setSpotifyProgress])
+
+  useEffect(() => {
+    setSpotifyProgress(Math.floor(pixelLoveAudio.getMusicPosition()))
+  }, [setSpotifyProgress])
 
   const minutes = Math.floor(spotifyProgress / 60)
   const seconds = spotifyProgress % 60
-  const totalMin = Math.floor(TRACK_DURATION / 60)
-  const totalSec = TRACK_DURATION % 60
+  const totalDuration = pixelLoveAudio.getMusicDuration() || TRACK_DURATION
+  const totalMin = Math.floor(totalDuration / 60)
+  const totalSec = Math.floor(totalDuration % 60)
   const progressPct = (spotifyProgress / TRACK_DURATION) * 100
+  const audioUnlocked = pixelLoveAudio.hasUnlockedAudio()
 
   return (
     <div
@@ -49,8 +62,8 @@ export default function SpotifyPlayer() {
           <div
             className="w-2 h-2 rounded-full shrink-0"
             style={{
-              background: 'var(--grn)',
-              boxShadow: '0 0 6px var(--grn)',
+              background: spotifyPlaying ? 'var(--grn)' : 'var(--tx3)',
+              boxShadow: spotifyPlaying ? '0 0 6px var(--grn)' : 'none',
               animation: spotifyPlaying ? 'pulse 1.5s infinite' : 'none',
             }}
           />
@@ -58,7 +71,7 @@ export default function SpotifyPlayer() {
             SORRY
           </div>
           <div className="text-xs shrink-0" style={{ color: 'var(--tx3)' }}>—</div>
-          <div className="text-xs truncate" style={{ color: 'var(--tx2)' }}>Nemzzz</div>
+          <div className="text-xs truncate" style={{ color: 'var(--tx2)' }}>8-bit love loop</div>
         </div>
         {/* Progress bar */}
         <div className="flex items-center gap-2 mt-1">
@@ -71,7 +84,9 @@ export default function SpotifyPlayer() {
             onClick={(e) => {
               const rect = e.currentTarget.getBoundingClientRect()
               const pct = (e.clientX - rect.left) / rect.width
-              setSpotifyProgress(Math.floor(pct * TRACK_DURATION))
+              const nextTime = Math.floor(pct * TRACK_DURATION)
+              pixelLoveAudio.seekMusic(nextTime)
+              setSpotifyProgress(nextTime)
             }}
           >
             <div
@@ -83,26 +98,44 @@ export default function SpotifyPlayer() {
             {totalMin}:{String(totalSec).padStart(2, '0')}
           </span>
         </div>
+        {!audioUnlocked && (
+          <div className="text-[9px] mt-1" style={{ color: 'var(--tx3)' }}>
+            clique em play para ligar o som
+          </div>
+        )}
       </div>
 
       {/* Controls */}
       <div className="flex items-center gap-2 shrink-0">
         <button
-          onClick={() => setSpotifyProgress(Math.max(0, spotifyProgress - 10))}
+          onClick={() => {
+            pixelLoveAudio.playBlip()
+            const nextTime = Math.max(0, spotifyProgress - 10)
+            pixelLoveAudio.seekMusic(nextTime)
+            setSpotifyProgress(nextTime)
+          }}
           className="text-sm transition-colors hover:text-white"
           style={{ background: 'none', border: 'none', color: 'var(--tx2)', cursor: 'pointer' }}
         >
           ⏮
         </button>
         <button
-          onClick={() => setSpotifyPlaying(!spotifyPlaying)}
+          onClick={() => {
+            pixelLoveAudio.playBlip()
+            setSpotifyPlaying(!spotifyPlaying)
+          }}
           className="w-7 h-7 rounded-full flex items-center justify-center transition-transform hover:scale-110"
           style={{ background: 'var(--grn)', border: 'none', cursor: 'pointer', color: '#000', fontSize: '12px', fontWeight: 700 }}
         >
           {spotifyPlaying ? '⏸' : '▶'}
         </button>
         <button
-          onClick={() => setSpotifyProgress(Math.min(TRACK_DURATION, spotifyProgress + 10))}
+          onClick={() => {
+            pixelLoveAudio.playBlip()
+            const nextTime = Math.min(TRACK_DURATION, spotifyProgress + 10)
+            pixelLoveAudio.seekMusic(nextTime)
+            setSpotifyProgress(nextTime)
+          }}
           className="text-sm transition-colors hover:text-white"
           style={{ background: 'none', border: 'none', color: 'var(--tx2)', cursor: 'pointer' }}
         >

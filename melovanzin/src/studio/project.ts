@@ -4,7 +4,6 @@
 
 import type {
   ChannelFxState,
-  ChannelSource,
   PlaylistClip,
   StepPattern,
   StudioChannel,

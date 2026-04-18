@@ -4,7 +4,7 @@
 
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { StudioProject, StudioChannel, StepPattern } from './types'
+import type { StudioProject, StudioChannel } from './types'
 import { createEmptyProject, createSampleChannel, duplicatePattern, placeClip, addChannelToProject } from './project'
 
 // --- Estado da UI ---

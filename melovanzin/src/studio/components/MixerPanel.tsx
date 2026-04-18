@@ -36,7 +36,6 @@ export function MixerPanel() {
     const newSolo = !channel.solo
 
     // Update all channels - if turning on solo, others get muted
-    const allIds = project.channels.map(ch => ch.id)
     const soloedIds = newSolo
       ? [...project.channels.filter(ch => ch.solo || ch.id === channelId).map(ch => ch.id)]
       : []

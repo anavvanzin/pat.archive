@@ -16,7 +16,7 @@ import './studio.css'
 
 export function StudioScreen() {
   const project = useActiveProject()
-  const { createProject, setStudioActive } = useStudioStore()
+  const { createProject } = useStudioStore()
 
   // Initialize engine callback
   const handleStep = useCallback((step: number, bar: number) => {

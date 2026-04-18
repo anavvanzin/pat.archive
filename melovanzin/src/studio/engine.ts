@@ -210,8 +210,7 @@ class StudioEngine {
 
     // Create sequence
     this.sequence = new Tone.Sequence(
-      (time, step) => {
-        const globalStep = this.currentStep
+      (_time, step) => {
         this.currentStep = step + 1
 
         if (this.currentStep >= project.patternLength) {
