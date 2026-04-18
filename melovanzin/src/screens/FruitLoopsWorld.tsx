@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useStore } from '../store/useStore'
 import PixelChar from '../components/PixelChar'
 import SpotifyPlayer from '../components/SpotifyPlayer'
+import { pixelLoveAudio } from '../audio/pixelLoveAudio'
+import { useStudioStore } from '../studio/useStudioStore'
+import { StudioScreen } from '../studio/StudioScreen'
 
 const STEPS = 16
 const INITIAL_BPM = 120
@@ -38,6 +41,8 @@ function Waveform({ playing, activeStep }: { playing: boolean; activeStep: numbe
 
 export default function FruitLoopsWorld() {
   const { setWorld, savedBeats, saveBeat, addNotification, unlockEasterEgg, easterEggs, triggerHeartBurst } = useStore()
+  const isStudioActive = useStudioStore((s) => s.isStudioActive)
+  const setStudioActive = useStudioStore((s) => s.setStudioActive)
 
   const [kick, setKick] = useState<boolean[]>(makeEmpty())
   const [snare, setSnare] = useState<boolean[]>(makeEmpty())
@@ -59,6 +64,13 @@ export default function FruitLoopsWorld() {
   kickRef.current = kick
   snareRef.current = snare
   hihatRef.current = hihat
+
+  // Pause global audio when studio is active
+  useEffect(() => {
+    if (isStudioActive) {
+      pixelLoveAudio.pauseMusic()
+    }
+  }, [isStudioActive])
 
   // Check easter egg #1 — O Beat Clássico
   useEffect(() => {
@@ -164,28 +176,41 @@ export default function FruitLoopsWorld() {
   return (
     <div className="screen" style={{ background: '#0a0800' }}>
       {/* FL Studio header */}
-      <div
-        className="flex items-center gap-3 px-4 py-2 shrink-0"
-        style={{ background: '#111108', borderBottom: '2px solid #2a2200' }}
-      >
-        <button
-          onClick={() => setWorld('hub')}
-          className="pixel-font transition-colors hover:text-white"
-          style={{ fontSize: '8px', color: 'var(--tx3)', background: 'none', border: 'none', cursor: 'pointer' }}
+<div
+          className="flex items-center gap-3 px-4 py-2 shrink-0"
+          style={{ background: '#111108', borderBottom: '2px solid #2a2200' }}
         >
-          ← hub
-        </button>
-        <div
-          className="pixel-font"
-          style={{ fontSize: '10px', color: 'var(--yl)', letterSpacing: '2px', textShadow: '0 0 8px var(--yl)' }}
-        >
-          ★ FRUIT LOOPS ★
+          <button
+            onClick={() => setWorld('hub')}
+            className="pixel-font transition-colors hover:text-white"
+            style={{ fontSize: '8px', color: 'var(--tx3)', background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            ← hub
+          </button>
+          <div
+            className="pixel-font"
+            style={{ fontSize: '10px', color: 'var(--yl)', letterSpacing: '2px', textShadow: '0 0 8px var(--yl)' }}
+          >
+            ★ FRUIT LOOPS ★
+          </div>
+          <div className="flex-1" />
+          <button
+            onClick={() => setStudioActive(true)}
+            className="pixel-font px-3 py-1 rounded transition-all"
+            style={{
+              fontSize: '7px',
+              background: isStudioActive ? 'rgba(157,78,221,0.3)' : 'rgba(157,78,221,0.1)',
+              border: '1px solid var(--pu)',
+              color: 'var(--pu)',
+              cursor: 'pointer',
+            }}
+          >
+            {isStudioActive ? '◉ STUDIO' : '○ STUDIO'}
+          </button>
+          <div className="mono-font text-sm" style={{ color: 'var(--grn)', background: 'rgba(29,185,84,0.1)', border: '1px solid rgba(29,185,84,0.2)', padding: '2px 8px', borderRadius: '4px' }}>
+            {bpm} BPM
+          </div>
         </div>
-        <div className="flex-1" />
-        <div className="mono-font text-sm" style={{ color: 'var(--grn)', background: 'rgba(29,185,84,0.1)', border: '1px solid rgba(29,185,84,0.2)', padding: '2px 8px', borderRadius: '4px' }}>
-          {bpm} BPM
-        </div>
-      </div>
 
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
@@ -400,6 +425,9 @@ export default function FruitLoopsWorld() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Studio Mode */}
+      {isStudioActive && <StudioScreen />}
     </div>
   )
 }
