@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react'
+import { Play, Pause, SkipBack, SkipForward, Repeat } from 'lucide-react'
 import { pixelLoveAudio } from '../audio/pixelLoveAudio'
 import { useStore } from '../store/useStore'
+import AudioVisualizer from './AudioVisualizer'
 
-const TRACK_DURATION = pixelLoveAudio.pixelLoveTrackDuration
+const TRACK_DURATION = pixelLoveAudio.pixelLoveTrackDuration || 180
 
 export default function SpotifyPlayer() {
   const { spotifyPlaying, setSpotifyPlaying, spotifyProgress, setSpotifyProgress } = useStore()
@@ -27,17 +29,25 @@ export default function SpotifyPlayer() {
     }
   }, [spotifyPlaying, setSpotifyProgress])
 
-  useEffect(() => {
-    setSpotifyProgress(Math.floor(pixelLoveAudio.getMusicPosition()))
-  }, [setSpotifyProgress])
-
   const minutes = Math.floor(spotifyProgress / 60)
   const seconds = spotifyProgress % 60
   const totalDuration = pixelLoveAudio.getMusicDuration() || TRACK_DURATION
   const totalMin = Math.floor(totalDuration / 60)
   const totalSec = Math.floor(totalDuration % 60)
-  const progressPct = (spotifyProgress / TRACK_DURATION) * 100
+  const progressPct = (spotifyProgress / (totalDuration || 1)) * 100
   const audioUnlocked = pixelLoveAudio.hasUnlockedAudio()
+
+  const handleNext = () => {
+    pixelLoveAudio.playBlip()
+    pixelLoveAudio.nextTrack()
+    setSpotifyPlaying(true)
+  }
+
+  const handlePrev = () => {
+    pixelLoveAudio.playBlip()
+    pixelLoveAudio.prevTrack()
+    setSpotifyPlaying(true)
+  }
 
   return (
     <div
@@ -45,46 +55,35 @@ export default function SpotifyPlayer() {
       style={{
         background: 'rgba(13,0,21,0.97)',
         borderColor: 'var(--border)',
-        height: '56px',
+        height: '64px',
       }}
     >
-      {/* Album art placeholder */}
       <div
-        className="w-9 h-9 rounded flex items-center justify-center shrink-0 text-base"
+        className="w-10 h-10 rounded flex items-center justify-center shrink-0"
         style={{ background: 'linear-gradient(135deg, #1e0038, #0a1a3a)', border: '1px solid var(--border)' }}
       >
-        🎵
+        <span className="text-xl">🎵</span>
       </div>
 
-      {/* Track info */}
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <div
-            className="w-2 h-2 rounded-full shrink-0"
-            style={{
-              background: spotifyPlaying ? 'var(--grn)' : 'var(--tx3)',
-              boxShadow: spotifyPlaying ? '0 0 6px var(--grn)' : 'none',
-              animation: spotifyPlaying ? 'pulse 1.5s infinite' : 'none',
-            }}
-          />
-          <div className="text-xs font-medium truncate" style={{ fontFamily: 'Inter, sans-serif', color: '#fff' }}>
-            SORRY
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-2">
+            <div className="text-xs font-medium truncate text-white">SORRY</div>
+            <span className="text-[10px] text-gray-500">by pixel-love</span>
           </div>
-          <div className="text-xs shrink-0" style={{ color: 'var(--tx3)' }}>—</div>
-          <div className="text-xs truncate" style={{ color: 'var(--tx2)' }}>8-bit love loop</div>
+          <AudioVisualizer />
         </div>
-        {/* Progress bar */}
-        <div className="flex items-center gap-2 mt-1">
-          <span className="text-xs mono-font shrink-0" style={{ color: 'var(--tx3)', fontSize: '9px' }}>
+        
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] tabular-nums text-gray-400">
             {minutes}:{String(seconds).padStart(2, '0')}
           </span>
           <div
-            className="flex-1 h-1 rounded-full cursor-pointer"
-            style={{ background: 'rgba(255,255,255,0.12)' }}
+            className="flex-1 h-1.5 rounded-full cursor-pointer bg-white/10"
             onClick={(e) => {
               const rect = e.currentTarget.getBoundingClientRect()
               const pct = (e.clientX - rect.left) / rect.width
-              const nextTime = Math.floor(pct * TRACK_DURATION)
+              const nextTime = Math.floor(pct * totalDuration)
               pixelLoveAudio.seekMusic(nextTime)
               setSpotifyProgress(nextTime)
             }}
@@ -94,58 +93,31 @@ export default function SpotifyPlayer() {
               style={{ width: `${progressPct}%`, background: 'var(--grn)' }}
             />
           </div>
-          <span className="text-xs mono-font shrink-0" style={{ color: 'var(--tx3)', fontSize: '9px' }}>
+          <span className="text-[10px] tabular-nums text-gray-400">
             {totalMin}:{String(totalSec).padStart(2, '0')}
           </span>
         </div>
-        {!audioUnlocked && (
-          <div className="text-[9px] mt-1" style={{ color: 'var(--tx3)' }}>
-            clique em play para ligar o som
-          </div>
-        )}
       </div>
 
-      {/* Controls */}
-      <div className="flex items-center gap-2 shrink-0">
-        <button
-          onClick={() => {
-            pixelLoveAudio.playBlip()
-            const nextTime = Math.max(0, spotifyProgress - 10)
-            pixelLoveAudio.seekMusic(nextTime)
-            setSpotifyProgress(nextTime)
-          }}
-          className="text-sm transition-colors hover:text-white"
-          style={{ background: 'none', border: 'none', color: 'var(--tx2)', cursor: 'pointer' }}
-        >
-          ⏮
+      <div className="flex items-center gap-3">
+        <button onClick={handlePrev} className="text-gray-400 hover:text-white transition-colors">
+          <SkipBack size={18} />
         </button>
         <button
           onClick={() => {
             pixelLoveAudio.playBlip()
             setSpotifyPlaying(!spotifyPlaying)
           }}
-          className="w-7 h-7 rounded-full flex items-center justify-center transition-transform hover:scale-110"
-          style={{ background: 'var(--grn)', border: 'none', cursor: 'pointer', color: '#000', fontSize: '12px', fontWeight: 700 }}
+          className="w-8 h-8 rounded-full flex items-center justify-center bg-white text-black hover:scale-105 transition-transform"
         >
-          {spotifyPlaying ? '⏸' : '▶'}
+          {spotifyPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
         </button>
-        <button
-          onClick={() => {
-            pixelLoveAudio.playBlip()
-            const nextTime = Math.min(TRACK_DURATION, spotifyProgress + 10)
-            pixelLoveAudio.seekMusic(nextTime)
-            setSpotifyProgress(nextTime)
-          }}
-          className="text-sm transition-colors hover:text-white"
-          style={{ background: 'none', border: 'none', color: 'var(--tx2)', cursor: 'pointer' }}
-        >
-          ⏭
+        <button onClick={handleNext} className="text-gray-400 hover:text-white transition-colors">
+          <SkipForward size={18} />
         </button>
-      </div>
-
-      {/* Pixel font label */}
-      <div className="pixel-font shrink-0" style={{ fontSize: '7px', color: 'var(--grn)', letterSpacing: '0.5px' }}>
-        NOW<br />PLAYING
+        <button className="text-gray-400 hover:text-green-500 ml-2">
+          <Repeat size={16} />
+        </button>
       </div>
     </div>
   )
