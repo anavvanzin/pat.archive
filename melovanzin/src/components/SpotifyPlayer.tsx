@@ -7,7 +7,11 @@ import AudioVisualizer from './AudioVisualizer'
 const TRACK_DURATION = pixelLoveAudio.pixelLoveTrackDuration || 180
 
 export default function SpotifyPlayer() {
-  const { spotifyPlaying, setSpotifyPlaying, spotifyProgress, setSpotifyProgress } = useStore()
+  const { 
+    spotifyPlaying, setSpotifyPlaying, 
+    spotifyProgress, setSpotifyProgress,
+    spotifyRepeat, setSpotifyRepeat 
+  } = useStore()
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
@@ -71,31 +75,36 @@ export default function SpotifyPlayer() {
             <div className="text-xs font-medium truncate text-white">SORRY</div>
             <span className="text-[10px] text-gray-500">by pixel-love</span>
           </div>
-          <AudioVisualizer />
+          <span className="text-[10px] text-gray-500">1 / 5</span>
         </div>
         
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] tabular-nums text-gray-400">
-            {minutes}:{String(seconds).padStart(2, '0')}
-          </span>
-          <div
-            className="flex-1 h-1.5 rounded-full cursor-pointer bg-white/10"
-            onClick={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect()
-              const pct = (e.clientX - rect.left) / rect.width
-              const nextTime = Math.floor(pct * totalDuration)
-              pixelLoveAudio.seekMusic(nextTime)
-              setSpotifyProgress(nextTime)
-            }}
-          >
-            <div
-              className="h-full rounded-full transition-all"
-              style={{ width: `${progressPct}%`, background: 'var(--grn)' }}
-            />
-          </div>
-          <span className="text-[10px] tabular-nums text-gray-400">
-            {totalMin}:{String(totalSec).padStart(2, '0')}
-          </span>
+        <div className="relative">
+            <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+                <AudioVisualizer />
+            </div>
+            <div className="flex items-center gap-2 relative">
+                <span className="text-[10px] tabular-nums text-gray-400">
+                {minutes}:{String(seconds).padStart(2, '0')}
+                </span>
+                <div
+                className="flex-1 h-1.5 rounded-full cursor-pointer bg-white/10"
+                onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect()
+                    const pct = (e.clientX - rect.left) / rect.width
+                    const nextTime = Math.floor(pct * totalDuration)
+                    pixelLoveAudio.seekMusic(nextTime)
+                    setSpotifyProgress(nextTime)
+                }}
+                >
+                <div
+                    className="h-full rounded-full transition-all"
+                    style={{ width: `${progressPct}%`, background: 'var(--grn)' }}
+                />
+                </div>
+                <span className="text-[10px] tabular-nums text-gray-400">
+                {totalMin}:{String(totalSec).padStart(2, '0')}
+                </span>
+            </div>
         </div>
       </div>
 
@@ -115,7 +124,13 @@ export default function SpotifyPlayer() {
         <button onClick={handleNext} className="text-gray-400 hover:text-white transition-colors">
           <SkipForward size={18} />
         </button>
-        <button className="text-gray-400 hover:text-green-500 ml-2">
+        <button 
+          onClick={() => {
+            pixelLoveAudio.playBlip()
+            setSpotifyRepeat(!spotifyRepeat)
+          }} 
+          className={`ml-2 transition-colors ${spotifyRepeat ? 'text-green-500' : 'text-gray-400 hover:text-green-500'}`}
+        >
           <Repeat size={16} />
         </button>
       </div>

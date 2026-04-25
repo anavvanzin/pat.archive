@@ -34,6 +34,8 @@ interface AppState {
   setSpotifyPlaying: (v: boolean) => void
   spotifyProgress: number
   setSpotifyProgress: (v: number) => void
+  spotifyRepeat: boolean
+  setSpotifyRepeat: (v: boolean) => void
 
   // Notifications
   notifications: { id: string; message: string; icon: string }[]
@@ -83,6 +85,8 @@ export const useStore = create<AppState>()(
       setSpotifyPlaying: (v) => set({ spotifyPlaying: v }),
       spotifyProgress: 0,
       setSpotifyProgress: (v) => set({ spotifyProgress: v }),
+      spotifyRepeat: false,
+      setSpotifyRepeat: (v) => set({ spotifyRepeat: v }),
 
       notifications: [],
       addNotification: (message, icon = '✦') => {

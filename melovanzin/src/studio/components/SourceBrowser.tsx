@@ -126,8 +126,20 @@ export function SourceBrowser() {
     setLoading(true)
     setError(null)
     try {
+      const proxyUrl = `/api/audio-proxy?url=${encodeURIComponent(lyraUrl.trim())}`
+      const response = await fetch(proxyUrl)
+  const handleLyraImport = async () => {
+    if (!lyraUrl.trim()) return
+    setLoading(true)
+    setError(null)
+    try {
       const { createLyraSourceFromUrl } = await import('../sources')
-      const source = await createLyraSourceFromUrl(lyraUrl.trim())
+      // If it starts with http, use proxy, otherwise treat as local path
+      const urlToFetch = lyraUrl.trim().startsWith('http') 
+        ? `/api/audio-proxy?url=${encodeURIComponent(lyraUrl.trim())}` 
+        : lyraUrl.trim()
+      
+      const source = await createLyraSourceFromUrl(urlToFetch)
       await studioEngine.previewSource(source)
       addChannelFromSource({
         name: channelName.trim() || source.fileName.replace(/\.[^/.]+$/, ''),
