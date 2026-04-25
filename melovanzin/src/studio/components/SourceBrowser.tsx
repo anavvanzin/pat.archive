@@ -138,8 +138,13 @@ export function SourceBrowser() {
       const urlToFetch = lyraUrl.trim().startsWith('http') 
         ? `/api/audio-proxy?url=${encodeURIComponent(lyraUrl.trim())}` 
         : lyraUrl.trim()
-      
-      const source = await createLyraSourceFromUrl(urlToFetch)
+      const { createLyraSourceFromUrl } = await import('../sources')
+      const isLocal = window.location.hostname === 'localhost';
+      const proxyUrl = isLocal 
+        ? `http://localhost:8080/api/audio-proxy?url=${encodeURIComponent(lyraUrl.trim())}` 
+        : lyraUrl.trim();
+        
+      const source = await createLyraSourceFromUrl(proxyUrl);
       await studioEngine.previewSource(source)
       addChannelFromSource({
         name: channelName.trim() || source.fileName.replace(/\.[^/.]+$/, ''),
@@ -159,15 +164,20 @@ export function SourceBrowser() {
     setError(null)
     try {
       const { createLyraSourceFromUrl } = await import('../sources')
-      const source = await createLyraSourceFromUrl(demo.url, 'Tone.js Demo')
+      const isLocal = window.location.hostname === 'localhost';
+      const proxyUrl = isLocal 
+        ? `http://localhost:8080/api/audio-proxy?url=${encodeURIComponent(lyraUrl.trim())}` 
+        : lyraUrl.trim();
+        
+      const source = await createLyraSourceFromUrl(proxyUrl);
       await studioEngine.previewSource(source)
       addChannelFromSource({
-        name: channelName.trim() || demo.name,
+        name: channelName.trim() || source.fileName.replace(/\.[^/.]+$/, ''),
         source,
       })
+      setLyraUrl('')
       setChannelName('')
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'Nao consegui carregar esse sample.')
     } finally {
       setLoadingId(null)
     }

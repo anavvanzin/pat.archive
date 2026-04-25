@@ -5,6 +5,7 @@ import { useStore } from './store/useStore'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './firebase'
 import CRTOverlay from './components/CRTOverlay'
+import MeloBuddy from './components/MeloBuddy'
 import NotificationSystem from './components/NotificationSystem'
 import LoveMessageOverlay from './components/LoveMessageOverlay'
 import TitleScreen from './screens/TitleScreen'
@@ -13,7 +14,7 @@ import FruitLoopsWorld from './screens/FruitLoopsWorld'
 import TibiaWorld from './screens/TibiaWorld'
 import BotLaneWorld from './screens/BotLaneWorld'
 import DiscordWorld from './screens/DiscordWorld'
-import { StudioScreen } from './studio/StudioScreen'
+import MeloBuddy from './components/MeloBuddy'
 
 function HeartBurst() {
   const heartBurstPos = useStore((s) => s.heartBurstPos)
@@ -219,6 +220,7 @@ export default function App() {
   const unlockEasterEgg = useStore((s) => s.unlockEasterEgg)
   const addNotification = useStore((s) => s.addNotification)
   const spotifyPlaying = useStore((s) => s.spotifyPlaying)
+  const buddyAura = useStore((s) => s.buddyAura)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -300,6 +302,8 @@ export default function App() {
     >
       <CRTOverlay />
 
+      <MeloBuddy aura={buddyAura} />
+
       <AnimatePresence mode="wait">
         <motion.div
           key={currentWorld}
@@ -315,6 +319,7 @@ export default function App() {
 
       {currentWorld !== 'title' && (
         <>
+          <MeloBuddy />
           <NotificationSystem />
           <LoveMessageOverlay />
           <HeartBurst />

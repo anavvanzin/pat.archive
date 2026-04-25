@@ -19,7 +19,12 @@ interface Ward {
 type Phase = 'playing' | 'dragon' | 'victory'
 
 export default function BotLaneWorld() {
-  const { setWorld, triggerHeartBurst, addNotification, unlockEasterEgg, easterEggs } = useStore()
+  const { setWorld, triggerHeartBurst, addNotification, unlockEasterEgg, easterEggs, setBuddyAura } = useStore()
+
+  useEffect(() => {
+    setBuddyAura('mantra')
+    return () => setBuddyAura('none')
+  }, [setBuddyAura])
 
   const [minions, setMinions] = useState<Minion[]>([])
   const [wards, setWards] = useState<Ward[]>([])

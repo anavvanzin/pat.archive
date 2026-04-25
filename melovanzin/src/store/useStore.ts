@@ -57,6 +57,10 @@ interface AppState {
   inventory: InventoryItem[]
   addToInventory: (item: Omit<InventoryItem, 'id' | 'collectedAt'>) => void
 
+  // Buddy state
+  buddyAura: 'none' | 'mantra' | 'love'
+  setBuddyAura: (a: 'none' | 'mantra' | 'love') => void
+
   // Bot Lane
   botLaneScore: { kills: number; deaths: number; assists: number; minions: number }
   updateBotLaneScore: (delta: Partial<AppState['botLaneScore']>) => void
@@ -118,6 +122,9 @@ export const useStore = create<AppState>()(
           inventory: [...s.inventory, { ...item, id, collectedAt: Date.now() }],
         }))
       },
+
+      buddyAura: 'none',
+      setBuddyAura: (aura) => set({ buddyAura: aura }),
 
       botLaneScore: { kills: 0, deaths: 0, assists: 0, minions: 0 },
       updateBotLaneScore: (delta) =>
