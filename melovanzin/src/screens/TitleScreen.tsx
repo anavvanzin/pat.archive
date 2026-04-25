@@ -151,47 +151,53 @@ export default function TitleScreen() {
         transition={{ duration: 0.5 }}
       >
         {/* Characters */}
-        <div className="flex items-end gap-8 mb-2">
+        <div className="flex items-end gap-10 mb-4">
           <motion.div
-            animate={{ y: [0, -6, 0] }}
-            transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
+            animate={{ y: [0, -8, 0], scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+            whileHover={{ scale: 1.1 }}
           >
-            <PixelChar char="ana" size={5} />
+            <PixelChar char="ana" size={6} />
           </motion.div>
-          <div className="pixel-font text-2xl" style={{ color: 'var(--pk)', marginBottom: '20px', textShadow: '0 0 12px var(--pk)' }}>♡</div>
+          <motion.div 
+            className="pixel-font text-3xl glow-pk"
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+            style={{ marginBottom: '24px' }}
+          >♡</motion.div>
           <motion.div
-            animate={{ y: [0, -6, 0] }}
-            transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut', delay: 0.3 }}
+            animate={{ y: [0, -8, 0], scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut', delay: 0.3 }}
+            whileHover={{ scale: 1.1 }}
           >
-            <PixelChar char="lucas" size={5} />
+            <PixelChar char="lucas" size={6} />
           </motion.div>
         </div>
 
         {/* Title */}
         <div>
           <h1
-            className="pixel-font text-center"
+            className="pixel-font text-center glow-pu"
             style={{
-              fontSize: 'clamp(18px, 4vw, 36px)',
-              color: 'var(--pu)',
-              textShadow: '0 0 20px var(--pu), 0 0 40px rgba(201,125,255,0.4)',
-              letterSpacing: '2px',
+              fontSize: 'clamp(22px, 5vw, 42px)',
+              letterSpacing: '3px',
               lineHeight: '1.4',
             }}
           >
             MeloVanzin
           </h1>
-          <p
-            className="pixel-font text-center mt-3"
+          <motion.p
+            className="pixel-font text-center mt-4"
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ repeat: Infinity, duration: 2 }}
             style={{
-              fontSize: 'clamp(8px, 1.5vw, 12px)',
+              fontSize: 'clamp(9px, 1.6vw, 13px)',
               color: 'var(--pk)',
-              textShadow: '0 0 10px var(--pk)',
-              letterSpacing: '1px',
+              letterSpacing: '1.5px',
             }}
           >
             um universo só nosso 🫧
-          </p>
+          </motion.p>
         </div>
 
         {/* Press start */}

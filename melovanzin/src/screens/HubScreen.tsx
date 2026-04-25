@@ -251,30 +251,42 @@ export default function HubScreen() {
           </motion.div>
 
           {/* Doors grid */}
-          <div className="grid grid-cols-2 gap-4 w-full max-w-2xl">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-2xl">
             {DOORS.map((door, i) => (
               <motion.button
                 key={door.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ delay: 0.15 + i * 0.08, type: 'spring', damping: 15 }}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.05, y: -4 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => handleDoorClick(door.id)}
                 onMouseEnter={() => setHovered(door.id)}
                 onMouseLeave={() => setHovered(null)}
-                className="relative p-4 rounded-xl flex flex-col items-center gap-2 transition-all"
+                className="relative p-5 rounded-2xl flex flex-col items-center gap-3 transition-all card-hover"
                 style={{
                   background: entered === door.id
-                    ? `linear-gradient(135deg, ${door.glow}, rgba(13,0,21,0.9))`
-                    : 'rgba(22,0,42,0.8)',
-                  border: `2px solid ${hovered === door.id ? door.border : 'var(--border)'}`,
-                  boxShadow: hovered === door.id ? `0 0 20px ${door.glow}` : 'none',
+                    ? `linear-gradient(135deg, ${door.glow}, rgba(13,0,21,0.95))`
+                    : 'rgba(22,0,42,0.85)',
+                  border: `2px solid ${hovered === door.id ? door.border : 'rgba(46,0,85,0.5)'}`,
+                  boxShadow: hovered === door.id 
+                    ? `0 0 30px ${door.glow}, 0 8px 32px rgba(0,0,0,0.3)` 
+                    : '0 4px 16px rgba(0,0,0,0.2)',
                   cursor: 'pointer',
-                  backdropFilter: 'blur(8px)',
-                  minHeight: '110px',
+                  backdropFilter: 'blur(12px)',
+                  minHeight: '140px',
+                  overflow: 'hidden',
                 }}
               >
+                {/* Shimmer overlay on hover */}
+                {hovered === door.id && (
+                  <div 
+                    className="absolute inset-0 pointer-events-none shimmer"
+                    style={{
+                      background: `linear-gradient(135deg, transparent 40%, ${door.glow} 50%, transparent 60%)`,
+                    }}
+                  />
+                )}
                 {/* Key hint */}
                 <div
                   className="absolute top-2 right-3 pixel-font"
@@ -322,15 +334,15 @@ export default function HubScreen() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45 }}
-            whileHover={{ y: -3, scale: 1.01 }}
+            whileHover={{ y: -3, scale: 1.02 }}
             whileTap={{ scale: 0.985 }}
             onClick={handleLoveuPortal}
-            className="relative w-full max-w-2xl overflow-hidden rounded-2xl px-5 py-4 text-left"
+            className="relative w-full max-w-2xl overflow-hidden rounded-2xl px-5 py-4 text-left card-hover"
             style={{
               border: '1px solid rgba(201,125,255,0.42)',
               background:
                 'linear-gradient(135deg, rgba(19,0,40,0.96) 0%, rgba(42,8,72,0.92) 48%, rgba(18,0,38,0.98) 100%)',
-              boxShadow: '0 0 28px rgba(124,58,237,0.18), inset 0 0 0 1px rgba(255,255,255,0.03)',
+              boxShadow: '0 0 28px rgba(124,58,237,0.18), 0 8px 32px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.03)',
               backdropFilter: 'blur(10px)',
             }}
           >
@@ -384,18 +396,25 @@ export default function HubScreen() {
               <div className="shrink-0 text-right">
                 <motion.div
                   className="pixel-font"
-                  animate={{ y: [0, -4, 0], rotate: [0, 2, 0] }}
-                  transition={{ repeat: Infinity, duration: 2.8, ease: 'easeInOut' }}
-                  style={{ fontSize: '34px', filter: 'drop-shadow(0 0 12px rgba(201,125,255,0.45))' }}
+                  animate={{ y: [0, -6, 0], rotate: [0, 4, 0], scale: [1, 1.1, 1] }}
+                  transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+                  style={{ 
+                    fontSize: '38px', 
+                    filter: 'drop-shadow(0 0 16px rgba(201,125,255,0.6))',
+                    textShadow: '0 0 20px var(--pu)',
+                  }}
                 >
                   ☁
                 </motion.div>
-                <div
+                <motion.div
                   className="pixel-font mt-2"
-                  style={{ fontSize: '8px', color: 'var(--pu)', textShadow: '0 0 10px rgba(201,125,255,0.4)' }}
+                  initial={{ opacity: 0.7 }}
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                  style={{ fontSize: '9px', color: 'var(--pu)' }}
                 >
                   {loveuPortal.cta}
-                </div>
+                </motion.div>
               </div>
             </div>
           </motion.button>

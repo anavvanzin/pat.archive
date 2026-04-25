@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 import { downloadProjectJson, downloadProjectWav } from '../export'
 import { studioEngine } from '../engine'
@@ -78,14 +79,31 @@ export function StudioHeader({ onExit, onOpenWorld }: StudioHeaderProps) {
   }
 
   return (
-    <header className="studio-header">
+    <header className="studio-header gradient-mesh">
       <div className="studio-identity">
-        <span className="studio-kicker pixel-font">Lucas Melo Producer Pack</span>
+        <motion.span 
+          className="studio-kicker pixel-font"
+          whileHover={{ scale: 1.05 }}
+          style={{ 
+            display: 'inline-block',
+            cursor: 'default',
+          }}
+        >
+          Lucas Melo Producer Pack
+        </motion.span>
         <input
           className="project-name-input"
           value={project.name}
           onChange={(event) => renameProject(event.target.value)}
           aria-label="Nome da sessao"
+          style={{
+            background: 'transparent',
+            border: 'none',
+            borderBottom: '2px solid transparent',
+            transition: 'border-color 0.3s ease',
+          }}
+          onFocus={(e) => e.target.style.borderBottomColor = 'var(--pu)'}
+          onBlur={(e) => e.target.style.borderBottomColor = 'transparent'}
         />
         <p className="studio-dedication">
           um presente da Ana para o Lucas: aprender, samplear e deixar o coracao virar beat.
