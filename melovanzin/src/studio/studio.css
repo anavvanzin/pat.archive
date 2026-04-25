@@ -30,12 +30,53 @@
 
 .studio-header {
   display: grid;
-  grid-template-columns: minmax(260px, 1.2fr) auto auto;
+  grid-template-columns: minmax(260px, 1.2fr) auto auto auto;
   gap: 18px;
   padding: 20px 24px 16px;
   border-bottom: 1px solid rgba(201, 125, 255, 0.16);
   background: linear-gradient(180deg, rgba(20, 14, 31, 0.94), rgba(11, 8, 20, 0.88));
   backdrop-filter: blur(16px);
+}
+
+.studio-auth {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 2px solid var(--pu);
+  object-fit: cover;
+}
+
+.auth-button {
+  border: 1px solid rgba(201, 125, 255, 0.22);
+  background: rgba(33, 20, 49, 0.82);
+  color: var(--tx);
+  border-radius: 14px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 11px;
+  text-transform: lowercase;
+  transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+
+.auth-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 110, 180, 0.44);
+}
+
+.auth-button.login {
+  background: linear-gradient(135deg, rgba(255, 110, 180, 0.22), rgba(201, 125, 255, 0.24));
+  border-color: rgba(255, 110, 180, 0.4);
 }
 
 .studio-kicker {

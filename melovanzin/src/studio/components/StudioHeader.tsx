@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { downloadProjectJson, downloadProjectWav } from '../export'
 import { studioEngine } from '../engine'
 import { useActiveProject, useStudioStore } from '../useStudioStore'
+import { loginWithGoogle, logout, auth } from '../../firebase'
+import { useStore } from '../../store/useStore'
 
 interface StudioHeaderProps {
   onExit: () => void
@@ -20,6 +22,26 @@ export function StudioHeader({ onExit, onOpenWorld }: StudioHeaderProps) {
   const project = useActiveProject()
   const { transport, renameProject, setBpm, setBars, setPlaying, resetSession } = useStudioStore()
   const [exporting, setExporting] = useState(false)
+  
+  const firebaseUser = useStore((s) => s.firebaseUser)
+  const setFirebaseUser = useStore((s) => s.setFirebaseUser)
+
+  const handleLogin = async () => {
+    try {
+      await loginWithGoogle()
+    } catch (err) {
+      console.error('Login failed:', err)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      setFirebaseUser(null)
+    } catch (err) {
+      console.error('Logout failed:', err)
+    }
+  }
 
   const handlePlayToggle = async () => {
     if (transport.isPlaying) {
@@ -68,6 +90,25 @@ export function StudioHeader({ onExit, onOpenWorld }: StudioHeaderProps) {
         <p className="studio-dedication">
           um presente da Ana para o Lucas: aprender, samplear e deixar o coracao virar beat.
         </p>
+      </div>
+
+      <div className="studio-auth">
+        {firebaseUser ? (
+          <div className="user-info">
+            <img 
+              src={firebaseUser.photoURL || ''} 
+              alt={firebaseUser.displayName || 'User'} 
+              className="user-avatar"
+            />
+            <button className="auth-button" onClick={handleLogout}>
+              sair
+            </button>
+          </div>
+        ) : (
+          <button className="auth-button login" onClick={handleLogin}>
+            entrar com google
+          </button>
+        )}
       </div>
 
       <div className="studio-transport">
