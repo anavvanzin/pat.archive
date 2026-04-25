@@ -200,16 +200,23 @@ export default function HubScreen() {
 
       <div className="flex flex-col h-full" style={{ zIndex: 2, position: 'relative' }}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-5 pb-3 shrink-0">
+        <div className="flex items-center justify-between px-4 md:px-6 pt-4 md:pt-5 pb-3 shrink-0">
           <div className="pixel-font text-xs" style={{ color: 'var(--tx3)', letterSpacing: '1px' }}>
             melovanzin v1.0
           </div>
-          <div
+          <motion.div
             className="pixel-font"
-            style={{ fontSize: '10px', color: 'var(--pu)', textShadow: '0 0 8px var(--pu)' }}
+            style={{ 
+              fontSize: '10px', 
+              color: 'var(--pu)', 
+              textShadow: '0 0 8px var(--pu)',
+              textAlign: 'center',
+            }}
+            animate={{ opacity: [0.8, 1, 0.8] }}
+            transition={{ repeat: Infinity, duration: 2 }}
           >
             ♡ hub ♡
-          </div>
+          </motion.div>
           {/* Easter egg counter */}
           <motion.div
             className="pixel-font"
@@ -251,7 +258,7 @@ export default function HubScreen() {
           </motion.div>
 
           {/* Doors grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-2xl">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-2xl px-2 sm:px-0">
             {DOORS.map((door, i) => (
               <motion.button
                 key={door.id}
@@ -263,7 +270,7 @@ export default function HubScreen() {
                 onClick={() => handleDoorClick(door.id)}
                 onMouseEnter={() => setHovered(door.id)}
                 onMouseLeave={() => setHovered(null)}
-                className="relative p-5 rounded-2xl flex flex-col items-center gap-3 transition-all card-hover"
+                className="relative p-3 sm:p-5 rounded-2xl flex flex-col items-center gap-2 sm:gap-3 transition-all card-hover"
                 style={{
                   background: entered === door.id
                     ? `linear-gradient(135deg, ${door.glow}, rgba(13,0,21,0.95))`
@@ -274,7 +281,7 @@ export default function HubScreen() {
                     : '0 4px 16px rgba(0,0,0,0.2)',
                   cursor: 'pointer',
                   backdropFilter: 'blur(12px)',
-                  minHeight: '140px',
+                  minHeight: '100px sm:140px',
                   overflow: 'hidden',
                 }}
               >
@@ -297,7 +304,7 @@ export default function HubScreen() {
 
                 {/* Portal glow */}
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-1 transition-all"
+                  className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center mb-1 transition-all ${hovered === door.id ? 'text-2xl' : 'text-xl'} sm:text-2xl`}
                   style={{
                     background: `radial-gradient(circle, ${door.glow} 0%, transparent 70%)`,
                     boxShadow: hovered === door.id ? `0 0 24px ${door.glow}` : 'none',
@@ -307,12 +314,12 @@ export default function HubScreen() {
                 </div>
 
                 <div
-                  className="pixel-font text-center"
-                  style={{ fontSize: '9px', color: door.color, letterSpacing: '0.5px' }}
+                  className={`pixel-font text-center ${hovered === door.id ? 'text-xs' : 'text-2xs'} sm:text-9px`}
+                  style={{ color: door.color, letterSpacing: '0.5px' }}
                 >
                   {door.label}
                 </div>
-                <div className="text-xs" style={{ color: 'var(--tx3)' }}>
+                <div className="text-2xs sm:text-xs" style={{ color: 'var(--tx3)' }}>
                   {door.sublabel}
                 </div>
 

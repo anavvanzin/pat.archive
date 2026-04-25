@@ -285,6 +285,90 @@
   overflow: auto;
 }
 
+/* Demo samples */
+.demo-samples {
+  background: rgba(10, 7, 18, 0.4);
+  border: 1px solid rgba(201, 125, 255, 0.12);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.demo-title, .synth-title {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--yl);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.demo-desc, .synth-desc {
+  font-size: 11px;
+  color: var(--tx2);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.demo-grid, .synth-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.demo-btn, .synth-btn {
+  background: rgba(22, 0, 42, 0.7);
+  border: 1px solid rgba(201, 125, 255, 0.2);
+  border-radius: 12px;
+  padding: 10px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.demo-btn:hover, .synth-btn:hover {
+  background: rgba(46, 0, 85, 0.6);
+  border-color: var(--demo-color, var(--pu));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--demo-color, var(--pu)) 40%, transparent);
+  transform: translateY(-2px);
+}
+
+.demo-btn:active, .synth-btn:active {
+  transform: translateY(0);
+}
+
+.demo-name, .synth-name {
+  font-size: 10px;
+  color: var(--demo-color, var(--pu));
+  font-weight: 600;
+}
+
+.synth-name {
+  color: var(--synth-color, var(--pu));
+}
+
+.demo-desc-small, .synth-freq {
+  font-size: 9px;
+  color: var(--tx3);
+}
+
+.synth-freq {
+  color: var(--tx3);
+  font-family: 'Fira Code', monospace;
+}
+
+/* Synth section */
+.synth-section {
+  background: rgba(10, 7, 18, 0.4);
+  border: 1px solid rgba(201, 125, 255, 0.12);
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
 .source-card,
 .source-note,
 .empty-state,
