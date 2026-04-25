@@ -2,6 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { pixelLoveAudio } from './audio/pixelLoveAudio'
 import { useStore } from './store/useStore'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from './firebase'
 import CRTOverlay from './components/CRTOverlay'
 import NotificationSystem from './components/NotificationSystem'
 import LoveMessageOverlay from './components/LoveMessageOverlay'
@@ -11,6 +13,7 @@ import FruitLoopsWorld from './screens/FruitLoopsWorld'
 import TibiaWorld from './screens/TibiaWorld'
 import BotLaneWorld from './screens/BotLaneWorld'
 import DiscordWorld from './screens/DiscordWorld'
+import { StudioScreen } from './studio/StudioScreen'
 
 function HeartBurst() {
   const heartBurstPos = useStore((s) => s.heartBurstPos)
@@ -205,21 +208,41 @@ const WORLDS = {
   tibia: TibiaWorld,
   botlane: BotLaneWorld,
   discord: DiscordWorld,
+  studio: StudioScreen,
 } as const
 
 export default function App() {
   const currentWorld = useStore((s) => s.currentWorld)
+  const setWorld = useStore((s) => s.setWorld)
+  const setFirebaseUser = useStore((s) => s.setFirebaseUser)
   const easterEggs = useStore((s) => s.easterEggs)
   const unlockEasterEgg = useStore((s) => s.unlockEasterEgg)
   const addNotification = useStore((s) => s.addNotification)
   const spotifyPlaying = useStore((s) => s.spotifyPlaying)
-  const Component = WORLDS[currentWorld]
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setFirebaseUser(user)
+    })
+    return () => unsubscribe()
+  }, [setFirebaseUser])
+
+  const handleOpenWorld = (world: 'hub' | 'discord' | 'tibia' | 'botlane') => {
+    setWorld(world)
+  }
+
+  const renderWorld = () => {
+    if (currentWorld === 'studio') {
+      return <StudioScreen onExit={() => setWorld('hub')} onOpenWorld={handleOpenWorld} />
+    }
+    const Component = WORLDS[currentWorld]
+    return <Component />
+  }
 
   const [showKonami, setShowKonami] = useState(false)
   const [showCompletion, setShowCompletion] = useState(false)
   const konamiBuf = useRef<string[]>([])
   const audioBootstrapped = useRef(false)
-  // Ref para não capturar o valor inicial de easterEggs no closure do effect de completion
   const prevEggCount = useRef(easterEggs.length)
 
   // Detectar Konami code em qualquer tela
@@ -286,7 +309,7 @@ export default function App() {
           transition={{ duration: 0.3 }}
           style={{ position: 'absolute', inset: 0 }}
         >
-          <Component />
+          {renderWorld()}
         </motion.div>
       </AnimatePresence>
 

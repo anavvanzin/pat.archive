@@ -32,8 +32,19 @@ const DOORS: Door[] = [
     tooltip: 'fruit loops™ — bora fazer um beat',
   },
   {
-    id: 'tibia',
+    id: 'studio',
     key: '2',
+    icon: '🎹',
+    label: 'Studio',
+    sublabel: 'Music production',
+    color: 'var(--pk)',
+    glow: 'rgba(244,63,94,0.4)',
+    border: 'rgba(244,63,94,0.5)',
+    tooltip: 'full music production — DAW mode',
+  },
+  {
+    id: 'tibia',
+    key: '3',
     icon: '⚔',
     label: 'Tibia',
     sublabel: 'RPG world',
@@ -44,7 +55,7 @@ const DOORS: Door[] = [
   },
   {
     id: 'botlane',
-    key: '3',
+    key: '4',
     icon: '🏆',
     label: 'Bot Lane',
     sublabel: 'League of Legends',
@@ -55,7 +66,7 @@ const DOORS: Door[] = [
   },
   {
     id: 'discord',
-    key: '4',
+    key: '5',
     icon: '💬',
     label: 'Discord',
     sublabel: 'the origin story',

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-export type World = 'title' | 'hub' | 'fruitloops' | 'tibia' | 'botlane' | 'discord'
+export type World = 'title' | 'hub' | 'fruitloops' | 'tibia' | 'botlane' | 'discord' | 'studio'
 
 export interface BeatPattern {
   id: string
@@ -24,6 +24,10 @@ interface AppState {
   // Navigation
   currentWorld: World
   setWorld: (w: World) => void
+
+  // Firebase Auth
+  firebaseUser: import('../firebase').FirebaseUser | null
+  setFirebaseUser: (user: import('../firebase').FirebaseUser | null) => void
 
   // Spotify player
   spotifyPlaying: boolean
@@ -71,6 +75,9 @@ export const useStore = create<AppState>()(
     (set, get) => ({
       currentWorld: 'title',
       setWorld: (w) => set({ currentWorld: w }),
+
+      firebaseUser: null,
+      setFirebaseUser: (user) => set({ firebaseUser: user }),
 
       spotifyPlaying: true,
       setSpotifyPlaying: (v) => set({ spotifyPlaying: v }),
