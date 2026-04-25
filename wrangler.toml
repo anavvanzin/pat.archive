@@ -1,0 +1,6 @@
+name = "pixel-love"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "./melovanzin/dist"
+
+[vars]
+APP_ENV = "production"
