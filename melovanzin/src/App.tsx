@@ -14,7 +14,7 @@ import FruitLoopsWorld from './screens/FruitLoopsWorld'
 import TibiaWorld from './screens/TibiaWorld'
 import BotLaneWorld from './screens/BotLaneWorld'
 import DiscordWorld from './screens/DiscordWorld'
-import MeloBuddy from './components/MeloBuddy'
+import StudioScreen from './screens/StudioScreen'
 
 function HeartBurst() {
   const heartBurstPos = useStore((s) => s.heartBurstPos)
