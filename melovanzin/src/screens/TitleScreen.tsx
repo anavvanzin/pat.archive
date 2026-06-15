@@ -1,239 +1,221 @@
-import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useStore } from '../store/useStore'
-import PixelChar from '../components/PixelChar'
+import patriciaPortrait from '../assets/patricia_portrait.png'
 
-function StarField() {
-  const stars = Array.from({ length: 80 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 2 + 1,
-    delay: Math.random() * 3,
-    duration: 1.5 + Math.random() * 2,
-  }))
-
+// Símbolo minimalista/geométrico da Pantera em SVG
+function PanteraSvg({ className }: { className?: string }) {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {stars.map((s) => (
-        <div
-          key={s.id}
-          className="absolute rounded-full bg-white"
-          style={{
-            left: `${s.x}%`,
-            top: `${s.y}%`,
-            width: s.size,
-            height: s.size,
-            animation: `twinkle ${s.duration}s ease-in-out infinite`,
-            animationDelay: `${s.delay}s`,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-function ParticleBg() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; color: string; alpha: number }[] = []
-    const colors = ['#c97dff', '#ff6eb4', '#a855f7', '#ff9ed6', '#7c3aed']
-
-    for (let i = 0; i < 120; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5 - 0.2,
-        size: Math.random() * 3 + 1,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        alpha: Math.random() * 0.6 + 0.2,
-      })
-    }
-
-    let mouse = { x: canvas.width / 2, y: canvas.height / 2 }
-    const onMove = (e: MouseEvent) => { mouse.x = e.clientX; mouse.y = e.clientY }
-    window.addEventListener('mousemove', onMove)
-
-    let raf: number
-    const animate = () => {
-      ctx.fillStyle = 'rgba(13,0,21,0.15)'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-      particles.forEach((p) => {
-        // Attract to mouse
-        const dx = mouse.x - p.x
-        const dy = mouse.y - p.y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < 200) {
-          p.vx += dx / dist * 0.02
-          p.vy += dy / dist * 0.02
-        }
-
-        p.vx *= 0.99
-        p.vy *= 0.99
-        p.x += p.vx
-        p.y += p.vy
-
-        if (p.x < 0) p.x = canvas.width
-        if (p.x > canvas.width) p.x = 0
-        if (p.y < 0) p.y = canvas.height
-        if (p.y > canvas.height) p.y = 0
-
-        ctx.globalAlpha = p.alpha
-        ctx.fillStyle = p.color
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fill()
-      })
-      ctx.globalAlpha = 1
-      raf = requestAnimationFrame(animate)
-    }
-    animate()
-
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('mousemove', onMove)
-    }
-  }, [])
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full"
-      style={{ zIndex: 0 }}
-    />
+    <svg
+      viewBox="0 0 100 100"
+      className={className}
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M50 10 L80 30 L90 70 L50 90 L10 70 L20 30 Z" opacity="0.15" />
+      {/* Orelhas */}
+      <path d="M25 25 L35 15 L40 28 Z" />
+      <path d="M75 25 L65 15 L60 28 Z" />
+      {/* Olhos que brilham */}
+      <polygon points="38,40 44,43 36,45" fill="var(--secondary)" />
+      <polygon points="62,40 56,43 64,45" fill="var(--secondary)" />
+      {/* Detalhes geométricos do focinho */}
+      <path d="M50 45 L45 55 L55 55 Z" />
+      <path d="M42 60 Q 50 65 58 60" stroke="currentColor" strokeWidth="2" fill="none" />
+    </svg>
   )
 }
 
 export default function TitleScreen() {
   const setWorld = useStore((s) => s.setWorld)
-  const [pressed, setPressed] = useState(false)
+  const setMode = useStore((s) => s.setMode)
+  const audioEnabled = useStore((s) => s.audioEnabled)
+  const setAudioEnabled = useStore((s) => s.setAudioEnabled)
+  const [hoveredMode, setHoveredMode] = useState<'atelie' | 'pista' | null>(null)
 
-  useEffect(() => {
-    const handler = () => {
-      if (!pressed) {
-        setPressed(true)
-        setTimeout(() => setWorld('fruitloops'), 600)
+  const playSubBeep = () => {
+    if (!audioEnabled) return
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(65.4, ctx.currentTime) // som sub grave C2
+      gain.gain.setValueAtTime(0.4, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6)
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start()
+      osc.stop(ctx.currentTime + 0.6)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const playChalkSound = () => {
+    if (!audioEnabled) return
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+      const bufferSize = ctx.sampleRate * 0.2
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
+      const data = buffer.getChannelData(0)
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1
       }
+      const noise = ctx.createBufferSource()
+      noise.buffer = buffer
+      
+      const filter = ctx.createBiquadFilter()
+      filter.type = 'bandpass'
+      filter.frequency.value = 1000
+      filter.Q.value = 2
+
+      const gain = ctx.createGain()
+      gain.gain.setValueAtTime(0.15, ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2)
+
+      noise.connect(filter)
+      filter.connect(gain)
+      gain.connect(ctx.destination)
+      noise.start()
+    } catch (e) {
+      console.error(e)
     }
-    window.addEventListener('keydown', handler)
-    window.addEventListener('click', handler)
-    return () => {
-      window.removeEventListener('keydown', handler)
-      window.removeEventListener('click', handler)
-    }
-  }, [pressed, setWorld])
+  }
+
+  const handleEnter = (mode: 'atelie' | 'pista') => {
+    setMode(mode)
+    setWorld('hub')
+  }
 
   return (
-    <div className="screen" style={{ background: 'var(--bg)', cursor: 'pointer' }}>
-      <ParticleBg />
-      <StarField />
-
-      {/* CRT horizontal bars subtle */}
-      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
-        <div className="crt-overlay" />
+    <div
+      className={`screen paper-noise flex flex-col items-center justify-between min-h-screen p-8 transition-colors duration-1000 select-none ${
+        hoveredMode === 'pista'
+          ? 'bg-[#0d0d0d] text-[#fdfbf7]'
+          : 'bg-[#fdfbf7] text-[#0d0d0d]'
+      }`}
+    >
+      {/* Ativar Áudio no Topo */}
+      <div className="w-full max-w-6xl flex justify-between items-center z-20 font-mono text-xs">
+        <div>[ PATRÍCIA VANZIN — UNIVERSO ]</div>
+        <button
+          onClick={() => setAudioEnabled(!audioEnabled)}
+          className="border-2 border-current px-3 py-1 cursor-pointer font-bold btn-punk text-[10px]"
+          style={{ padding: '4px 8px' }}
+        >
+          SOM: {audioEnabled ? 'ON' : 'OFF'}
+        </button>
       </div>
 
-      <motion.div
-        className="absolute inset-0 flex flex-col items-center justify-center gap-6"
-        style={{ zIndex: 3 }}
-        animate={pressed ? { opacity: 0, scale: 1.05 } : { opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        {/* Characters */}
-        <div className="flex items-end gap-10 mb-4">
-          <motion.div
-            animate={{ y: [0, -8, 0], scale: [1, 1.05, 1] }}
-            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-            whileHover={{ scale: 1.1 }}
-          >
-            <PixelChar char="ana" size={6} />
-          </motion.div>
-          <motion.div 
-            className="pixel-font text-3xl glow-pk"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-            style={{ marginBottom: '24px' }}
-          >♡</motion.div>
-          <motion.div
-            animate={{ y: [0, -8, 0], scale: [1, 1.05, 1] }}
-            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut', delay: 0.3 }}
-            whileHover={{ scale: 1.1 }}
-          >
-            <PixelChar char="lucas" size={6} />
-          </motion.div>
+      {/* Seção Principal Central */}
+      <div className="flex flex-col md:flex-row items-center justify-center gap-12 w-full max-w-6xl flex-grow z-10">
+        
+        {/* Retrato Xilogravura com Pantera de Fundo */}
+        <div className="relative w-64 h-80 md:w-80 md:h-[400px] border-4 border-current p-3 bg-current flex-shrink-0 group">
+          {/* Pantera como espírito protetor atrás */}
+          <PanteraPresence hoveredMode={hoveredMode} />
+          
+          {/* Retrato */}
+          <div className="w-full h-full overflow-hidden border-2 border-background bg-[#fdfbf7]">
+            <img
+              src={patriciaPortrait}
+              alt="Patrícia Vanzin"
+              className={`w-full h-full object-cover transition-all duration-700 ${
+                hoveredMode === 'pista'
+                  ? 'grayscale contrast-200 invert'
+                  : 'grayscale contrast-200'
+              }`}
+              style={{ mixBlendMode: 'multiply' }}
+            />
+          </div>
+
+          {/* Efeitos de Riscos de Tinta ou Flashes */}
+          <AnimatePresence>
+            {hoveredMode === 'atelie' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.3 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 pointer-events-none texture-lines"
+              />
+            )}
+            {hoveredMode === 'pista' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.2 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 pointer-events-none texture-screen bg-[var(--vermelho)]"
+              />
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Title */}
-        <div>
-          <h1
-            className="pixel-font text-center glow-pu"
-            style={{
-              fontSize: 'clamp(22px, 5vw, 42px)',
-              letterSpacing: '3px',
-              lineHeight: '1.4',
-            }}
-          >
-            MeloVanzin
-          </h1>
-          <motion.p
-            className="pixel-font text-center mt-4"
-            animate={{ opacity: [0.7, 1, 0.7] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            style={{
-              fontSize: 'clamp(9px, 1.6vw, 13px)',
-              color: 'var(--pk)',
-              letterSpacing: '1.5px',
-            }}
-          >
-            um universo só nosso 🫧
-          </motion.p>
-        </div>
+        {/* Informações da Artista e Bifurcação */}
+        <div className="flex flex-col items-center md:items-start text-center md:text-left gap-8 max-w-lg">
+          <div className="space-y-3">
+            <h1 className="font-title text-6xl md:text-8xl tracking-tighter leading-none select-text">
+              PATRÍCIA
+              <br />
+              VANZIN
+            </h1>
+            <p className="font-mono text-sm tracking-widest text-[#d49b00] font-bold">
+              DJ · ARTISTA VISUAL · CRIADORA
+            </p>
+          </div>
 
-        {/* Press start */}
-        <div
-          className="pixel-font mt-4"
-          style={{
-            fontSize: 'clamp(8px, 1.5vw, 11px)',
-            color: 'var(--tx2)',
-            animation: 'blink 1.4s ease-in-out infinite',
-            letterSpacing: '1px',
-          }}
-        >
-          — PRESS START —
-        </div>
+          {/* Linha Divisória de Cartaz */}
+          <div className="w-24 h-1 bg-current" />
 
-        {/* Floating hearts */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {['♡', '♡', '✦', '♡', '✦'].map((c, i) => (
-            <div
-              key={i}
-              className="absolute pixel-font"
-              style={{
-                left: `${10 + i * 20}%`,
-                bottom: `${20 + (i % 3) * 15}%`,
-                fontSize: `${10 + i * 2}px`,
-                color: i % 2 === 0 ? 'var(--pk)' : 'var(--pu)',
-                opacity: 0.4,
-                animation: `float ${2.5 + i * 0.4}s ease-in-out infinite`,
-                animationDelay: `${i * 0.5}s`,
+          {/* Dois Caminhos Grandes */}
+          <div className="flex flex-col sm:flex-row gap-4 w-full">
+            {/* ENTRAR NO ATELIÊ */}
+            <button
+              onMouseEnter={() => {
+                setHoveredMode('atelie')
+                playChalkSound()
               }}
+              onMouseLeave={() => setHoveredMode(null)}
+              onClick={() => handleEnter('atelie')}
+              className="btn-punk flex-grow text-center text-lg md:text-xl py-4 font-bold border-3 border-current"
             >
-              {c}
-            </div>
-          ))}
+              ENTRAR NO ATELIÊ
+            </button>
+
+            {/* ENTRAR NA PISTA */}
+            <button
+              onMouseEnter={() => {
+                setHoveredMode('pista')
+                playSubBeep()
+              }}
+              onMouseLeave={() => setHoveredMode(null)}
+              onClick={() => handleEnter('pista')}
+              className="btn-punk flex-grow text-center text-lg md:text-xl py-4 font-bold border-3 border-current bg-[#800c0c] text-[#fdfbf7] hover:bg-[#fdfbf7] hover:text-[#0d0d0d]"
+            >
+              ENTRAR NA PISTA
+            </button>
+          </div>
         </div>
-      </motion.div>
+      </div>
+
+      {/* Nota de Rodapé estilo editorial */}
+      <div className="w-full max-w-6xl flex justify-between items-center z-20 font-mono text-[10px] opacity-70">
+        <div>GRAVURA Nº 01/2026</div>
+        <div>[ CLIQUE EM QUALQUER LUGAR PARA INICIAR ]</div>
+        <div>PPGD / UFSC</div>
+      </div>
+    </div>
+  )
+}
+
+function PanteraPresence({ hoveredMode }: { hoveredMode: 'atelie' | 'pista' | null }) {
+  return (
+    <div className="absolute -top-10 -right-10 w-28 h-28 text-current pointer-events-none transition-all duration-700">
+      <PanteraSvg
+        className={`w-full h-full transform transition-transform duration-700 ${
+          hoveredMode === 'pista' ? 'scale-110 rotate-12 text-[#d49b00]' : 'scale-90 opacity-40'
+        }`}
+      />
     </div>
   )
 }

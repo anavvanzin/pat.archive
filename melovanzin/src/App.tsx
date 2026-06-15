@@ -270,6 +270,16 @@ export default function App() {
     prevEggCount.current = easterEggs.length
   }, [easterEggs.length])
 
+  // Rastreamento do mouse para o cursor customizado
+  const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 })
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMouseCoords({ x: e.clientX, y: e.clientY })
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
   useEffect(() => {
     const bootstrapAudio = () => {
       if (audioBootstrapped.current) return
@@ -294,8 +304,8 @@ export default function App() {
     <div
       style={{
         width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
+        height: currentWorld === 'hub' ? 'auto' : '100vh',
+        overflowY: currentWorld === 'hub' ? 'auto' : 'hidden',
         background: 'var(--bg)',
         position: 'relative',
       }}
@@ -337,6 +347,8 @@ export default function App() {
           <CompletionScreen key="completion" onClose={() => setShowCompletion(false)} />
         )}
       </AnimatePresence>
+
+      <div className="custom-cursor hide-mobile" style={{ left: mouseCoords.x, top: mouseCoords.y }} />
     </div>
   )
 }

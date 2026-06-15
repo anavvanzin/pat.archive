@@ -25,6 +25,12 @@ interface AppState {
   currentWorld: World
   setWorld: (w: World) => void
 
+  // Artista Modo Ateliê vs Pista
+  currentMode: 'atelie' | 'pista'
+  setMode: (m: 'atelie' | 'pista') => void
+  audioEnabled: boolean
+  setAudioEnabled: (e: boolean) => void
+
   // Firebase Auth
   firebaseUser: import('../firebase').FirebaseUser | null
   setFirebaseUser: (user: import('../firebase').FirebaseUser | null) => void
@@ -81,6 +87,11 @@ export const useStore = create<AppState>()(
     (set, get) => ({
       currentWorld: 'title',
       setWorld: (w) => set({ currentWorld: w }),
+
+      currentMode: 'atelie',
+      setMode: (m) => set({ currentMode: m }),
+      audioEnabled: false,
+      setAudioEnabled: (e) => set({ audioEnabled: e }),
 
       firebaseUser: null,
       setFirebaseUser: (user) => set({ firebaseUser: user }),
