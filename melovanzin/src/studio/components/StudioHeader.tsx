@@ -10,6 +10,7 @@ import { useStore } from '../../store/useStore'
 interface StudioHeaderProps {
   onExit: () => void
   onOpenWorld: (world: 'hub' | 'discord' | 'tibia' | 'botlane') => void
+  hideSequencerControls?: boolean
 }
 
 const WORLD_SHORTCUTS = [
@@ -19,7 +20,7 @@ const WORLD_SHORTCUTS = [
   { id: 'botlane', label: 'bot lane' },
 ] as const
 
-export function StudioHeader({ onExit, onOpenWorld }: StudioHeaderProps) {
+export function StudioHeader({ onExit, onOpenWorld, hideSequencerControls }: StudioHeaderProps) {
   const project = useActiveProject()
   const { transport, renameProject, setBpm, setBars, setPlaying, resetSession } = useStudioStore()
   const [exporting, setExporting] = useState(false)
@@ -129,18 +130,20 @@ export function StudioHeader({ onExit, onOpenWorld }: StudioHeaderProps) {
         )}
       </div>
 
-      <div className="studio-transport">
-        <button className="transport-button stop" onClick={handleStop}>
-          stop
-        </button>
-        <button className="transport-button play" onClick={() => void handlePlayToggle()}>
-          {transport.isPlaying ? 'pause' : 'play'}
-        </button>
-        <div className="transport-readout">
-          <span>bar {transport.currentBar + 1}</span>
-          <span>step {transport.currentStep + 1}</span>
+      {!hideSequencerControls && (
+        <div className="studio-transport">
+          <button className="transport-button stop" onClick={handleStop}>
+            stop
+          </button>
+          <button className="transport-button play" onClick={() => void handlePlayToggle()}>
+            {transport.isPlaying ? 'pause' : 'play'}
+          </button>
+          <div className="transport-readout">
+            <span>bar {transport.currentBar + 1}</span>
+            <span>step {transport.currentStep + 1}</span>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="studio-controls">
         <div className="world-shortcuts">
@@ -158,37 +161,41 @@ export function StudioHeader({ onExit, onOpenWorld }: StudioHeaderProps) {
           </div>
         </div>
 
-        <label className="header-field">
-          <span>BPM</span>
-          <input
-            type="number"
-            min={60}
-            max={180}
-            value={project.bpm}
-            onChange={(event) => setBpm(Number(event.target.value))}
-          />
-        </label>
+        {!hideSequencerControls && (
+          <>
+            <label className="header-field">
+              <span>BPM</span>
+              <input
+                type="number"
+                min={60}
+                max={180}
+                value={project.bpm}
+                onChange={(event) => setBpm(Number(event.target.value))}
+              />
+            </label>
 
-        <label className="header-field">
-          <span>Bars</span>
-          <input
-            type="number"
-            min={2}
-            max={16}
-            value={project.bars}
-            onChange={(event) => setBars(Number(event.target.value))}
-          />
-        </label>
+            <label className="header-field">
+              <span>Bars</span>
+              <input
+                type="number"
+                min={2}
+                max={16}
+                value={project.bars}
+                onChange={(event) => setBars(Number(event.target.value))}
+              />
+            </label>
 
-        <button className="header-action" onClick={() => downloadProjectJson(project)}>
-          JSON
-        </button>
-        <button className="header-action strong" onClick={() => void handleExportWav()}>
-          {exporting ? 'render...' : 'WAV'}
-        </button>
-        <button className="header-action" onClick={resetSession}>
-          reset
-        </button>
+            <button className="header-action" onClick={() => downloadProjectJson(project)}>
+              JSON
+            </button>
+            <button className="header-action strong" onClick={() => void handleExportWav()}>
+              {exporting ? 'render...' : 'WAV'}
+            </button>
+            <button className="header-action" onClick={resetSession}>
+              reset
+            </button>
+          </>
+        )}
         <button className="header-action exit" onClick={handleExit}>
           mundos
         </button>

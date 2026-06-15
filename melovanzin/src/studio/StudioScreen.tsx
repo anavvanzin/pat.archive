@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { studioEngine } from './engine'
+import { djEngine } from './djEngine'
 import { useActiveProject, useStudioStore } from './useStudioStore'
 import { ChannelRack } from './components/ChannelRack'
 import { GeniusButton } from './components/GeniusButton'
@@ -9,6 +10,9 @@ import { PatternBar } from './components/PatternBar'
 import { Playlist } from './components/Playlist'
 import { SourceBrowser } from './components/SourceBrowser'
 import { StudioHeader } from './components/StudioHeader'
+import { DJDeck } from './components/DJDeck'
+import { DJMixer } from './components/DJMixer'
+import { TrackBrowser } from './components/TrackBrowser'
 import './studio.css'
 
 interface StudioScreenProps {
@@ -18,6 +22,7 @@ interface StudioScreenProps {
 
 export function StudioScreen({ onExit, onOpenWorld }: StudioScreenProps) {
   const project = useActiveProject()
+  const [studioMode, setStudioMode] = useState<'sequencer' | 'dj'>('sequencer')
 
   useEffect(() => {
     studioEngine.setStepCallback((step, bar) => {
@@ -27,26 +32,81 @@ export function StudioScreen({ onExit, onOpenWorld }: StudioScreenProps) {
 
     return () => {
       studioEngine.dispose()
+      djEngine.dispose()
     }
   }, [])
 
   useEffect(() => {
-    void studioEngine.syncProject(project)
-  }, [project])
+    if (studioMode === 'sequencer') {
+      void studioEngine.syncProject(project)
+    }
+  }, [project, studioMode])
+
+  const handleExit = () => {
+    djEngine.dispose()
+    onExit()
+  }
+
+  const handleOpenWorld = (w: 'hub' | 'discord' | 'tibia' | 'botlane') => {
+    djEngine.dispose()
+    onOpenWorld(w)
+  }
 
   return (
     <div className="studio-container">
-      <StudioHeader onExit={onExit} onOpenWorld={onOpenWorld} />
-      <div className="studio-layout">
-        <SourceBrowser />
-        <main className="studio-center">
-          <PatternBar />
-          <ChannelRack />
-          <Playlist />
-        </main>
-        <MixerPanel />
+      {/* TABS SWITCHER */}
+      <div className="studio-mode-tabs">
+        <button 
+          className={`studio-mode-tab ${studioMode === 'sequencer' ? 'active' : ''}`}
+          onClick={() => {
+            djEngine.dispose()
+            setStudioMode('sequencer')
+          }}
+        >
+          ✦ BEAT SEQUENCER
+        </button>
+        <button 
+          className={`studio-mode-tab ${studioMode === 'dj' ? 'active' : ''}`}
+          onClick={() => {
+            studioEngine.stop()
+            useStudioStore.getState().setPlaying(false)
+            setStudioMode('dj')
+          }}
+        >
+          ✦ MELOMIXER (DJ DECK)
+        </button>
       </div>
-      <GeniusButton />
+
+      <StudioHeader 
+        onExit={handleExit} 
+        onOpenWorld={handleOpenWorld} 
+        hideSequencerControls={studioMode === 'dj'} 
+      />
+
+      {studioMode === 'sequencer' ? (
+        <div className="studio-layout">
+          <SourceBrowser />
+          <main className="studio-center">
+            <PatternBar />
+            <ChannelRack />
+            <Playlist />
+          </main>
+          <MixerPanel />
+        </div>
+      ) : (
+        <div className="dj-layout">
+          <div className="dj-top-section">
+            <DJDeck deck="A" />
+            <DJMixer />
+            <DJDeck deck="B" />
+          </div>
+          <div className="dj-bottom-section">
+            <TrackBrowser />
+          </div>
+        </div>
+      )}
+
+      {studioMode === 'sequencer' && <GeniusButton />}
     </div>
   )
 }
