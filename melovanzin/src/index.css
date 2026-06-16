@@ -241,7 +241,7 @@ body {
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 1px;
-  transition: all 0.2s steps(4);
+  transition: background-color 0.2s steps(4), color 0.2s steps(4), transform 0.2s steps(4), box-shadow 0.2s steps(4);
   position: relative;
   cursor: pointer;
 }
@@ -266,7 +266,11 @@ body {
   height: 12px;
   background: var(--fg);
   border: 2px solid var(--bg);
-  outline: none;
+}
+
+.mixer-fader:focus-visible {
+  outline: 3px solid var(--secondary) !important;
+  outline-offset: 2px;
 }
 
 .mixer-fader::-webkit-slider-thumb {
@@ -410,5 +414,17 @@ body {
   font-family: var(--font-titles) !important;
   text-transform: uppercase !important;
   color: var(--fg) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
 }
 

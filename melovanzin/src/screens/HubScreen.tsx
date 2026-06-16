@@ -172,6 +172,8 @@ export default function HubScreen() {
               src={patriciaPortrait}
               alt="Patricia Portrait"
               className="w-full h-full object-cover woodcut-img"
+              width={288}
+              height={384}
             />
           </div>
           <div className="absolute bottom-4 left-4 bg-[#fdfbf7] text-[#0d0d0d] font-mono text-[9px] px-2 py-1 border border-[#0d0d0d]">
@@ -203,7 +205,7 @@ export default function HubScreen() {
               <div className="border-2 border-current p-6 bg-[#0d0d0d] text-[#fdfbf7] desalinhado-1">
                 <h5 className="font-title text-lg text-[#d49b00] mb-2">✦ SONORIDADE</h5>
                 <p className="font-mono text-xs leading-relaxed opacity-95">
-                  "O som é matéria prima. Assim como a goiva corta a madeira da matriz de xilo, os beats cortam o ar da pista. É visceral, físico e sem concessões corporativas."
+                  “O som é matéria-prima. Assim como a goiva corta a madeira da matriz de xilo, os beats cortam o ar da pista. É visceral, físico e sem concessões corporativas.”
                 </p>
               </div>
             </div>
@@ -486,13 +488,13 @@ export default function HubScreen() {
         <div className="zine-container flex flex-col md:flex-row gap-12 items-center">
           {/* Selfie tratada */}
           <div className="w-64 h-80 border-3 border-current bg-current flex-shrink-0 woodcut-container relative">
-            <img src={patriciaSelfie} alt="Patricia Selfie" className="w-full h-full object-cover woodcut-img" />
+            <img src={patriciaSelfie} alt="Patricia Selfie" className="w-full h-full object-cover woodcut-img" width={256} height={320} />
           </div>
 
           <div className="space-y-6">
             <h3 className="font-title text-4xl md:text-5xl">PATRÍCIA VANZIN</h3>
             <blockquote className="font-serif text-xl italic border-l-4 border-[#800c0c] pl-6 leading-relaxed">
-              "Entre tinta e frequência, ela constrói imagens e atmosferas. Seu trabalho atravessa pintura, cultura underground e música eletrônica, sempre guiado por contraste, instinto e presença."
+              “Entre tinta e frequência, ela constrói imagens e atmosferas. Seu trabalho atravessa pintura, cultura underground e música eletrônica, sempre guiado por contraste, instinto e presença.”
             </blockquote>
             
             {/* Linha do Tempo */}
@@ -538,7 +540,7 @@ export default function HubScreen() {
           <div className="pt-8">
             <button
               onClick={() => {
-                addNotification('Baixando Press Kit...', '📥')
+                addNotification('Baixando Press Kit…', '📥')
                 triggerHeartBurst(window.innerWidth / 2, window.innerHeight / 2)
               }}
               className="font-mono text-xs border border-current px-4 py-2 hover:bg-[#fdfbf7] hover:text-[#0d0d0d] transition-colors"
@@ -567,13 +569,14 @@ export default function HubScreen() {
               <button
                 onClick={() => setSelectedWork(null)}
                 className="absolute top-4 right-4 font-title text-xl font-bold cursor-pointer hover:text-[#800c0c]"
+                aria-label="Fechar detalhes da obra"
               >
                 [ X ]
               </button>
 
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="w-full md:w-1/2 border-2 border-current overflow-hidden woodcut-container bg-white">
-                  <img src={selectedWork.image} alt={selectedWork.title} className="w-full h-full object-cover" />
+                  <img src={selectedWork.image} alt={selectedWork.title} className="w-full h-full object-cover" width={320} height={240} />
                 </div>
                 <div className="space-y-4 md:w-1/2 flex flex-col justify-between">
                   <div>
