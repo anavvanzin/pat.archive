@@ -366,7 +366,7 @@ export default function HubScreen() {
             {/* CARTA I — A DJ */}
             <div
               onClick={() => setFlippedCard(flippedCard === 1 ? null : 1)}
-              className="taro-card cursor-pointer min-h-[360px] flex flex-col justify-between"
+              className="taro-card cursor-pointer min-h-[360px] flex flex-col justify-between animate-taro-glow"
             >
               <AnimatePresence mode="wait">
                 {flippedCard !== 1 ? (
@@ -404,7 +404,7 @@ export default function HubScreen() {
             {/* CARTA II — A ARTISTA */}
             <div
               onClick={() => setFlippedCard(flippedCard === 2 ? null : 2)}
-              className="taro-card cursor-pointer min-h-[360px] flex flex-col justify-between"
+              className="taro-card cursor-pointer min-h-[360px] flex flex-col justify-between animate-taro-glow"
             >
               <AnimatePresence mode="wait">
                 {flippedCard !== 2 ? (
@@ -445,7 +445,7 @@ export default function HubScreen() {
                 setFlippedCard(flippedCard === 3 ? null : 3)
                 triggerHeartBurst(window.innerWidth / 2, window.innerHeight / 2)
               }}
-              className="taro-card cursor-pointer min-h-[360px] flex flex-col justify-between"
+              className="taro-card cursor-pointer min-h-[360px] flex flex-col justify-between animate-taro-glow"
             >
               <AnimatePresence mode="wait">
                 {flippedCard !== 3 ? (

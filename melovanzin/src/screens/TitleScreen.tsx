@@ -155,17 +155,42 @@ export default function TitleScreen() {
         <div className="flex flex-col items-center md:items-start text-center md:text-left gap-8 max-w-lg">
           <div className="space-y-3">
             <h1 className="font-title text-6xl md:text-8xl tracking-tighter leading-none select-text">
-              PATRÍCIA
-              <br />
-              VANZIN
+              <span className="block">
+                {"PATRÍCIA".split("").map((c, i) => (
+                  <span
+                    key={i}
+                    className="animate-punk-pop"
+                    style={{ '--i': i } as React.CSSProperties}
+                  >
+                    {c}
+                  </span>
+                ))}
+              </span>
+              <span className="block">
+                {"VANZIN".split("").map((c, i) => (
+                  <span
+                    key={i}
+                    className="animate-punk-pop"
+                    style={{ '--i': i + 9 } as React.CSSProperties}
+                  >
+                    {c}
+                  </span>
+                ))}
+              </span>
             </h1>
-            <p className="font-mono text-sm tracking-widest text-[#d49b00] font-bold">
+            <p 
+              className="font-mono text-sm tracking-widest text-[#d49b00] font-bold animate-punk-pop"
+              style={{ '--i': 16 } as React.CSSProperties}
+            >
               DJ · ARTISTA VISUAL · CRIADORA
             </p>
           </div>
 
           {/* Linha Divisória de Cartaz */}
-          <div className="w-24 h-1 bg-current" />
+          <div 
+            className="w-24 h-1 bg-current animate-punk-pop" 
+            style={{ '--i': 17 } as React.CSSProperties}
+          />
 
           {/* Dois Caminhos Grandes */}
           <div className="flex flex-col sm:flex-row gap-4 w-full">
@@ -177,7 +202,8 @@ export default function TitleScreen() {
               }}
               onMouseLeave={() => setHoveredMode(null)}
               onClick={() => handleEnter('atelie')}
-              className="btn-punk flex-grow text-center text-lg md:text-xl py-4 font-bold border-3 border-current"
+              className="btn-punk flex-grow text-center text-lg md:text-xl py-4 font-bold border-3 border-current animate-punk-pop"
+              style={{ '--i': 18 } as React.CSSProperties}
             >
               ENTRAR NO ATELIÊ
             </button>
@@ -190,7 +216,8 @@ export default function TitleScreen() {
               }}
               onMouseLeave={() => setHoveredMode(null)}
               onClick={() => handleEnter('pista')}
-              className="btn-punk flex-grow text-center text-lg md:text-xl py-4 font-bold border-3 border-current bg-[#800c0c] text-[#fdfbf7] hover:bg-[#fdfbf7] hover:text-[#0d0d0d]"
+              className="btn-punk flex-grow text-center text-lg md:text-xl py-4 font-bold border-3 border-current bg-[#800c0c] text-[#fdfbf7] hover:bg-[#fdfbf7] hover:text-[#0d0d0d] animate-punk-pop"
+              style={{ '--i': 20 } as React.CSSProperties}
             >
               ENTRAR NA PISTA
             </button>
