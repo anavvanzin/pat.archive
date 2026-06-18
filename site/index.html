@@ -394,8 +394,11 @@
   const BLOOD='#B5221A', GOLD='#C79A4B';
 
   /* ====== SYNC LAYER (Cloudflare Worker; trava simples por chave) ====== */
-  // Depois do deploy, defina SYNC_URL com a URL do Worker. Vazio = só local.
-  const SYNC_URL = "";
+  // Depois do deploy, defina SYNC_URL com a URL do Worker. Vazio = tenta dev local ou apenas local.
+  let SYNC_URL = "";
+  if (!SYNC_URL && (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:")) {
+    SYNC_URL = "http://127.0.0.1:8787";
+  }
   const EDIT_KEY = new URLSearchParams(location.search).get('k') || "";
   const canEdit = () => !SYNC_URL || !!EDIT_KEY; // sem backend, edita local; com backend, precisa de chave
   let pushTimer=null;
