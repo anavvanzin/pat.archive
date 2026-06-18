@@ -261,6 +261,7 @@
         <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:18px; color:var(--gold); margin:6px 0 0;">um cantinho seu — filmes, leituras e os nossos dias. feito por ana.</p>
       </div>
       <div style="display:flex; align-items:center; gap:10px;">
+        <a id="btnPlanner" href="planejamento-vida.html" style="display:none; font-family:Oswald,sans-serif; font-size:13px; letter-spacing:.06em; padding:5px 12px; text-decoration:none; border:1.5px solid var(--gold); color:var(--gold); background:transparent; margin-right:8px;" style-hover="background:var(--gold); color:#0E0B0A;">⚙ planejador</a>
         <span style="font-family:'Hanken Grotesk',sans-serif; font-size:12px; color:var(--mute); letter-spacing:.08em;">ESCREVENDO COMO</span>
         <button id="ownerPat" class="penbtn">pat</button>
         <button id="ownerAna" class="penbtn">ana</button>
@@ -395,8 +396,8 @@
 
   /* ====== SYNC LAYER (Cloudflare Worker; trava simples por chave) ====== */
   // Depois do deploy, defina SYNC_URL com a URL do Worker. Vazio = tenta dev local ou apenas local.
-  let SYNC_URL = "";
-  if (!SYNC_URL && (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:")) {
+  let SYNC_URL = "https://chdx-sync.warholana.workers.dev";
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
     SYNC_URL = "http://127.0.0.1:8787";
   }
   const EDIT_KEY = new URLSearchParams(location.search).get('k') || "";
@@ -742,6 +743,14 @@
     renderOwner(); renderFilms(); renderBooks(); renderCalendar(); renderPending();
     renderNotes(); renderCapsules(); renderGuests(); renderPhotos(); renderPoster();
     todayCard(); drawTarot(); updateDeckUI(); drawWave();
+    
+    if (canEdit() && EDIT_KEY) {
+      const pLink = $('btnPlanner');
+      if (pLink) {
+        pLink.href = 'planejamento-vida.html?k=' + encodeURIComponent(EDIT_KEY);
+        pLink.style.display = 'inline-block';
+      }
+    }
   }
   init();
 })();

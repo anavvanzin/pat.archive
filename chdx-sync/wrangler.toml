@@ -1,0 +1,12 @@
+name = "chdx-sync"
+main = "src/worker.js"
+compatibility_date = "2026-06-01"
+
+# Criado por: npx wrangler kv namespace create STATE
+# Cole o id retornado abaixo:
+[[kv_namespaces]]
+binding = "STATE"
+id = "a64619a4b30c45399aef2d2ab45a5ae4"
+
+# A chave secreta de edição NÃO fica aqui (é secret):
+#   npx wrangler secret put EDIT_KEY

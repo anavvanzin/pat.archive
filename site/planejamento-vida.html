@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Patricia · planejamento de vida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#ece6d8;
+    --paper:#f6f1e6;
+    --ink:#1a1712;
+    --ink-soft:#5b5547;
+    --line:#cdc4b0;
+    --magenta:#ff2e6e;
+    --violet:#4733ff;
+    --lime:#bff048;
+    --cyan:#16c8d8;
+    --shadow:6px 6px 0 var(--ink);
+    --radius:4px;
+    font-synthesis:none;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Space Grotesk",system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:80px;
+  }
+  /* CRT scanline nod */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+    background:repeating-linear-gradient(to bottom, rgba(0,0,0,.05) 0 1px, transparent 1px 3px);
+    opacity:.35;mix-blend-mode:multiply;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 0;}
+  header.top{
+    border:2px solid var(--ink);
+    background:var(--paper);
+    box-shadow:var(--shadow);
+    padding:18px 22px;
+    display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px;
+  }
+  .brand{display:flex;flex-direction:column;gap:2px;}
+  .brand .kicker{
+    font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--magenta);
+  }
+  .brand h1{
+    font-family:"Fraunces",serif;font-weight:900;font-size:clamp(30px,6vw,52px);
+    line-height:.92;margin:0;letter-spacing:-.01em;
+  }
+  .brand h1 em{font-style:italic;font-weight:500;color:var(--violet);}
+  .meta{
+    text-align:right;font-family:"Space Mono",monospace;font-size:12px;color:var(--ink-soft);
+  }
+  .meta .day{font-size:15px;color:var(--ink);font-weight:700;text-transform:capitalize;}
+  .iobar{display:flex;gap:8px;margin-top:8px;justify-content:flex-end;flex-wrap:wrap;}
+  .mini{
+    font-family:"Space Mono",monospace;font-size:11px;cursor:pointer;
+    border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);
+    padding:5px 10px;border-radius:3px;
+  }
+  .mini:hover{background:var(--lime);}
+  nav.tabs{display:flex;flex-wrap:wrap;gap:0;margin-top:24px;}
+  nav.tabs button{
+    font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:14px;
+    border:2px solid var(--ink);border-bottom:none;background:var(--bg);
+    color:var(--ink-soft);padding:11px 18px;cursor:pointer;position:relative;top:2px;
+    border-radius:8px 8px 0 0;margin-right:6px;transition:color .12s,background .12s;
+  }
+  nav.tabs button .ic{font-family:"Space Mono",monospace;margin-right:7px;color:var(--magenta);}
+  nav.tabs button[aria-selected="true"]{
+    background:var(--paper);color:var(--ink);box-shadow:0 -3px 0 var(--magenta) inset;top:0;
+  }
+  main{
+    border:2px solid var(--ink);background:var(--paper);box-shadow:var(--shadow);
+    padding:24px;min-height:440px;
+  }
+  section.panel{display:none;animation:fade .2s ease;}
+  section.panel.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  .panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+  .panel-head h2{font-family:"Fraunces",serif;font-weight:900;font-size:28px;margin:0;letter-spacing:-.01em;}
+  .panel-head p{margin:0;color:var(--ink-soft);font-size:13px;max-width:48ch;}
+  /* forms */
+  .form-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:18px;}
+  .field{display:flex;flex-direction:column;gap:3px;}
+  .field label{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+  input,select,textarea{
+    font-family:"Space Grotesk",sans-serif;font-size:14px;color:var(--ink);
+    background:#fffdf8;border:1.5px solid var(--ink);border-radius:3px;padding:8px 10px;
+  }
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--violet);outline-offset:1px;}
+  textarea{resize:vertical;min-height:60px;width:100%;}
+  .btn{
+    font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:14px;cursor:pointer;
+    background:var(--ink);color:var(--paper);border:1.5px solid var(--ink);border-radius:3px;
+    padding:9px 16px;transition:transform .08s;
+  }
+  .btn:hover{background:var(--magenta);border-color:var(--magenta);}
+  .btn:active{transform:translate(2px,2px);}
+  .btn.alt{background:var(--violet);border-color:var(--violet);}
+  .btn.ghost{background:transparent;color:var(--ink);}
+  .btn.ghost:hover{background:var(--lime);color:var(--ink);}
+  .chip{
+    font-family:"Space Mono",monospace;font-size:11px;border:1.5px solid var(--ink);
+    background:var(--bg);padding:3px 8px;border-radius:99px;cursor:pointer;color:var(--ink-soft);
+  }
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);}
+  .empty{
+    border:1.5px dashed var(--line);border-radius:6px;padding:30px;text-align:center;
+    color:var(--ink-soft);font-size:14px;
+  }
+  .empty b{color:var(--ink);}
+  /* calendar */
+  .cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .cal-top .mname{font-family:"Fraunces",serif;font-weight:700;font-size:22px;text-transform:capitalize;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+  .cal-grid .dow{font-family:"Space Mono",monospace;font-size:11px;text-align:center;color:var(--ink-soft);padding:4px 0;text-transform:uppercase;}
+  .cell{
+    border:1.5px solid var(--line);border-radius:4px;min-height:74px;padding:5px 6px;cursor:pointer;
+    background:#fffdf8;display:flex;flex-direction:column;gap:3px;transition:border-color .1s;
+  }
+  .cell:hover{border-color:var(--ink);}
+  .cell.empty-cell{background:transparent;border:none;cursor:default;}
+  .cell.today{border:2px solid var(--magenta);}
+  .cell.sel{box-shadow:inset 0 0 0 2px var(--violet);}
+  .cell .num{font-family:"Space Mono",monospace;font-size:12px;font-weight:700;}
+  .cell .ev{font-size:10px;line-height:1.25;background:var(--lime);border-radius:2px;padding:1px 4px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+  .cell .more{font-size:9px;color:var(--ink-soft);font-family:"Space Mono",monospace;}
+  .day-panel{margin-top:18px;border-top:2px dotted var(--line);padding-top:14px;}
+  .day-panel h3{font-family:"Fraunces",serif;font-size:18px;margin:0 0 10px;text-transform:capitalize;}
+  .ev-list{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px;}
+  .ev-list li{display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--line);border-radius:3px;padding:6px 10px;font-size:14px;}
+  .ev-list li button{margin-left:auto;}
+  .x{border:none;background:none;cursor:pointer;font-family:"Space Mono",monospace;font-size:14px;color:var(--magenta);font-weight:700;padding:2px 6px;border-radius:3px;}
+  .x:hover{background:var(--magenta);color:var(--paper);}
+  /* budget */
+  .totals{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 20px;}
+  .tcard{flex:1;min-width:150px;border:2px solid var(--ink);border-radius:5px;padding:12px 14px;background:#fffdf8;}
+  .tcard .lab{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);}
+  .tcard .val{font-family:"Fraunces",serif;font-weight:900;font-size:26px;margin-top:2px;}
+  .tcard.in .val{color:#1f9d57;}
+  .tcard.out .val{color:var(--magenta);}
+  .tcard.bal{background:var(--ink);color:var(--paper);}
+  .tcard.bal .lab{color:#cdc4b0;}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th,td{text-align:left;padding:8px 8px;border-bottom:1.5px solid var(--line);}
+  th{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+  td.num,th.num{text-align:right;font-family:"Space Mono",monospace;}
+  .tag{font-family:"Space Mono",monospace;font-size:10px;border:1.5px solid var(--ink);border-radius:99px;padding:1px 8px;}
+  .bars{margin-top:18px;display:flex;flex-direction:column;gap:7px;}
+  .bar-row{display:grid;grid-template-columns:120px 1fr 92px;align-items:center;gap:10px;font-size:13px;}
+  .bar-track{height:14px;background:var(--bg);border:1.5px solid var(--ink);border-radius:99px;overflow:hidden;}
+  .bar-fill{height:100%;background:var(--violet);}
+  /* cards grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;}
+  .card{border:2px solid var(--ink);border-radius:5px;background:#fffdf8;padding:14px;display:flex;flex-direction:column;gap:8px;box-shadow:3px 3px 0 var(--ink);}
+  .card h4{font-family:"Fraunces",serif;font-size:18px;margin:0;line-height:1.1;}
+  .card .sub{font-family:"Space Mono",monospace;font-size:11px;color:var(--ink-soft);}
+  .card .pc{font-size:13px;}
+  .card .pc b{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);display:block;}
+  .card .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto;}
+  .stars{color:var(--magenta);letter-spacing:2px;}
+  .price{font-family:"Fraunces",serif;font-weight:900;font-size:22px;}
+  .statussel{font-family:"Space Mono",monospace;font-size:11px;padding:4px 6px;}
+  a.lk{color:var(--violet);font-weight:700;font-size:12px;text-decoration:none;border-bottom:2px solid var(--lime);}
+  a.lk:hover{background:var(--lime);}
+  .done{opacity:.55;}
+  .done h4{text-decoration:line-through;}
+  details.hint{margin-bottom:16px;border:1.5px dashed var(--violet);border-radius:5px;padding:8px 12px;background:#fffdf8;}
+  details.hint summary{cursor:pointer;font-family:"Space Mono",monospace;font-size:12px;color:var(--violet);font-weight:700;}
+  details.hint ul{margin:8px 0 2px;padding-left:18px;font-size:13px;color:var(--ink-soft);}
+  .footnote{text-align:center;font-family:"Space Mono",monospace;font-size:11px;color:var(--ink-soft);margin-top:20px;}
+  @media(max-width:560px){
+    .cell{min-height:56px;}
+    main{padding:16px;}
+    .bar-row{grid-template-columns:84px 1fr 78px;}
+  }
+  body.readonly input,
+  body.readonly select,
+  body.readonly textarea,
+  body.readonly button:not(#btnExport):not(#tabs button),
+  body.readonly .cell .ev,
+  body.readonly .x,
+  body.readonly .list-view li button {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  body.readonly .mini:not(#btnExport),
+  body.readonly .btn:not(#btnExport) {
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="kicker">planejamento de vida</span>
+      <h1>Patricia <em>&amp; planos</em></h1>
+    </div>
+    <div class="meta">
+      <div class="day" id="todayStr">—</div>
+      <div id="clock">—</div>
+      <div class="iobar">
+        <span id="syncStatus" style="font-family:'Space Mono',monospace; font-size:11px; padding:3px 8px; border:1.5px solid var(--ink); border-radius:3px; background:var(--bg); color:var(--ink-soft); display:inline-block; margin-right:4px;">...</span>
+        <button class="mini" id="btnExport">↓ backup</button>
+        <button class="mini" id="btnImport">↑ restaurar</button>
+        <input type="file" id="importFile" accept="application/json" hidden />
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="cal" aria-selected="true"><span class="ic">[01]</span>Calendário</button>
+    <button data-tab="bud" aria-selected="false"><span class="ic">[02]</span>Orçamento</button>
+    <button data-tab="apt" aria-selected="false"><span class="ic">[03]</span>Apê</button>
+    <button data-tab="dream" aria-selected="false"><span class="ic">[04]</span>Sonhos</button>
+    <button data-tab="dj" aria-selected="false"><span class="ic">[05]</span>DJ sets</button>
+  </nav>
+
+  <main>
+    <!-- CALENDÁRIO -->
+    <section class="panel active" id="cal">
+      <div class="panel-head">
+        <h2>Calendário</h2>
+        <p>Clica num dia pra anotar compromisso, plano de date, prazo ou lembrete. Tudo fica salvo no navegador.</p>
+      </div>
+      <div class="cal-top">
+        <button class="btn ghost" id="prevM">←</button>
+        <span class="mname" id="monthName">—</span>
+        <button class="btn ghost" id="nextM">→</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="day-panel" id="dayPanel" hidden>
+        <h3 id="dayTitle">—</h3>
+        <ul class="ev-list" id="dayEvents"></ul>
+        <div class="form-row" style="margin-bottom:0;">
+          <div class="field" style="flex:1;min-width:200px;">
+            <label for="evInput">novo evento</label>
+            <input id="evInput" placeholder="ex.: visita ao apê das 15h" />
+          </div>
+          <button class="btn" id="addEv">adicionar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORÇAMENTO -->
+    <section class="panel" id="bud">
+      <div class="panel-head">
+        <h2>Orçamento</h2>
+        <p>Receitas e despesas do mês em real. Acompanha o saldo e veja pra onde o dinheiro está indo.</p>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="budMonth">mês</label>
+          <input type="month" id="budMonth" />
+        </div>
+        <div class="field" style="flex:2;min-width:160px;">
+          <label for="bDesc">descrição</label>
+          <input id="bDesc" placeholder="ex.: aluguel, freela, mercado" />
+        </div>
+        <div class="field">
+          <label for="bCat">categoria</label>
+          <select id="bCat"></select>
+        </div>
+        <div class="field">
+          <label for="bType">tipo</label>
+          <select id="bType">
+            <option value="out">despesa</option>
+            <option value="in">receita</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="bVal">valor (R$)</label>
+          <input id="bVal" type="number" step="0.01" min="0" placeholder="0,00" style="width:120px;" />
+        </div>
+        <button class="btn" id="addBud">lançar</button>
+      </div>
+      <div class="totals">
+        <div class="tcard in"><div class="lab">receitas</div><div class="val" id="tIn">R$ 0</div></div>
+        <div class="tcard out"><div class="lab">despesas</div><div class="val" id="tOut">R$ 0</div></div>
+        <div class="tcard bal"><div class="lab">saldo</div><div class="val" id="tBal">R$ 0</div></div>
+      </div>
+      <div id="budBody"></div>
+      <div class="bars" id="budBars"></div>
+    </section>
+
+    <!-- APÊ -->
+    <section class="panel" id="apt">
+      <div class="panel-head">
+        <h2>Caça-apartamento</h2>
+        <p>Floripa. Cadastra cada apê, compara aluguel, marca favoritos e guarda prós e contras antes de visitar.</p>
+      </div>
+      <details class="hint">
+        <summary>critérios do apê dos sonhos (checklist)</summary>
+        <div id="critList" style="margin-top:10px;"></div>
+        <div class="form-row" style="margin:10px 0 0;">
+          <div class="field" style="flex:1;min-width:200px;">
+            <label for="critInput">novo critério</label>
+            <input id="critInput" placeholder="ex.: aceita pet, perto da praia, lavanderia" />
+          </div>
+          <button class="btn alt" id="addCrit">+</button>
+        </div>
+      </details>
+      <div class="form-row">
+        <div class="field" style="flex:1;min-width:140px;">
+          <label for="aNome">apelido</label>
+          <input id="aNome" placeholder="ex.: apê da Lagoa" />
+        </div>
+        <div class="field">
+          <label for="aBairro">bairro</label>
+          <input id="aBairro" list="bairros" placeholder="bairro" />
+          <datalist id="bairros">
+            <option>Centro</option><option>Trindade</option><option>Lagoa da Conceição</option>
+            <option>Campeche</option><option>Córrego Grande</option><option>Santa Mônica</option>
+            <option>Itacorubi</option><option>Carvoeira</option><option>Pantanal</option>
+            <option>João Paulo</option><option>Coqueiros</option><option>Estreito</option>
+            <option>Ingleses</option><option>Rio Tavares</option>
+          </datalist>
+        </div>
+        <div class="field"><label for="aAluguel">aluguel (R$)</label><input id="aAluguel" type="number" min="0" style="width:110px;" placeholder="0" /></div>
+        <div class="field"><label for="aQuartos">quartos</label><input id="aQuartos" type="number" min="0" style="width:80px;" placeholder="1" /></div>
+        <div class="field"><label for="aNota">nota</label>
+          <select id="aNota"><option value="0">–</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+        </div>
+        <div class="field"><label for="aStatus">status</label>
+          <select id="aStatus">
+            <option value="a-visitar">a visitar</option>
+            <option value="visitado">visitado</option>
+            <option value="favorito">favorito</option>
+            <option value="descartado">descartado</option>
+          </select>
+        </div>
+        <div class="field" style="flex:1;min-width:160px;"><label for="aLink">link</label><input id="aLink" placeholder="https://..." /></div>
+      </div>
+      <div class="form-row">
+        <div class="field" style="flex:1;min-width:200px;"><label for="aPros">prós</label><input id="aPros" placeholder="o que é bom" /></div>
+        <div class="field" style="flex:1;min-width:200px;"><label for="aContras">contras</label><input id="aContras" placeholder="o que pesa" /></div>
+        <button class="btn" id="addApt">salvar apê</button>
+      </div>
+      <div class="form-row" id="aptFilters" style="margin-bottom:14px;">
+        <span class="chip" data-f="todos" aria-pressed="true">todos</span>
+        <span class="chip" data-f="a-visitar" aria-pressed="false">a visitar</span>
+        <span class="chip" data-f="visitado" aria-pressed="false">visitado</span>
+        <span class="chip" data-f="favorito" aria-pressed="false">favorito</span>
+        <span class="chip" data-f="descartado" aria-pressed="false">descartado</span>
+        <span style="flex:1;"></span>
+        <button class="mini" id="sortApt">ordenar por aluguel ↑↓</button>
+      </div>
+      <div class="grid" id="aptGrid"></div>
+    </section>
+
+    <!-- SONHOS -->
+    <section class="panel" id="dream">
+      <div class="panel-head">
+        <h2>Outros sonhos</h2>
+        <p>O mural das coisas grandes e pequenas: viagens, projetos, planos a dois, metas malucas. Sem prazo é só desejo — aqui ele vira plano.</p>
+      </div>
+      <div class="form-row">
+        <div class="field" style="flex:1;min-width:200px;"><label for="dTit">sonho</label><input id="dTit" placeholder="ex.: morar na Lagoa / viajar pra Gent" /></div>
+        <div class="field"><label for="dCat">categoria</label>
+          <select id="dCat">
+            <option>A dois</option><option>Viagem</option><option>Carreira</option>
+            <option>Casa</option><option>Criativo</option><option>Saúde</option>
+            <option>Dinheiro</option><option>Estudo</option><option>Outro</option>
+          </select>
+        </div>
+        <div class="field"><label for="dPrazo">prazo</label>
+          <select id="dPrazo"><option value="curto">curto</option><option value="medio">médio</option><option value="longo">longo</option></select>
+        </div>
+        <div class="field" style="flex:1;min-width:200px;"><label for="dDesc">detalhe</label><input id="dDesc" placeholder="opcional" /></div>
+        <button class="btn" id="addDream">sonhar</button>
+      </div>
+      <div class="form-row" id="dreamFilters" style="margin-bottom:14px;">
+        <span class="chip" data-p="todos" aria-pressed="true">todos</span>
+        <span class="chip" data-p="curto" aria-pressed="false">curto prazo</span>
+        <span class="chip" data-p="medio" aria-pressed="false">médio</span>
+        <span class="chip" data-p="longo" aria-pressed="false">longo</span>
+      </div>
+      <div class="grid" id="dreamGrid"></div>
+    </section>
+
+    <!-- DJ SETS -->
+    <section class="panel" id="dj">
+      <div class="panel-head">
+        <h2>DJ sets</h2>
+        <p>Ideias de set techno / tech house: conceito, BPM, duração e a tracklist em construção.</p>
+      </div>
+      <details class="hint">
+        <summary>faíscas pra começar um set</summary>
+        <ul>
+          <li><b>Sunset Lagoa</b> — tech house quente, 122–125 BPM, groove rolante pra fim de tarde.</li>
+          <li><b>Peak time</b> — techno hipnótico, 130–134 BPM, stabs e rolling bass pro pico.</li>
+          <li><b>Afterhours</b> — deep / dub techno, 126–128 BPM, atmosfera e poucos elementos.</li>
+          <li><b>Warm-up</b> — organic / melodic, 120–123 BPM, abrindo a pista devagar.</li>
+        </ul>
+      </details>
+      <div class="form-row">
+        <div class="field" style="flex:1;min-width:160px;"><label for="sNome">nome do set</label><input id="sNome" placeholder="ex.: Sunset Lagoa #1" /></div>
+        <div class="field" style="flex:1;min-width:160px;"><label for="sMood">mood / conceito</label><input id="sMood" placeholder="ex.: tech house quente" /></div>
+        <div class="field"><label for="sBpm">BPM</label><input id="sBpm" placeholder="122–126" style="width:100px;" /></div>
+        <div class="field"><label for="sDur">duração</label><input id="sDur" placeholder="60 min" style="width:90px;" /></div>
+        <div class="field" style="flex:1;min-width:140px;"><label for="sLocal">ocasião / local</label><input id="sLocal" placeholder="ex.: festa na praia" /></div>
+      </div>
+      <div class="form-row">
+        <div class="field" style="flex:1;min-width:260px;"><label for="sTracks">tracklist / notas</label><textarea id="sTracks" placeholder="1. Artista – Faixa&#10;2. ...&#10;transições, ideias, vinis"></textarea></div>
+        <button class="btn" id="addSet">salvar set</button>
+      </div>
+      <div class="grid" id="djGrid"></div>
+    </section>
+  </main>
+
+  <div class="footnote">feito com carinho · dados ficam só neste navegador · use ↓ backup pra guardar uma cópia</div>
+</div>
+
+<script>
+"use strict";
+(function(){
+  const KEY="paty_planner_v1";
+  const fmtBRL = new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"});
+  const BUDGET_CATS = ["Moradia","Alimentação","Transporte","Lazer","Saúde","Educação","Assinaturas","Trabalho/Freela","Beleza","Pets","Investimento","Outros"];
+
+  /* ====== SYNC LAYER (Cloudflare Worker; sincronização remota) ====== */
+  let SYNC_URL = "https://chdx-sync.warholana.workers.dev";
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    SYNC_URL = "http://127.0.0.1:8787";
+  }
+  const EDIT_KEY = new URLSearchParams(location.search).get('k') || "";
+  const canEdit = () => !SYNC_URL || !!EDIT_KEY;
+  let pushTimer = null;
+
+  function pushRemote() {
+    if (!SYNC_URL || !EDIT_KEY) return;
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(() => {
+      fetch(SYNC_URL + '/state', {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json', 'x-edit-key': EDIT_KEY },
+        body: JSON.stringify({ planner: state })
+      }).then(r => {
+        if (r.ok) updateSyncUI(true);
+      }).catch(() => {});
+    }, 500);
+  }
+
+  async function pullRemote() {
+    if (!SYNC_URL) return false;
+    try {
+      const r = await fetch(SYNC_URL + '/state');
+      if (!r.ok) return false;
+      const d = await r.json();
+      if (d && d.planner) {
+        state = Object.assign(state, d.planner);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function updateSyncUI(justPushed = false) {
+    const elSync = document.getElementById("syncStatus");
+    if (!elSync) return;
+    if (!SYNC_URL) {
+      elSync.textContent = "💻 local";
+      elSync.title = "Salvo apenas neste dispositivo";
+    } else if (EDIT_KEY) {
+      elSync.textContent = justPushed ? "✓ salvo" : "🔒 nuvem";
+      elSync.title = "Sincronizado em nuvem (modo edição)";
+      if (justPushed) {
+        setTimeout(() => { elSync.textContent = "🔒 nuvem"; }, 2000);
+      }
+    } else {
+      elSync.textContent = "👁 leitura";
+      elSync.title = "Modo somente leitura (chave ausente)";
+      elSync.style.color = "var(--magenta)";
+    }
+  }
+
+  function defaults(){
+    const now=new Date();
+    return {events:{},budget:[],apts:[],dreams:[],sets:[],criteria:[],
+            budgetMonth: now.toISOString().slice(0,7), aptSortAsc:true};
+  }
+  let state;
+  try{ state = Object.assign(defaults(), JSON.parse(localStorage.getItem(KEY))||{}); }
+  catch(e){ state = defaults(); }
+  function save(){
+    localStorage.setItem(KEY, JSON.stringify(state));
+    pushRemote();
+  }
+  const uid = ()=> Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const el = (id)=>document.getElementById(id);
+  const esc = (s)=> (s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  /* ---------- header clock ---------- */
+  function tickHeader(){
+    const d=new Date();
+    el("todayStr").textContent = d.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"});
+    el("clock").textContent = d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  }
+  tickHeader(); setInterval(tickHeader,30000);
+
+  /* ---------- tabs ---------- */
+  el("tabs").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-tab]"); if(!b) return;
+    document.querySelectorAll("#tabs button").forEach(x=>x.setAttribute("aria-selected", x===b));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active", p.id===b.dataset.tab));
+  });
+
+  /* ================= CALENDAR ================= */
+  let viewDate = new Date();
+  const MES = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+  const DOW = ["dom","seg","ter","qua","qui","sex","sáb"];
+  let selKey = null;
+  const keyOf = (y,m,d)=> `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+
+  function renderCal(){
+    const y=viewDate.getFullYear(), m=viewDate.getMonth();
+    el("monthName").textContent = `${MES[m]} ${y}`;
+    const first=new Date(y,m,1).getDay();
+    const days=new Date(y,m+1,0).getDate();
+    const today=new Date(); const tKey=keyOf(today.getFullYear(),today.getMonth(),today.getDate());
+    let html="";
+    DOW.forEach(d=> html+=`<div class="dow">${d}</div>`);
+    for(let i=0;i<first;i++) html+=`<div class="cell empty-cell"></div>`;
+    for(let d=1;d<=days;d++){
+      const k=keyOf(y,m,d);
+      const evs=state.events[k]||[];
+      let evHtml="";
+      evs.slice(0,2).forEach(ev=> evHtml+=`<div class="ev" title="${esc(ev.text)}">${esc(ev.text)}</div>`);
+      if(evs.length>2) evHtml+=`<div class="more">+${evs.length-2}</div>`;
+      html+=`<div class="cell${k===tKey?' today':''}${k===selKey?' sel':''}" data-key="${k}">
+        <div class="num">${d}</div>${evHtml}</div>`;
+    }
+    el("calGrid").innerHTML=html;
+  }
+  el("calGrid").addEventListener("click",e=>{
+    const c=e.target.closest(".cell[data-key]"); if(!c) return;
+    selKey=c.dataset.key; renderCal(); renderDayPanel();
+  });
+  function renderDayPanel(){
+    if(!selKey){ el("dayPanel").hidden=true; return; }
+    el("dayPanel").hidden=false;
+    const [y,m,d]=selKey.split("-").map(Number);
+    el("dayTitle").textContent = new Date(y,m-1,d).toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"});
+    const evs=state.events[selKey]||[];
+    el("dayEvents").innerHTML = evs.length
+      ? evs.map(ev=>`<li><span>${esc(ev.text)}</span><button class="x" data-id="${ev.id}" title="remover">✕</button></li>`).join("")
+      : `<li style="border-style:dashed;color:var(--ink-soft);">nada anotado ainda</li>`;
+  }
+  el("dayEvents").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-id]"); if(!b||!selKey) return;
+    state.events[selKey]=(state.events[selKey]||[]).filter(ev=>ev.id!==b.dataset.id);
+    if(!state.events[selKey].length) delete state.events[selKey];
+    save(); renderCal(); renderDayPanel();
+  });
+  function addEvent(){
+    const v=el("evInput").value.trim(); if(!v||!selKey) return;
+    (state.events[selKey]=state.events[selKey]||[]).push({id:uid(),text:v});
+    el("evInput").value=""; save(); renderCal(); renderDayPanel();
+  }
+  el("addEv").addEventListener("click",addEvent);
+  el("evInput").addEventListener("keydown",e=>{ if(e.key==="Enter") addEvent(); });
+  el("prevM").addEventListener("click",()=>{ viewDate.setMonth(viewDate.getMonth()-1); renderCal(); });
+  el("nextM").addEventListener("click",()=>{ viewDate.setMonth(viewDate.getMonth()+1); renderCal(); });
+
+  /* ================= BUDGET ================= */
+  el("bCat").innerHTML = BUDGET_CATS.map(c=>`<option>${c}</option>`).join("");
+  el("budMonth").value = state.budgetMonth;
+  el("budMonth").addEventListener("change",()=>{ state.budgetMonth=el("budMonth").value; save(); renderBudget(); });
+  function addBud(){
+    const desc=el("bDesc").value.trim();
+    const val=parseFloat(el("bVal").value);
+    if(!desc||isNaN(val)||val<0) return;
+    state.budget.push({id:uid(),month:state.budgetMonth,desc,cat:el("bCat").value,type:el("bType").value,value:val});
+    el("bDesc").value=""; el("bVal").value=""; save(); renderBudget();
+  }
+  el("addBud").addEventListener("click",addBud);
+  el("bVal").addEventListener("keydown",e=>{ if(e.key==="Enter") addBud(); });
+  function renderBudget(){
+    const items=state.budget.filter(b=>b.month===state.budgetMonth);
+    const tin=items.filter(b=>b.type==="in").reduce((s,b)=>s+b.value,0);
+    const tout=items.filter(b=>b.type==="out").reduce((s,b)=>s+b.value,0);
+    el("tIn").textContent=fmtBRL.format(tin);
+    el("tOut").textContent=fmtBRL.format(tout);
+    el("tBal").textContent=fmtBRL.format(tin-tout);
+    if(!items.length){ el("budBody").innerHTML=`<div class="empty">Sem lançamentos neste mês. Comece pelo <b>aluguel</b> e pelas <b>receitas</b> fixas.</div>`; el("budBars").innerHTML=""; return; }
+    const rows=items.slice().reverse().map(b=>`<tr>
+      <td>${esc(b.desc)}</td>
+      <td><span class="tag">${esc(b.cat)}</span></td>
+      <td>${b.type==="in"?"receita":"despesa"}</td>
+      <td class="num" style="color:${b.type==="in"?"#1f9d57":"var(--magenta)"}">${b.type==="in"?"+":"−"}${fmtBRL.format(b.value)}</td>
+      <td class="num"><button class="x" data-id="${b.id}">✕</button></td>
+    </tr>`).join("");
+    el("budBody").innerHTML=`<table><thead><tr><th>descrição</th><th>categoria</th><th>tipo</th><th class="num">valor</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+    // bars por categoria (despesas)
+    const byCat={};
+    items.filter(b=>b.type==="out").forEach(b=> byCat[b.cat]=(byCat[b.cat]||0)+b.value);
+    const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+    const max=cats.length?cats[0][1]:1;
+    el("budBars").innerHTML = cats.length
+      ? `<div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);">despesas por categoria</div>`+
+        cats.map(([c,v])=>`<div class="bar-row"><span>${esc(c)}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/max*100)}%"></div></div><span class="num" style="text-align:right;font-family:'Space Mono',monospace;font-size:12px;">${fmtBRL.format(v)}</span></div>`).join("")
+      : "";
+  }
+  el("budBody").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-id]"); if(!b) return;
+    state.budget=state.budget.filter(x=>x.id!==b.dataset.id); save(); renderBudget();
+  });
+
+  /* ================= APARTMENTS ================= */
+  let aptFilter="todos";
+  function addApt(){
+    const nome=el("aNome").value.trim()||"(sem apelido)";
+    state.apts.push({id:uid(),nome,bairro:el("aBairro").value.trim(),
+      aluguel:parseFloat(el("aAluguel").value)||0, quartos:el("aQuartos").value.trim(),
+      nota:parseInt(el("aNota").value)||0, status:el("aStatus").value,
+      link:el("aLink").value.trim(), pros:el("aPros").value.trim(), contras:el("aContras").value.trim()});
+    ["aNome","aBairro","aAluguel","aQuartos","aLink","aPros","aContras"].forEach(i=>el(i).value="");
+    el("aNota").value="0"; save(); renderApts();
+  }
+  el("addApt").addEventListener("click",addApt);
+  el("aptFilters").addEventListener("click",e=>{
+    const c=e.target.closest(".chip"); if(!c) return;
+    aptFilter=c.dataset.f;
+    document.querySelectorAll("#aptFilters .chip").forEach(x=>x.setAttribute("aria-pressed", x===c));
+    renderApts();
+  });
+  el("sortApt").addEventListener("click",()=>{ state.aptSortAsc=!state.aptSortAsc; save(); renderApts(); });
+  const STATUS_LABEL={"a-visitar":"a visitar","visitado":"visitado","favorito":"★ favorito","descartado":"descartado"};
+  function renderApts(){
+    let list=state.apts.slice();
+    if(aptFilter!=="todos") list=list.filter(a=>a.status===aptFilter);
+    list.sort((a,b)=> state.aptSortAsc ? a.aluguel-b.aluguel : b.aluguel-a.aluguel);
+    if(!list.length){ el("aptGrid").innerHTML=`<div class="empty" style="grid-column:1/-1;">Nenhum apê ${aptFilter!=="todos"?"nesse status":"cadastrado"} ainda. Cole o link de um anúncio e salve o primeiro 🏠</div>`; return; }
+    el("aptGrid").innerHTML=list.map(a=>`<div class="card${a.status==="descartado"?' done':''}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+        <h4>${esc(a.nome)}</h4>
+        <span class="stars" title="${a.nota} de 5">${"★".repeat(a.nota)}${"☆".repeat(5-a.nota)}</span>
+      </div>
+      <div class="sub">${esc(a.bairro||"bairro?")} · ${esc(a.quartos||"?")} quarto(s)</div>
+      <div class="price">${a.aluguel?fmtBRL.format(a.aluguel):"R$ —"}<span style="font-size:12px;font-family:'Space Mono',monospace;color:var(--ink-soft);">/mês</span></div>
+      ${a.pros?`<div class="pc"><b>prós</b>${esc(a.pros)}</div>`:""}
+      ${a.contras?`<div class="pc"><b>contras</b>${esc(a.contras)}</div>`:""}
+      <div class="row">
+        <select class="statussel" data-id="${a.id}">
+          ${Object.keys(STATUS_LABEL).map(s=>`<option value="${s}"${s===a.status?" selected":""}>${STATUS_LABEL[s]}</option>`).join("")}
+        </select>
+        ${a.link?`<a class="lk" href="${esc(a.link)}" target="_blank" rel="noopener">anúncio ↗</a>`:""}
+        <button class="x" data-del="${a.id}" style="margin-left:auto;">✕</button>
+      </div>
+    </div>`).join("");
+  }
+  el("aptGrid").addEventListener("click",e=>{
+    const d=e.target.closest("button[data-del]"); if(!d) return;
+    state.apts=state.apts.filter(a=>a.id!==d.dataset.del); save(); renderApts();
+  });
+  el("aptGrid").addEventListener("change",e=>{
+    const s=e.target.closest("select[data-id]"); if(!s) return;
+    const a=state.apts.find(x=>x.id===s.dataset.id); if(a){ a.status=s.value; save(); renderApts(); }
+  });
+  // criteria
+  function renderCrit(){
+    el("critList").innerHTML = state.criteria.length
+      ? state.criteria.map(c=>`<label style="display:flex;gap:8px;align-items:center;font-size:13px;padding:3px 0;">
+          <input type="checkbox" data-id="${c.id}" ${c.done?"checked":""}/>
+          <span style="${c.done?'text-decoration:line-through;opacity:.6;':''}">${esc(c.text)}</span>
+          <button class="x" data-del="${c.id}" style="margin-left:auto;">✕</button></label>`).join("")
+      : `<div style="font-size:13px;color:var(--ink-soft);">Liste o que não pode faltar: aceita pet, perto da praia, garagem...</div>`;
+  }
+  el("addCrit").addEventListener("click",()=>{
+    const v=el("critInput").value.trim(); if(!v) return;
+    state.criteria.push({id:uid(),text:v,done:false}); el("critInput").value=""; save(); renderCrit();
+  });
+  el("critInput").addEventListener("keydown",e=>{ if(e.key==="Enter") el("addCrit").click(); });
+  el("critList").addEventListener("click",e=>{
+    const del=e.target.closest("button[data-del]");
+    if(del){ state.criteria=state.criteria.filter(c=>c.id!==del.dataset.del); save(); renderCrit(); }
+  });
+  el("critList").addEventListener("change",e=>{
+    const cb=e.target.closest("input[data-id]"); if(!cb) return;
+    const c=state.criteria.find(x=>x.id===cb.dataset.id); if(c){ c.done=cb.checked; save(); renderCrit(); }
+  });
+
+  /* ================= DREAMS ================= */
+  let dreamFilter="todos";
+  const PRAZO_LABEL={curto:"curto prazo",medio:"médio prazo",longo:"longo prazo"};
+  function addDream(){
+    const t=el("dTit").value.trim(); if(!t) return;
+    state.dreams.push({id:uid(),titulo:t,cat:el("dCat").value,prazo:el("dPrazo").value,desc:el("dDesc").value.trim(),done:false});
+    el("dTit").value=""; el("dDesc").value=""; save(); renderDreams();
+  }
+  el("addDream").addEventListener("click",addDream);
+  el("dTit").addEventListener("keydown",e=>{ if(e.key==="Enter") addDream(); });
+  el("dreamFilters").addEventListener("click",e=>{
+    const c=e.target.closest(".chip"); if(!c) return;
+    dreamFilter=c.dataset.p;
+    document.querySelectorAll("#dreamFilters .chip").forEach(x=>x.setAttribute("aria-pressed", x===c));
+    renderDreams();
+  });
+  function renderDreams(){
+    let list=state.dreams.slice();
+    if(dreamFilter!=="todos") list=list.filter(d=>d.prazo===dreamFilter);
+    if(!list.length){ el("dreamGrid").innerHTML=`<div class="empty" style="grid-column:1/-1;">Mural vazio. Qual é o primeiro sonho? Pode ser pequeno ✨</div>`; return; }
+    el("dreamGrid").innerHTML=list.map(d=>`<div class="card${d.done?' done':''}">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
+        <h4>${esc(d.titulo)}</h4>
+        <input type="checkbox" data-done="${d.id}" ${d.done?"checked":""} title="realizado"/>
+      </div>
+      <div class="sub">${esc(d.cat)} · ${PRAZO_LABEL[d.prazo]}</div>
+      ${d.desc?`<div class="pc">${esc(d.desc)}</div>`:""}
+      <div class="row"><button class="x" data-del="${d.id}" style="margin-left:auto;">✕</button></div>
+    </div>`).join("");
+  }
+  el("dreamGrid").addEventListener("click",e=>{
+    const del=e.target.closest("button[data-del]"); if(!del) return;
+    state.dreams=state.dreams.filter(d=>d.id!==del.dataset.del); save(); renderDreams();
+  });
+  el("dreamGrid").addEventListener("change",e=>{
+    const cb=e.target.closest("input[data-done]"); if(!cb) return;
+    const d=state.dreams.find(x=>x.id===cb.dataset.done); if(d){ d.done=cb.checked; save(); renderDreams(); }
+  });
+
+  /* ================= DJ SETS ================= */
+  function addSet(){
+    const n=el("sNome").value.trim(); if(!n) return;
+    state.sets.push({id:uid(),nome:n,mood:el("sMood").value.trim(),bpm:el("sBpm").value.trim(),
+      dur:el("sDur").value.trim(),local:el("sLocal").value.trim(),tracks:el("sTracks").value.trim()});
+    ["sNome","sMood","sBpm","sDur","sLocal","sTracks"].forEach(i=>el(i).value=""); save(); renderSets();
+  }
+  el("addSet").addEventListener("click",addSet);
+  function renderSets(){
+    if(!state.sets.length){ el("djGrid").innerHTML=`<div class="empty" style="grid-column:1/-1;">Nenhum set ainda. Abre uma faísca ali em cima e monta o primeiro 🎛️</div>`; return; }
+    el("djGrid").innerHTML=state.sets.map(s=>`<div class="card">
+      <h4>${esc(s.nome)}</h4>
+      <div class="sub">${[s.mood,s.bpm?s.bpm+" BPM":"",s.dur,s.local].filter(Boolean).map(esc).join(" · ")||"—"}</div>
+      ${s.tracks?`<div class="pc" style="white-space:pre-wrap;font-size:12.5px;border-top:1.5px dotted var(--line);padding-top:8px;">${esc(s.tracks)}</div>`:""}
+      <div class="row"><button class="x" data-del="${s.id}" style="margin-left:auto;">✕</button></div>
+    </div>`).join("");
+  }
+  el("djGrid").addEventListener("click",e=>{
+    const del=e.target.closest("button[data-del]"); if(!del) return;
+    state.sets=state.sets.filter(s=>s.id!==del.dataset.del); save(); renderSets();
+  });
+
+  /* ================= BACKUP ================= */
+  el("btnExport").addEventListener("click",()=>{
+    const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=`planejamento-patricia-${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+  el("btnImport").addEventListener("click",()=> el("importFile").click());
+  el("importFile").addEventListener("change",e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{ try{ state=Object.assign(defaults(),JSON.parse(r.result)); save(); renderAll(); alert("Backup restaurado ✓"); }
+      catch(err){ alert("Arquivo inválido."); } };
+    r.readAsText(f);
+  });
+
+  /* ================= INIT ================= */
+  function renderAll(){
+    renderCal(); renderDayPanel(); renderBudget(); renderApts(); renderCrit(); renderDreams(); renderSets();
+    el("budMonth").value=state.budgetMonth; el("bCat").innerHTML=BUDGET_CATS.map(c=>`<option>${c}</option>`).join("");
+  }
+  
+  async function init() {
+    if (!canEdit()) {
+      document.body.classList.add("readonly");
+    }
+    updateSyncUI();
+    await pullRemote();
+    renderAll();
+  }
+  init();
+})();
+</script>
+</body>
+</html>
