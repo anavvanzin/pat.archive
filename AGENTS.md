@@ -47,3 +47,19 @@ npm run preview    # preview production build
 
 - **Frontend → GitHub Pages**: `.github/workflows/deploy.yml` triggers on push to `main`, `master`, or `Codex/melovanzin-retro-game-iULVz`. Builds from `melovanzin/` and deploys `dist/` to Pages.
 - **Backend → optional future Cloud Run path**: documentation may reference `GCP_PROJECT_ID`, `GCP_WORKLOAD_IDENTITY_PROVIDER`, and `GCP_SERVICE_ACCOUNT`, but there is no active backend deploy workflow checked into this repo at the moment.
+
+## Design Conventions & Visual Universe (Patricia)
+
+- **Aesthetic Theme**: Woodcut/xilogravura contemporary art, tarot card layouts, punk serigrafia.
+- **Palette**: Printing black, paper cream, dark red, burned yellow. No smooth digital gradients or corporate-style cards.
+- **Dual Atmosphere**: Dynamic transition from Ateliê (light mode: cream background, light) to Pista (dark mode: black background, red/amber lights).
+- **Interactive Elements**:
+  - Keep animations clean and controlled.
+  - The Panther is a silent presence (no spoken dialogue/text).
+  - No Discord pages/links.
+
+## Life Planner & Remote Synchronization
+
+- **Sync Path**: Integrated via Cloudflare Worker `chdx-sync` (KV namespace `STATE`).
+- **Partial Merge**: PUT method must perform partial updates to preserve independent fields (`camarim`, `guests`, `photos`, `planner`).
+- **Planner Security**: Access to the edit mode of `planejamento-vida.html` is gated behind the `?k=<EDIT_KEY>` URL query string. Non-authenticated users see a readonly version.
