@@ -4,10 +4,12 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## Repository Structure
 
-This repo has two independent parts:
+This repo has three parts:
 
-- **Root** — a minimal Express.js server (`server.js`) that can support future backend work. No active Cloud Run workflow is present in this repo right now.
-- **`melovanzin/`** — a React + Vite frontend app (the actual interactive game). All frontend work happens here.
+- **Root** — a minimal Express.js server (`server.js`) that can support future backend work.
+- **`site/`** — static HTML, CSS, and JS frontend files for Patricia (main site `index.html` and life planner `planejamento-vida.html`).
+- **`chdx-sync/`** — Cloudflare Worker backend for remote synchronization.
+- **`produtividade/`** — a local task/productivity dashboard (`dashboard.html`) for Patricia.
 
 ## Commands
 
@@ -15,48 +17,33 @@ This repo has two independent parts:
 ```bash
 npm install
 npm start          # runs server.js on port 8080
+npm run dev        # runs server.js on port 8080 with nodemon (auto-reload)
 ```
 
-### Frontend (`melovanzin/`)
+### Sync Worker (`chdx-sync/`)
 ```bash
-cd melovanzin
-npm install
-npm run dev        # Vite dev server
-npm run build      # tsc + vite build → dist/
-npm run lint       # ESLint
-npm run preview    # preview production build
+cd chdx-sync
+npx wrangler dev   # run local worker
 ```
 
-## Frontend Architecture (`melovanzin/`)
+## Frontend Architecture (`site/`)
 
-**Navigation model**: No URL-based routing. The app uses a single Zustand store (`src/store/useStore.ts`) with a `currentWorld` field to switch between screens. `App.tsx` maps world keys to screen components via a `WORLDS` object.
+**Navigation model**: Single-page static structures. The app uses vanilla JavaScript and `localStorage` to persist state locally, with remote backup and synchronization integrated via the worker.
 
-**World screens** (`src/screens/`): Each screen is a self-contained component for a themed "world" — `TitleScreen`, `HubScreen`, `FruitLoopsWorld`, `TibiaWorld`, `BotLaneWorld`, `DiscordWorld`.
+**UI pages** (`site/`):
+- `index.html` — main CHDX portfolio and player hub for Patricia.
+- `planejamento-vida.html` — interactive life planner with calendar, budgeting, apartment hunting, goals, and DJ sets.
 
-**Global state** (`src/store/useStore.ts`): Single Zustand store with `persist` middleware. Only `savedBeats`, `inventory`, and `highScoreMinions` are persisted to localStorage (key: `melovanzin-storage`). Everything else (notifications, overlays, current world) is ephemeral.
-
-**Global UI layers** (always rendered in `App.tsx`):
-- `CRTOverlay` — scanline/CRT visual effect
-- `NotificationSystem` — toast notifications (auto-dismiss at 4s)
-- `LoveMessageOverlay` — full-screen love message
-- `HeartBurst` — particle animation triggered by `triggerHeartBurst(x, y)`
-
-**Build output**: `vite-plugin-singlefile` inlines all JS/CSS into a single `index.html`. No asset files are emitted. The `amor-invencivel-melovanzin.html` at the root is a pre-built export of this.
-
-## Deployment
-
-- **Frontend → GitHub Pages**: `.github/workflows/deploy.yml` triggers on push to `main`, `master`, or `Codex/melovanzin-retro-game-iULVz`. Builds from `melovanzin/` and deploys `dist/` to Pages.
-- **Backend → optional future Cloud Run path**: documentation may reference `GCP_PROJECT_ID`, `GCP_WORKLOAD_IDENTITY_PROVIDER`, and `GCP_SERVICE_ACCOUNT`, but there is no active backend deploy workflow checked into this repo at the moment.
-
-## Design Conventions & Visual Universe (Patricia)
-
+**Design Aesthetics**:
 - **Aesthetic Theme**: Woodcut/xilogravura contemporary art, tarot card layouts, punk serigrafia.
 - **Palette**: Printing black, paper cream, dark red, burned yellow. No smooth digital gradients or corporate-style cards.
 - **Dual Atmosphere**: Dynamic transition from Ateliê (light mode: cream background, light) to Pista (dark mode: black background, red/amber lights).
-- **Interactive Elements**:
-  - Keep animations clean and controlled.
-  - The Panther is a silent presence (no spoken dialogue/text).
-  - No Discord pages/links.
+- **Interactive Elements**: Keep animations clean and controlled. The Panther is a silent presence. No Discord links.
+
+## Deployment
+
+- **Frontend → Cloudflare Pages**: `.github/workflows/deploy.yml` deploys the `site/` folder directly to Cloudflare Pages.
+- **Sync Worker → Cloudflare Worker**: Deployable via Wrangler.
 
 ## Life Planner & Remote Synchronization
 

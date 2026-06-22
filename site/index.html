@@ -70,11 +70,17 @@
 
 <!-- ===== NAV ===== -->
 <header style="position:sticky; top:0; z-index:80; background:rgba(14,11,10,.93); border-bottom:1.5px solid var(--blood); padding:12px 30px; display:flex; align-items:center; justify-content:space-between; gap:20px; backdrop-filter:blur(3px);">
-  <a href="#home" style="display:flex; align-items:center; gap:13px; text-decoration:none;">
-    <div class="aset-panther" style="height:40px; width:40px; background:var(--paper); border:1px solid var(--gold); padding:2px;"></div>
-    <span style="font-family:Oswald,sans-serif; font-weight:700; font-size:24px; letter-spacing:.18em; color:var(--cream);">CHDX</span>
-    <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:17px; color:var(--gold); margin-left:-4px;">/ pat</span>
-  </a>
+  <div style="display:flex; align-items:center; gap:13px;">
+    <a href="#home" style="display:flex; align-items:center; gap:13px; text-decoration:none;">
+      <div class="aset-panther" style="height:40px; width:40px; background:var(--paper); border:1px solid var(--gold); padding:2px;"></div>
+      <span style="font-family:Oswald,sans-serif; font-weight:700; font-size:24px; letter-spacing:.18em; color:var(--cream);">CHDX</span>
+      <span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:17px; color:var(--gold); margin-left:-4px;">/ pat</span>
+    </a>
+    <div style="display:flex; align-items:center; gap:6px; padding:3px 8px; border:1px solid #2a221c; background:#120d0b; border-radius:3px;">
+      <span id="syncStatusLight" style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#8a8174; transition:background 0.3s, box-shadow 0.3s;"></span>
+      <span id="syncStatusText" style="font-family:'Space Mono',monospace; font-size:9px; color:#8a8174; text-transform:uppercase; letter-spacing:0.05em; line-height:1;">modo local</span>
+    </div>
+  </div>
   <nav style="display:flex; gap:7px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
     <a href="#home" class="navlink">HOME</a>
     <a href="#sets" class="navlink">SETS</a>
@@ -153,15 +159,15 @@
     <p style="font-family:'Hanken Grotesk',sans-serif; font-size:17px; color:var(--soft); max-width:560px; margin:0 0 30px;">Dois decks, mixer central e crate. Mexa nos controles — a maquete da cabine que vira o coração do site.</p>
     <div style="border:2px solid var(--edge); background:#120D0B; padding:18px;">
       <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
-        <div style="flex:1; min-width:90px; border:1px solid var(--edge); color:var(--mute); font-family:Oswald,sans-serif; font-size:11px; letter-spacing:.12em; padding:7px 11px;">FX · ECHO</div>
-        <div style="flex:1; min-width:90px; border:1px solid var(--edge); color:var(--mute); font-family:Oswald,sans-serif; font-size:11px; letter-spacing:.12em; padding:7px 11px;">FX · FILTER</div>
-        <div style="flex:1; min-width:90px; border:1px solid var(--edge); color:var(--mute); font-family:Oswald,sans-serif; font-size:11px; letter-spacing:.12em; padding:7px 11px;">FX · REVERB</div>
-        <div style="flex:1; min-width:90px; border:1px solid var(--blood); background:rgba(181,34,26,.18); color:var(--cream); font-family:Oswald,sans-serif; font-size:11px; letter-spacing:.12em; padding:7px 11px;">BPM 124</div>
+        <div id="fxEcho" style="flex:1; min-width:90px; border:1px solid var(--edge); color:var(--mute); font-family:Oswald,sans-serif; font-size:11px; letter-spacing:.12em; padding:7px 11px; cursor:pointer; text-align:center; transition:all 0.2s;">FX · ECHO</div>
+        <div id="fxFilter" style="flex:1; min-width:90px; border:1px solid var(--edge); color:var(--mute); font-family:Oswald,sans-serif; font-size:11px; letter-spacing:.12em; padding:7px 11px; cursor:pointer; text-align:center; transition:all 0.2s;">FX · FILTER</div>
+        <div id="fxReverb" style="flex:1; min-width:90px; border:1px solid var(--edge); color:var(--mute); font-family:Oswald,sans-serif; font-size:11px; letter-spacing:.12em; padding:7px 11px; cursor:pointer; text-align:center; transition:all 0.2s;">FX · REVERB</div>
+        <div style="flex:1; min-width:90px; border:1px solid var(--blood); background:rgba(181,34,26,.18); color:var(--cream); font-family:Oswald,sans-serif; font-size:11px; letter-spacing:.12em; padding:7px 11px; text-align:center;">BPM 124</div>
       </div>
       <div style="display:grid; grid-template-columns:1fr .82fr 1fr; gap:16px; align-items:stretch;" class="deckgrid">
         <!-- deck A -->
         <div style="border:1px solid var(--edge); padding:15px; display:flex; flex-direction:column; gap:13px; background:var(--ink);">
-          <div style="font-family:Oswald,sans-serif; font-weight:700; font-size:14px; letter-spacing:.12em; color:var(--cream);">DECK A</div>
+          <div id="deckAHeader" style="font-family:Oswald,sans-serif; font-weight:700; font-size:14px; letter-spacing:.12em; color:var(--cream);">DECK A</div>
           <div id="deckADisc" style="aspect-ratio:1; border:2px solid #6a5f52; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; background:repeating-radial-gradient(circle, transparent 0 5px, rgba(233,224,206,.05) 5px 6px);">
             <div id="platterA" style="width:100%; height:100%; position:absolute; inset:0;"><div style="position:absolute; top:5px; left:50%; width:2px; height:30%; background:var(--blood);"></div><div style="width:34%; height:34%; border:2px solid var(--gold); border-radius:50%; position:absolute; top:33%; left:33%;"></div></div>
           </div>
@@ -176,14 +182,14 @@
             <div style="display:flex; flex-direction:column; gap:9px; align-items:center;"><div style="width:30px; height:30px; border-radius:50%; border:2px solid #6a5f52;"></div><div style="width:30px; height:30px; border-radius:50%; border:2px solid #6a5f52;"></div><div style="width:30px; height:30px; border-radius:50%; border:2px solid #6a5f52;"></div></div>
           </div>
           <div style="display:flex; justify-content:space-around; align-items:flex-end; flex:1; padding:6px 0;">
-            <div style="width:8px; height:78px; background:var(--edge); position:relative;"><div style="position:absolute; left:-7px; top:18px; width:22px; height:8px; background:var(--blood);"></div></div>
-            <div style="width:8px; height:78px; background:var(--edge); position:relative;"><div style="position:absolute; left:-7px; top:34px; width:22px; height:8px; background:var(--blood);"></div></div>
+            <div id="volA" style="width:8px; height:78px; background:var(--edge); position:relative; cursor:ns-resize; touch-action:none;"><div id="volAHandle" style="position:absolute; left:-7px; top:18px; width:22px; height:8px; background:var(--blood); pointer-events:none;"></div></div>
+            <div id="volB" style="width:8px; height:78px; background:var(--edge); position:relative; cursor:ns-resize; touch-action:none;"><div id="volBHandle" style="position:absolute; left:-7px; top:34px; width:22px; height:8px; background:var(--blood); pointer-events:none;"></div></div>
           </div>
           <div><div style="font-family:'Hanken Grotesk',sans-serif; font-size:11px; color:var(--mute); text-align:center; margin-bottom:4px;">crossfader</div><div id="xfade" style="height:9px; border:1px solid var(--edge); position:relative; cursor:ew-resize; touch-action:none;"><div id="xfadeHandle" style="position:absolute; left:50%; top:-3px; width:13px; height:15px; background:var(--cream); transform:translateX(-50%); pointer-events:none;"></div></div></div>
         </div>
         <!-- deck B -->
         <div style="border:1px solid var(--edge); padding:15px; display:flex; flex-direction:column; gap:13px; background:var(--ink);">
-          <div style="font-family:Oswald,sans-serif; font-weight:700; font-size:14px; letter-spacing:.12em; color:var(--cream); text-align:right;">DECK B</div>
+          <div id="deckBHeader" style="font-family:Oswald,sans-serif; font-weight:700; font-size:14px; letter-spacing:.12em; color:var(--cream); text-align:right;">DECK B</div>
           <div id="deckBDisc" style="aspect-ratio:1; border:2px solid #6a5f52; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; cursor:pointer; background:repeating-radial-gradient(circle, transparent 0 5px, rgba(233,224,206,.05) 5px 6px);">
             <div id="platterB" style="width:100%; height:100%; position:absolute; inset:0;"><div style="position:absolute; top:5px; left:50%; width:2px; height:30%; background:var(--blood);"></div><div style="width:34%; height:34%; border:2px solid var(--gold); border-radius:50%; position:absolute; top:33%; left:33%;"></div></div>
           </div>
@@ -192,12 +198,14 @@
         </div>
       </div>
       <div style="border:1px solid var(--edge); margin-top:14px; padding:13px; background:var(--ink);">
-        <div style="font-family:Oswald,sans-serif; font-weight:700; font-size:11px; letter-spacing:.14em; color:var(--cream); margin-bottom:9px;">CRATE / BIBLIOTECA</div>
-        <div style="display:flex; flex-direction:column; gap:0;">
-          <div style="display:flex; gap:12px; align-items:center; color:var(--soft); font-family:'Hanken Grotesk',sans-serif; font-size:13px; border-top:1px solid var(--line); padding:8px 0;"><span style="width:20px; height:13px; background:#6a5f52;"></span><span style="flex:1;">faixa — artista</span><span style="color:var(--mute);">3:42</span><span style="font-family:Oswald,sans-serif; color:var(--gold); font-size:12px;">124</span></div>
-          <div style="display:flex; gap:12px; align-items:center; color:var(--soft); font-family:'Hanken Grotesk',sans-serif; font-size:13px; border-top:1px solid var(--line); padding:8px 0;"><span style="width:20px; height:13px; background:#6a5f52;"></span><span style="flex:1;">faixa — artista</span><span style="color:var(--mute);">5:08</span><span style="font-family:Oswald,sans-serif; color:var(--gold); font-size:12px;">126</span></div>
-          <div style="display:flex; gap:12px; align-items:center; color:var(--cream); font-family:'Hanken Grotesk',sans-serif; font-size:13px; border-top:1px solid var(--line); padding:8px 0;"><span style="width:20px; height:13px; background:var(--blood);"></span><span style="flex:1;">faixa — artista</span><span style="color:var(--mute);">4:01</span><span style="font-family:Oswald,sans-serif; color:var(--gold); font-size:12px;">122</span></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; flex-wrap:wrap; gap:8px;">
+          <div style="font-family:Oswald,sans-serif; font-weight:700; font-size:11px; letter-spacing:.14em; color:var(--cream);">CRATE / BIBLIOTECA</div>
+          <label style="font-family:Oswald,sans-serif; font-size:9px; letter-spacing:.08em; color:var(--gold); border:1.5px solid var(--gold); padding:2px 8px; cursor:pointer; text-transform:uppercase; transition:all 0.15s;" onmouseover="this.style.background='var(--gold)'; this.style.color='#0E0B0A';" onmouseout="this.style.background='transparent'; this.style.color='var(--gold)';">
+            + enviar faixa
+            <input id="uploadTrackInput" type="file" accept="audio/*" style="display:none;">
+          </label>
         </div>
+        <div id="crateList" style="display:flex; flex-direction:column; gap:0;"></div>
       </div>
     </div>
   </div>
@@ -403,12 +411,39 @@
   const EDIT_KEY = new URLSearchParams(location.search).get('k') || "";
   const canEdit = () => !SYNC_URL || !!EDIT_KEY; // sem backend, edita local; com backend, precisa de chave
   let pushTimer=null;
+  function updateSyncStatus(status) {
+    const light = $('syncStatusLight');
+    const text = $('syncStatusText');
+    if (!light || !text) return;
+    if (status === 'online') {
+      light.style.background = 'var(--gold)';
+      light.style.boxShadow = '0 0 5px var(--gold)';
+      text.style.color = 'var(--cream)';
+      text.textContent = 'sincronizado';
+    } else if (status === 'local') {
+      light.style.background = '#8a8174';
+      light.style.boxShadow = 'none';
+      text.style.color = '#8a8174';
+      text.textContent = 'modo local';
+    } else if (status === 'erro') {
+      light.style.background = 'var(--blood)';
+      light.style.boxShadow = '0 0 5px var(--blood)';
+      text.style.color = 'var(--blood)';
+      text.textContent = 'erro de sync';
+    }
+  }
+
   function pushRemote(){
     if(!SYNC_URL || !EDIT_KEY) return;
     clearTimeout(pushTimer);
     pushTimer=setTimeout(()=>{
       fetch(SYNC_URL+'/state',{method:'PUT',headers:{'content-type':'application/json','x-edit-key':EDIT_KEY},
-        body:JSON.stringify({camarim:camarim, guests:guests, photos:photos})}).catch(()=>{});
+        body:JSON.stringify({camarim:camarim, guests:guests, photos:photos})})
+        .then(r => {
+          if(r.ok) updateSyncStatus('online');
+          else updateSyncStatus('erro');
+        })
+        .catch(()=>{ updateSyncStatus('erro'); });
     },500);
   }
   async function pullRemote(){
@@ -514,6 +549,14 @@
 
   /* ====== AUDIO ENGINE ====== */
   let A={audio:null}, deckA=false, deckB=false, xfade=0.5, schedTimer=null, nextNoteTime=0, step=0, raf=null;
+  let echoOn=false, filterOn=false, reverbOn=false;
+  let volA=0.72, volB=0.51;
+  let crateTracks = [
+    { id: 'procedural', title: 'Sintetizador Procedural', artist: 'Cabine', len: 'Loop', url: null, bpm: 124 }
+  ];
+  let deckABuffer = null, deckBBuffer = null;
+  let deckALoading = false, deckBLoading = false;
+
   function ensureAudio(){
     if(A.audio) return;
     try{
@@ -521,21 +564,336 @@
       A.master=A.audio.createGain(); A.master.gain.value=0.85;
       A.analyser=A.audio.createAnalyser(); A.analyser.fftSize=1024;
       A.master.connect(A.analyser); A.analyser.connect(A.audio.destination);
-      A.gA=A.audio.createGain(); A.gB=A.audio.createGain(); A.gA.connect(A.master); A.gB.connect(A.master);
+      
+      A.gA=A.audio.createGain(); A.gB=A.audio.createGain();
+      
+      // FX Filter
+      A.filter=A.audio.createBiquadFilter();
+      A.filter.type='lowpass';
+      A.filter.frequency.value=20000;
+      
+      A.gA.connect(A.filter);
+      A.gB.connect(A.filter);
+      A.filter.connect(A.master);
+      
+      // FX Echo (Delay)
+      A.delay=A.audio.createDelay(1.0);
+      A.delay.delayTime.value=0.3;
+      A.delayFeedback=A.audio.createGain();
+      A.delayFeedback.gain.value=0.4;
+      A.delay.connect(A.delayFeedback);
+      A.delayFeedback.connect(A.delay);
+      
+      A.delayWet=A.audio.createGain();
+      A.delayWet.gain.value=echoOn?0.5:0.0;
+      A.delay.connect(A.delayWet);
+      
+      A.filter.connect(A.delay);
+      A.delayWet.connect(A.master);
+      
+      // FX Reverb (Short spatializer feedback delay)
+      A.reverbDelay=A.audio.createDelay(0.1);
+      A.reverbDelay.delayTime.value=0.025;
+      A.reverbFeedback=A.audio.createGain();
+      A.reverbFeedback.gain.value=0.7;
+      A.reverbDelay.connect(A.reverbFeedback);
+      A.reverbFeedback.connect(A.reverbDelay);
+      
+      A.reverbWet=A.audio.createGain();
+      A.reverbWet.gain.value=reverbOn?0.6:0.0;
+      A.reverbDelay.connect(A.reverbWet);
+      
+      A.filter.connect(A.reverbDelay);
+      A.reverbWet.connect(A.master);
+
       const len=Math.floor(A.audio.sampleRate*0.2); A.noise=A.audio.createBuffer(1,len,A.audio.sampleRate);
       const d=A.noise.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
     }catch(e){}
   }
-  function applyGains(){ if(!A.audio) return; const x=xfade==null?0.5:xfade; const gA=Math.cos(x*Math.PI/2), gB=Math.sin(x*Math.PI/2); const t=A.audio.currentTime; A.gA.gain.setTargetAtTime((deckA?1:0)*gA,t,0.02); A.gB.gain.setTargetAtTime((deckB?1:0)*gB,t,0.02); }
+  function applyGains(){ if(!A.audio) return; const x=xfade==null?0.5:xfade; const gA=Math.cos(x*Math.PI/2), gB=Math.sin(x*Math.PI/2); const t=A.audio.currentTime; A.gA.gain.setTargetAtTime((deckA?volA:0)*gA,t,0.02); A.gB.gain.setTargetAtTime((deckB?volB:0)*gB,t,0.02); }
+  
+  function setVolAFrom(e){
+    ensureAudio();
+    const r=$('volA').getBoundingClientRect();
+    let y=(e.clientY-r.top)/r.height;
+    y=Math.max(0,Math.min(1,y));
+    volA = 1 - y;
+    $('volAHandle').style.top=(y*r.height - 4)+'px';
+    applyGains();
+  }
+  function setVolBFrom(e){
+    ensureAudio();
+    const r=$('volB').getBoundingClientRect();
+    let y=(e.clientY-r.top)/r.height;
+    y=Math.max(0,Math.min(1,y));
+    volB = 1 - y;
+    $('volBHandle').style.top=(y*r.height - 4)+'px';
+    applyGains();
+  }
+  
+  function updateFilterFreq() {
+    if(!A.audio || !A.filter) return;
+    const t = A.audio.currentTime;
+    if(filterOn) {
+      A.filter.frequency.setTargetAtTime(800, t, 0.05);
+      A.filter.Q.setTargetAtTime(3.5, t, 0.05);
+    } else {
+      A.filter.frequency.setTargetAtTime(20000, t, 0.05);
+      A.filter.Q.setTargetAtTime(1.0, t, 0.05);
+    }
+  }
+
+  function toggleEcho(){
+    echoOn=!echoOn; updateFXUI();
+    if(A.audio&&A.delayWet){ const t=A.audio.currentTime; A.delayWet.gain.setTargetAtTime(echoOn?0.5:0.0, t, 0.04); }
+  }
+  function toggleFilter(){
+    filterOn=!filterOn; updateFXUI(); updateFilterFreq();
+  }
+  function toggleReverb(){
+    reverbOn=!reverbOn; updateFXUI();
+    if(A.audio&&A.reverbWet){ const t=A.audio.currentTime; A.reverbWet.gain.setTargetAtTime(reverbOn?0.6:0.0, t, 0.04); }
+  }
+  function updateFXUI(){
+    const e=$('fxEcho'), f=$('fxFilter'), r=$('fxReverb');
+    const s=(el,on)=>{ if(el){ el.style.border=on?'1.5px solid var(--blood)':'1px solid var(--edge)'; el.style.background=on?'rgba(181,34,26,.18)':'transparent'; el.style.color=on?'var(--cream)':'var(--mute)'; } };
+    s(e,echoOn); s(f,filterOn); s(r,reverbOn);
+  }
   function maybeSchedule(){ const on=deckA||deckB; if(on&&!schedTimer&&A.audio){ nextNoteTime=A.audio.currentTime+0.06; step=0; schedTimer=setInterval(sched,25); } else if(!on&&schedTimer){ clearInterval(schedTimer); schedTimer=null; } }
   function sched(){ if(!A.audio) return; const spb=60/124/4; while(nextNoteTime<A.audio.currentTime+0.12){ stepAt(step,nextNoteTime); nextNoteTime+=spb; step=(step+1)%16; } }
-  function stepAt(s,t){ if(deckA){ if(s%4===0) kick(t); if(s%4===2) hat(t,0.32); if(s%2===1) hat(t,0.14); } if(deckB){ const map={0:55,6:82.41,8:65.41,11:97.99,14:55}; if(map[s]) bass(t,map[s]); } }
+  function stepAt(s,t){
+    if(deckA && !deckABuffer){
+      if(s%4===0) kick(t);
+      if(s%4===2) hat(t,0.32);
+      if(s%2===1) hat(t,0.14);
+    }
+    if(deckB && !deckBBuffer){
+      const map={0:55,6:82.41,8:65.41,11:97.99,14:55};
+      if(map[s]) bass(t,map[s]);
+    }
+  }
   function kick(t){ const o=A.audio.createOscillator(),g=A.audio.createGain(); o.frequency.setValueAtTime(150,t); o.frequency.exponentialRampToValueAtTime(50,t+0.12); g.gain.setValueAtTime(1,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.2); o.connect(g); g.connect(A.gA); o.start(t); o.stop(t+0.22); }
   function hat(t,v){ const s=A.audio.createBufferSource(); s.buffer=A.noise; const hp=A.audio.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7000; const g=A.audio.createGain(); g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.04); s.connect(hp); hp.connect(g); g.connect(A.gA); s.start(t); s.stop(t+0.05); }
   function bass(t,f){ const o=A.audio.createOscillator(),g=A.audio.createGain(),lp=A.audio.createBiquadFilter(); o.type='sawtooth'; o.frequency.value=f; lp.type='lowpass'; lp.frequency.value=520; g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.5,t+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+0.22); o.connect(lp); lp.connect(g); g.connect(A.gB); o.start(t); o.stop(t+0.24); }
+  function playFlipSound() {
+    ensureAudio();
+    if(!A.audio) return;
+    const t = A.audio.currentTime;
+    const s = A.audio.createBufferSource();
+    s.buffer = A.noise;
+    const hp = A.audio.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.setValueAtTime(2500, t);
+    hp.frequency.exponentialRampToValueAtTime(8000, t + 0.12);
+    const g = A.audio.createGain();
+    g.gain.setValueAtTime(0.08, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+    s.connect(hp); hp.connect(g); g.connect(A.master);
+    
+    const o = A.audio.createOscillator();
+    const g2 = A.audio.createGain();
+    o.frequency.setValueAtTime(120, t);
+    o.frequency.exponentialRampToValueAtTime(60, t + 0.08);
+    g2.gain.setValueAtTime(0.2, t);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+    o.connect(g2); g2.connect(A.master);
+    s.start(t); s.stop(t + 0.15);
+    o.start(t); o.stop(t + 0.1);
+  }
+  async function loadAudioBuffer(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Falha ao baixar arquivo de áudio.');
+    const arrayBuffer = await res.arrayBuffer();
+    return new Promise((resolve, reject) => {
+      A.audio.decodeAudioData(arrayBuffer, resolve, reject);
+    });
+  }
+  async function loadTrackToDeck(track, deck) {
+    ensureAudio();
+    if (!A.audio) return;
+    if (track.url === null) {
+      if (deck === 'A') {
+        deckABuffer = null;
+        if (A.sourceA) { try { A.sourceA.stop(); } catch(e){} A.sourceA = null; }
+        if (deckA) { deckA = false; updateDeckUI(); }
+        alert('Deck A: Sintetizador Procedural ativo.');
+      } else {
+        deckBBuffer = null;
+        if (A.sourceB) { try { A.sourceB.stop(); } catch(e){} A.sourceB = null; }
+        if (deckB) { deckB = false; updateDeckUI(); }
+        alert('Deck B: Sintetizador Procedural ativo.');
+      }
+      updateDeckStatusUI();
+      return;
+    }
+    if (deck === 'A') {
+      deckALoading = true;
+    } else {
+      deckBLoading = true;
+    }
+    updateDeckStatusUI();
+    try {
+      const buffer = await loadAudioBuffer(track.url);
+      if (deck === 'A') {
+        deckABuffer = buffer;
+        deckALoading = false;
+        if (deckA) {
+          try { if (A.sourceA) A.sourceA.stop(); } catch(e){}
+          A.sourceA = A.audio.createBufferSource();
+          A.sourceA.buffer = deckABuffer;
+          A.sourceA.loop = true;
+          A.sourceA.connect(A.gA);
+          A.sourceA.start(0);
+        }
+      } else {
+        deckBBuffer = buffer;
+        deckBLoading = false;
+        if (deckB) {
+          try { if (A.sourceB) A.sourceB.stop(); } catch(e){}
+          A.sourceB = A.audio.createBufferSource();
+          A.sourceB.buffer = deckBBuffer;
+          A.sourceB.loop = true;
+          A.sourceB.connect(A.gB);
+          A.sourceB.start(0);
+        }
+      }
+      alert(`Faixa "${track.title}" carregada no Deck ${deck}!`);
+    } catch (e) {
+      alert(`Erro ao carregar áudio: ${e.message}`);
+      if (deck === 'A') deckALoading = false;
+      else deckBLoading = false;
+    }
+    updateDeckStatusUI();
+  }
+  function updateDeckStatusUI() {
+    const ha = $('deckAHeader');
+    const hb = $('deckBHeader');
+    if (ha) {
+      if (deckALoading) ha.innerHTML = 'DECK A <span style="color:var(--gold); font-size:10px;">(CARREGANDO...)</span>';
+      else if (deckABuffer) ha.innerHTML = 'DECK A <span style="color:var(--gold); font-size:10px;">(ÁUDIO CARREGADO)</span>';
+      else ha.innerHTML = 'DECK A <span style="color:var(--mute); font-size:10px;">(PROCEDURAL)</span>';
+    }
+    if (hb) {
+      if (deckBLoading) hb.innerHTML = '<span style="color:var(--gold); font-size:10px;">(CARREGANDO...)</span> DECK B';
+      else if (deckBBuffer) hb.innerHTML = '<span style="color:var(--gold); font-size:10px;">(ÁUDIO CARREGADO)</span> DECK B';
+      else hb.innerHTML = '<span style="color:var(--mute); font-size:10px;">(PROCEDURAL)</span> DECK B';
+    }
+  }
+  function renderCrate() {
+    const list = $('crateList');
+    if (!list) return;
+    list.innerHTML = crateTracks.map(t => {
+      const isProcedural = t.url === null;
+      return `
+        <div style="display:flex; gap:12px; align-items:center; color:var(--soft); font-family:'Hanken Grotesk',sans-serif; font-size:13px; border-top:1px solid var(--line); padding:8px 0;">
+          <span style="width:12px; height:12px; background:${isProcedural ? 'var(--blood)' : 'var(--gold)'}; flex-shrink:0; border-radius:1px;"></span>
+          <div style="flex:1; min-width:0;">
+            <div style="font-family:Oswald,sans-serif; font-weight:600; font-size:14px; color:var(--cream); text-transform:uppercase; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(t.title)}</div>
+            <div style="font-family:'Hanken Grotesk',sans-serif; font-size:11px; color:var(--mute);">${esc(t.artist)}</div>
+          </div>
+          <span style="font-family:Oswald,sans-serif; color:var(--gold); font-size:12px; margin-right:6px;">${t.bpm} BPM</span>
+          <div style="display:flex; gap:4px; flex-shrink:0;">
+            <button class="crate-load-btn" data-id="${t.id}" data-deck="A" style="font-family:Oswald,sans-serif; font-size:10px; border:1px solid var(--edge); background:transparent; color:var(--soft); padding:2px 6px; cursor:pointer;">DECK A</button>
+            <button class="crate-load-btn" data-id="${t.id}" data-deck="B" style="font-family:Oswald,sans-serif; font-size:10px; border:1px solid var(--edge); background:transparent; color:var(--soft); padding:2px 6px; cursor:pointer;">DECK B</button>
+          </div>
+        </div>
+      `;
+    }).join('') || `<div style="padding:10px; text-align:center; color:var(--mute); font-size:12px;">Crate vazia</div>`;
+    list.querySelectorAll('.crate-load-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const deck = btn.dataset.deck;
+        const track = crateTracks.find(x => x.id === id);
+        if (track) {
+          loadTrackToDeck(track, deck);
+        }
+      });
+    });
+  }
+  function bindUploadListener() {
+    const input = $('uploadTrackInput');
+    if (!input) return;
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('audio/') && !file.name.endsWith('.mp3') && !file.name.endsWith('.wav') && !file.name.endsWith('.ogg') && !file.name.endsWith('.m4a')) {
+        alert('Selecione um arquivo de áudio válido (.mp3, .wav, .ogg, .m4a)');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('track', file);
+      const label = input.parentElement;
+      label.style.pointerEvents = 'none';
+      label.textContent = 'enviando...';
+      fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(r => r.json())
+      .then(d => {
+        if (d.ok && d.track) {
+          alert('Faixa enviada com sucesso!');
+          fetchTracks();
+        } else {
+          alert('Erro no envio: ' + (d.error || 'Erro desconhecido'));
+        }
+      })
+      .catch(err => {
+        alert('Erro de conexão ao enviar arquivo.');
+      })
+      .finally(() => {
+        label.style.pointerEvents = 'auto';
+        label.innerHTML = `+ enviar faixa<input id="uploadTrackInput" type="file" accept="audio/*" style="display:none;">`;
+        bindUploadListener();
+      });
+    });
+  }
+  async function fetchTracks() {
+    try {
+      const res = await fetch('/api/tracks');
+      if (res.ok) {
+        crateTracks = await res.json();
+      }
+    } catch(e) {}
+    renderCrate();
+  }
   function deckToggle(which){
     ensureAudio(); if(A.audio&&A.audio.state==='suspended'){ try{A.audio.resume();}catch(e){} }
-    if(which==='A') deckA=!deckA; else deckB=!deckB;
+    if(which==='A') {
+      deckA=!deckA;
+      if (deckA) {
+        if (deckABuffer) {
+          try { if (A.sourceA) { A.sourceA.stop(); } } catch(e){}
+          A.sourceA = A.audio.createBufferSource();
+          A.sourceA.buffer = deckABuffer;
+          A.sourceA.loop = true;
+          A.sourceA.connect(A.gA);
+          A.sourceA.start(0);
+        }
+      } else {
+        if (A.sourceA) {
+          try { A.sourceA.stop(); } catch(e){}
+          A.sourceA = null;
+        }
+      }
+    } else {
+      deckB=!deckB;
+      if (deckB) {
+        if (deckBBuffer) {
+          try { if (A.sourceB) { A.sourceB.stop(); } } catch(e){}
+          A.sourceB = A.audio.createBufferSource();
+          A.sourceB.buffer = deckBBuffer;
+          A.sourceB.loop = true;
+          A.sourceB.connect(A.gB);
+          A.sourceB.start(0);
+        }
+      } else {
+        if (A.sourceB) {
+          try { A.sourceB.stop(); } catch(e){}
+          A.sourceB = null;
+        }
+      }
+    }
     applyGains(); maybeSchedule(); updateDeckUI();
   }
   function updateDeckUI(){
@@ -552,9 +910,16 @@
   $('playA').addEventListener('click',e=>{e.stopPropagation();deckToggle('A');});
   $('playB').addEventListener('click',e=>{e.stopPropagation();deckToggle('B');});
   $('playerBtn').addEventListener('click',()=>deckToggle('A'));
+  $('fxEcho').addEventListener('click',()=>{ ensureAudio(); toggleEcho(); });
+  $('fxFilter').addEventListener('click',()=>{ ensureAudio(); toggleFilter(); });
+  $('fxReverb').addEventListener('click',()=>{ ensureAudio(); toggleReverb(); });
   function setXfadeFrom(e){ const r=$('xfade').getBoundingClientRect(); let x=(e.clientX-r.left)/r.width; x=Math.max(0,Math.min(1,x)); xfade=x; $('xfadeHandle').style.left=(x*100)+'%'; applyGains(); }
   $('xfade').addEventListener('pointerdown',setXfadeFrom);
   $('xfade').addEventListener('pointermove',e=>{ if(e.buttons) setXfadeFrom(e); });
+  $('volA').addEventListener('pointerdown',setVolAFrom);
+  $('volA').addEventListener('pointermove',e=>{ if(e.buttons) setVolAFrom(e); });
+  $('volB').addEventListener('pointerdown',setVolBFrom);
+  $('volB').addEventListener('pointermove',e=>{ if(e.buttons) setVolBFrom(e); });
   function drawWave(){
     const cv=$('wf'); if(cv){ const ctx=cv.getContext('2d'); const w=cv.width=cv.clientWidth*2, h=cv.height=cv.clientHeight*2; ctx.clearRect(0,0,w,h);
       if(A.analyser&&(deckA||deckB)){ const buf=new Uint8Array(A.analyser.fftSize); A.analyser.getByteTimeDomainData(buf); ctx.lineWidth=2.4; ctx.strokeStyle=BLOOD; ctx.beginPath(); for(let i=0;i<buf.length;i++){ const x=i/buf.length*w; const y=(buf[i]/255)*h; if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.stroke(); }
@@ -566,14 +931,19 @@
   const DECK=[
     {num:'0',name:'O Louco',meaning:'recomeço, salto no escuro',kind:'type',center:'∞'},
     {num:'I',name:'The DJ',meaning:'domínio do som, presença',kind:'thedj',center:''},
+    {num:'II',name:'A Sacerdotisa',meaning:'sabedoria, mistério interior',kind:'dots',center:'☯'},
     {num:'III',name:'A Imperatriz',meaning:'criação, abundância',kind:'type',center:'♀'},
+    {num:'V',name:'O Hierofante',meaning:'tradição, mentoria espiritual',kind:'type',center:'☤'},
     {num:'VI',name:'Os Amantes',meaning:'escolha do coração',kind:'type',center:'❤'},
     {num:'VIII',name:'A Pantera',meaning:'força, instinto, desejo',kind:'panther',center:''},
     {num:'X',name:'A Roda',meaning:'ciclos, virada de sorte',kind:'type',center:'◴'},
+    {num:'XI',name:'A Justiça',meaning:'equilíbrio, integridade, verdade',kind:'type',center:'⚖'},
     {num:'XIII',name:'A Morte',meaning:'fim que vira começo',kind:'type',center:'☥'},
+    {num:'XVI',name:'A Torre',meaning:'revolução repentina, libertação',kind:'sun',center:'⚡'},
     {num:'XVII',name:'A Estrela',meaning:'esperança, inspiração',kind:'dots',center:'✶'},
     {num:'XVIII',name:'A Lua',meaning:'sonho, mistério, intuição',kind:'dots',center:'☾'},
     {num:'XIX',name:'O Sol',meaning:'alegria, clareza, vitalidade',kind:'sun',center:'☀'},
+    {num:'XXI',name:'O Mundo',meaning:'realização, integração, dança',kind:'thedj',center:'❂'},
   ];
   function faceFor(kind){
     const base='flex:1; border:1px solid var(--line); display:flex; align-items:center; justify-content:center;';
@@ -584,7 +954,14 @@
   }
   let tarot=null;
   function drawTarot(){ const idx=[]; while(idx.length<3){ const i=Math.floor(Math.random()*DECK.length); if(!idx.includes(i)) idx.push(i);} tarot={drawn:idx.map(i=>DECK[i]),revealed:[false,false,false]}; renderTarot(); [0,1,2].forEach(k=>setTimeout(()=>revealCard(k),380+k*430)); }
-  function revealCard(k){ if(!tarot) return; tarot.revealed[k]=true; renderTarot(); }
+  function revealCard(k){
+    if(!tarot) return;
+    if(!tarot.revealed[k]) {
+      tarot.revealed[k]=true;
+      playFlipSound();
+      renderTarot();
+    }
+  }
   function renderTarot(){
     const drawn=tarot?tarot.drawn:DECK.slice(0,3); const rev=tarot?tarot.revealed:[false,false,false];
     $('tarotRow').innerHTML=drawn.map((c,k)=>`
@@ -739,10 +1116,18 @@
   /* ====== BOOT ====== */
   async function init(){
     loadLocal();
-    await pullRemote();
+    updateSyncStatus(SYNC_URL ? 'local' : 'local');
+    if (SYNC_URL) {
+      const ok = await pullRemote();
+      updateSyncStatus(ok ? 'online' : 'erro');
+    }
     renderOwner(); renderFilms(); renderBooks(); renderCalendar(); renderPending();
     renderNotes(); renderCapsules(); renderGuests(); renderPhotos(); renderPoster();
     todayCard(); drawTarot(); updateDeckUI(); drawWave();
+    
+    bindUploadListener();
+    await fetchTracks();
+    updateDeckStatusUI();
     
     if (canEdit() && EDIT_KEY) {
       const pLink = $('btnPlanner');
