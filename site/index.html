@@ -890,7 +890,10 @@
       o.start(t); o.stop(t + 0.1);
     }
     async function loadAudioBuffer(url) {
-      const res = await fetch(url);
+      // For external audio URLs, use the CORS proxy
+      const isSameOrigin = url.startsWith('blob:') || url.startsWith('/') || url.startsWith(location.origin);
+      const effectiveUrl = isSameOrigin ? url : `/api/audio-proxy?url=${encodeURIComponent(url)}`;
+      const res = await fetch(effectiveUrl);
       if (!res.ok) throw new Error('Falha ao baixar arquivo de áudio.');
       const arrayBuffer = await res.arrayBuffer();
       return new Promise((resolve, reject) => {
@@ -900,8 +903,8 @@
     async function loadTrackToDeck(track, deck) {
       ensureAudio();
       if (!A.audio) return;
-      // SoundCloud URL — open in new tab instead of loading into deck buffer
-      if (track.url && track.id !== 'procedural') {
+      // SoundCloud URL — open in new tab (not fetchable via proxy — SC requires auth)
+      if (track.url && track.id !== 'procedural' && (track.url.includes('soundcloud.com') || track.live)) {
         window.open(track.url, '_blank');
         return;
       }

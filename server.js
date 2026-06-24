@@ -115,6 +115,41 @@ app.post('/api/upload', upload.single('track'), (req, res) => {
 // Serve static site files
 app.use(express.static(siteDir));
 
+// Audio CORS proxy — fetches external audio and returns with CORS headers
+const ALLOWED_AUDIO_DOMAINS = [
+  'soundcloud.com', 'w.soundcloud.com',
+  'archive.org',
+  'anavanzin.com',
+  'warholana.workers.dev',
+];
+function isAllowedAudioUrl(url) {
+  try {
+    const u = new URL(url);
+    return ALLOWED_AUDIO_DOMAINS.some(d => u.hostname === d || u.hostname.endsWith('.' + d));
+  } catch { return false; }
+}
+app.get('/api/audio-proxy', async (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).send('Missing ?url= parameter');
+  if (!isAllowedAudioUrl(url)) return res.status(403).send('Domain not allowed');
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return res.status(response.status).send('Upstream error');
+    const contentType = response.headers.get('content-type') || 'audio/mpeg';
+    // Stream response to avoid buffering large files in memory
+    res.set('Content-Type', contentType);
+    // Set CORS header so the browser accepts it from any origin
+    res.set('Access-Control-Allow-Origin', '*');
+    // Stream via Web Streams API (Node 18+)
+    for await (const chunk of response.body) {
+      res.write(chunk);
+    }
+    res.end();
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message });
