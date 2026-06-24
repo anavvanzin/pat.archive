@@ -4,7 +4,3 @@ pages_build_output_dir = "site"
 
 [vars]
 APP_ENV = "production"
-
-[[r2_buckets]]
-binding = "AUDIO_BUCKET"
-bucket_name = "patricia-audio-uploads"

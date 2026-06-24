@@ -12,6 +12,10 @@
   <link rel="stylesheet" href="style.css">
   <!-- html2canvas for flyer image export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Howler.js audio engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <!-- Audio engine singleton -->
+  <script src="audio/engine.js"></script>
 </head>
 <body>
 
@@ -515,17 +519,26 @@
   </section>
 
   <!-- PERSISTENT FOOTER WAVE PLAYER -->
-  <div class="persistent-player">
+  <div class="persistent-player" id="persistentPlayer">
     <div id="playerBtn" class="player-play-btn">▶</div>
-    <div class="player-thumb">
+    <div class="player-thumb" id="playerThumb">
       <div class="aset-studiobg" style="width:100%; height:100%;"></div>
     </div>
-    <div class="player-meta">
-      <div class="player-title">012 · RITUAL NOTURNO</div>
-      <div class="player-artist">CHDX · ao vivo</div>
+    <div class="player-meta" id="playerMeta">
+      <div class="player-title" id="playerTitle">012 · RITUAL NOTURNO</div>
+      <div class="player-artist" id="playerArtist">CHDX · ao vivo</div>
+    </div>
+    <div class="player-progress-wrap" id="playerProgressWrap" style="display:none; flex:1; min-width:80px; cursor:pointer;">
+      <div class="player-progress-bar" id="playerProgressBar" style="height:3px; background:var(--edge); position:relative;">
+        <div id="playerProgressFill" style="height:100%; width:0%; background:var(--blood); transition:width 0.3s;"></div>
+      </div>
     </div>
     <canvas id="wf" class="player-wavesurfer"></canvas>
     <span id="playerTime" class="player-time">—</span>
+    <div id="playerNav" style="display:none; gap:4px; align-items:center;">
+      <button id="playerPrev" class="player-nav-btn" style="background:none; border:none; color:var(--mute); cursor:pointer; font-size:16px; padding:4px;">⏮</button>
+      <button id="playerNext" class="player-nav-btn" style="background:none; border:none; color:var(--mute); cursor:pointer; font-size:16px; padding:4px;">⏭</button>
+    </div>
   </div>
 
   <!-- CLIENT CODE SCRIPT BLOCK -->
@@ -646,34 +659,37 @@
 
     /* ====== SETS LIST ====== */
     const SETS_FALLBACK = [
-      {n:'001', title:'aquecimento lento', genre:'deep house · minimal', duration:'62:15', date:'2026-05-10', cover:'assets/card-thedj.png', url:'https://soundcloud.com/chdx/aquecimento-lento'},
-      {n:'002', title:'oferenda', genre:'techno · industrial', duration:'55:40', date:'2026-04-22', cover:'assets/portrait-atelier.png', url:'https://soundcloud.com/chdx/oferenda'},
-      {n:'003', title:'pantera negra', genre:'breaks · electro', duration:'48:30', date:'2026-03-15', cover:'assets/panther-flash.png', url:'https://soundcloud.com/chdx/pantera-negra'},
-      {n:'004', title:'ritual noturno', genre:'techno · ambient', duration:'58:12', date:'2026-06-23', cover:'assets/portrait-selfie.png', url:'https://soundcloud.com/chdx/ritual-noturno'},
-      {n:'005', title:'after do after', genre:'house · acid', duration:'71:05', date:'2026-02-28', cover:'assets/studio-chdx.png', url:'https://soundcloud.com/chdx/after-do-after', live:true},
-      {n:'006', title:'pista vazia', genre:'dub · experimental', duration:'44:18', date:'2026-01-19', cover:'assets/stilllife.png', url:'https://soundcloud.com/chdx/pista-vazia'},
-      {n:'007', title:'recent', genre:'techno · noise', duration:'52:33', date:'2026-06-15', cover:'assets/IMG_7549.jpg', url:'https://soundcloud.com/chdx/recent'},
-      {n:'008', title:'still life', genre:'ambient · drone', duration:'39:47', date:'2026-06-08', cover:'assets/IMG_7546.png', url:'https://soundcloud.com/chdx/still-life'},
+      {n:'001', title:'aquecimento lento', genre:'deep house · minimal', duration:'72:28', date:'2026-05-10', cover:'assets/card-thedj.png', url:'https://archive.org/download/Michael_Renk_A_Eighth_Byte/Michael_Renk_A_Eighth_Byte_vbr.mp3'},
+      {n:'002', title:'oferenda', genre:'techno · eletrônico', duration:'54:32', date:'2026-04-22', cover:'assets/portrait-atelier.png', url:'https://archive.org/download/phlow_mix_001/phlow_mix_001-mo.-netaudio_tape_vol_1.mp3'},
+      {n:'003', title:'pantera negra', genre:'breaks · electro', duration:'83:44', date:'2026-03-15', cover:'assets/panther-flash.png', url:'https://archive.org/download/STADTGRUENLABEL_NET_SET/STADTGRUENLABEL_NET_SET_vbr.mp3'},
+      {n:'004', title:'ritual noturno', genre:'techno · ambient · dub', duration:'86:42', date:'2026-06-23', cover:'assets/portrait-selfie.png', url:'https://archive.org/download/Mel012/NetlabelMixWeek46.mp3'},
+      {n:'005', title:'after do after', genre:'house · acid', duration:'1:49:18', date:'2026-02-28', cover:'assets/studio-chdx.png', url:'https://archive.org/download/Maurizio_Miceli_-_Tribute_To_Netlabels_II/Tribute_To_Netlabels_II_-_Part_Two_Deep_House_Mix.mp3', live:true},
+      {n:'006', title:'pista vazia', genre:'dub · tech house', duration:'87:08', date:'2026-01-19', cover:'assets/stilllife.png', url:'https://archive.org/download/gmix030_Domovoy_Summer_In_Soul/gmix030_Domovoy_Summer_In_Soul_vbr.mp3'},
+      {n:'007', title:'recent', genre:'techno · noise', duration:'2:06:39', date:'2026-06-15', cover:'assets/IMG_7549.jpg', url:'https://archive.org/download/Maurizio_Miceli_-_Tribute_To_Netlabels_II/Tribute_To_Netlabels_II_-_Part_One_Dub_Techno_Mix.mp3'},
+      {n:'008', title:'still life', genre:'ambient · drone', duration:'26:18', date:'2026-06-08', cover:'assets/IMG_7546.png', url:'https://ftp.scene.org/pub/music/groups/ideology/mix/phlow-mix001_ambient_architextures_2.mp3'},
     ];
     let SETS = [...SETS_FALLBACK];
     
     async function loadSets() {
-      try {
-        const res = await fetch('data/sets.json');
-        if (res.ok) {
-          SETS = await res.json();
-          SETS.forEach(s => { if (!s.n && s.id) s.n = s.id; });
-        }
-      } catch(e) { /* fallback to hardcoded data */ }
-      renderSets();
-    }
+   try {
+     const res = await fetch('data/sets.json');
+     if (res.ok) {
+       SETS = await res.json();
+       SETS.forEach(s => { if (!s.n && s.id) s.n = s.id; });
+     }
+   } catch(e) { /* fallback to hardcoded data */ }
+   renderSets();
+   // Feed SETS to AudioEngine
+   const engine = window.CHDX && window.CHDX.AudioEngine;
+   if (engine) engine.load(SETS);
+ }
     
     function renderSets() {
       $('setList').innerHTML = SETS.map((s,i)=>{
         const thumbBg = s.cover ? `url('${s.cover}') center/cover` : 'radial-gradient(rgba(233,224,206,.25) 1px, transparent 1.3px)';
         const isLive = s.live || s.isLive;
         return `
-          <div class="set-row" data-set="${s.n}" data-url="${esc(s.url || '')}">
+          <div class="set-row" data-set="${s.n}" data-idx="${i}">
             <span class="set-number" style="color:${i===0 ? 'var(--blood)' : 'var(--mute)'};">${s.n}</span>
             <div class="set-thumb" style="background:${thumbBg};${s.cover?'background-size:cover':''}">
               ${!s.cover ? `<span class="bside-label">B-side</span>` : ''}
@@ -690,11 +706,17 @@
 
       document.querySelectorAll('#setList .set-row').forEach(row => {
         row.addEventListener('click', () => {
-          const setNum = row.dataset.set;
-          const setObj = SETS.find(x => x.n === setNum);
+          const idx = parseInt(row.dataset.idx);
+          const setObj = SETS[idx];
           if (!setObj) return;
           if (setObj.url) {
-            window.open(setObj.url, '_blank');
+            // Play via AudioEngine — stream inline
+            const engine = window.CHDX && window.CHDX.AudioEngine;
+            if (engine) {
+              engine.play(idx);
+            } else {
+              window.open(setObj.url, '_blank');
+            }
           } else if (!setObj.live) {
             location.hash = '#studio';
             deckToggle('A');
@@ -903,11 +925,7 @@
     async function loadTrackToDeck(track, deck) {
       ensureAudio();
       if (!A.audio) return;
-      // SoundCloud URL — open in new tab (not fetchable via proxy — SC requires auth)
-      if (track.url && track.id !== 'procedural' && (track.url.includes('soundcloud.com') || track.live)) {
-        window.open(track.url, '_blank');
-        return;
-      }
+      // All sets have playable URLs — load via proxy (no more fail-to-SoundCloud)
       if (track.url === null) {
         if (deck === 'A') {
           deckABuffer = null;
@@ -981,9 +999,9 @@
       if (!list) return;
       list.innerHTML = crateTracks.map(t => {
         const isProcedural = t.url === null;
-        const scUrl = t.url && !isProcedural ? t.url : null;
+        const hasUrl = t.url && !isProcedural;
         return `
-          <div class="crate-row${scUrl ? ' crate-has-url' : ''}">
+          <div class="crate-row${hasUrl ? ' crate-has-url' : ''}">
             <span class="crate-row-dot${isProcedural ? ' procedural' : ''}"></span>
             <div class="crate-row-meta">
               <div class="crate-row-title">${esc(t.title)}</div>
@@ -991,7 +1009,7 @@
             </div>
             <span class="crate-row-bpm">${t.bpm} BPM</span>
             <div class="crate-row-btns">
-              ${scUrl ? `<button class="crate-sc-btn" data-url="${esc(scUrl)}">▶ SC</button>` : ''}
+              ${hasUrl ? `<button class="crate-play-btn" data-id="${t.id}">▶</button>` : ''}
               <button class="crate-load-btn" data-id="${t.id}" data-deck="A">A</button>
               <button class="crate-load-btn" data-id="${t.id}" data-deck="B">B</button>
             </div>
@@ -1008,11 +1026,19 @@
           }
         });
       });
-      list.querySelectorAll('.crate-sc-btn').forEach(btn => {
+      list.querySelectorAll('.crate-play-btn').forEach(btn => {
         btn.addEventListener('click', e => {
           e.stopPropagation();
-          const url = btn.dataset.url;
-          if (url) window.open(url, '_blank');
+          const id = btn.dataset.id;
+          const track = crateTracks.find(x => x.id === id);
+          if (track && track.url) {
+            // Find the set index and play via engine
+            const engine = window.CHDX && window.CHDX.AudioEngine;
+            if (engine) {
+              const idx = engine.playlist.findIndex(p => p.id === id);
+              if (idx >= 0) engine.play(idx);
+            }
+          }
         });
       });
     }
@@ -1115,19 +1141,11 @@
       $('platterB').style.animation=deckB?'spin360 2.4s linear infinite':'none';
       const setBtn=(el,on)=>{ el.style.background=on?BLOOD:'transparent'; el.style.color=on?'#0E0B0A':BLOOD; el.textContent=on?'❚❚ PLAY':'▶ PLAY'; };
       setBtn($('playA'),deckA); setBtn($('playB'),deckB);
-      const any=deckA||deckB;
-      $('playerBtn').style.background=any?BLOOD:'transparent'; $('playerBtn').style.color=any?'#0E0B0A':BLOOD; $('playerBtn').textContent=any?'❚❚':'▶';
-      $('playerTime').textContent=any?'AO VIVO':'—';
-      const metaTitle = $('playerBtn').parentElement.querySelector('.player-title');
-      if (metaTitle) {
-        metaTitle.textContent = (deckA && deckABuffer) ? 'AQUECIMENTO LENTO' : '012 · RITUAL NOTURNO';
-      }
     }
     $('deckADisc').addEventListener('click',()=>deckToggle('A'));
     $('deckBDisc').addEventListener('click',()=>deckToggle('B'));
     $('playA').addEventListener('click',e=>{e.stopPropagation();deckToggle('A');});
     $('playB').addEventListener('click',e=>{e.stopPropagation();deckToggle('B');});
-    $('playerBtn').addEventListener('click',()=>deckToggle('A'));
     $('fxEcho').addEventListener('click',()=>{ ensureAudio(); toggleEcho(); });
     $('fxFilter').addEventListener('click',()=>{ ensureAudio(); toggleFilter(); });
     $('fxReverb').addEventListener('click',()=>{ ensureAudio(); toggleReverb(); });
@@ -1393,6 +1411,112 @@
       });
     }
 
+    /* ====== AUDIO ENGINE WIRING ====== */
+    function wireEngine() {
+      const engine = window.CHDX && window.CHDX.AudioEngine;
+      if (!engine) return;
+
+      function updatePlayerUI(state) {
+        const cur = state.current;
+        if (cur) {
+          const cover = cur.cover || '';
+          $('playerTitle').textContent = cur.n ? `${cur.n} · ${cur.title.toUpperCase()}` : cur.title.toUpperCase();
+          $('playerArtist').textContent = cur.artist + ' · ' + (cur.duration || '—');
+          const thumb = $('playerThumb');
+          if (cover) {
+            thumb.innerHTML = `<div style="width:100%;height:100%;background:url('${cover}') center/cover;"></div>`;
+          }
+          $('playerProgressWrap').style.display = 'flex';
+          $('playerNav').style.display = 'flex';
+        }
+
+        // Play/pause button
+        const btn = $('playerBtn');
+        if (state.isPlaying) {
+          btn.textContent = '❚❚';
+          btn.style.background = BLOOD;
+          btn.style.color = '#0E0B0A';
+        } else if (cur) {
+          btn.textContent = '▶';
+          btn.style.background = 'transparent';
+          btn.style.color = BLOOD;
+        }
+
+        // Progress
+        const fill = $('playerProgressFill');
+        if (fill) fill.style.width = (state.progress * 100) + '%';
+
+        // Persistent player visibility
+        const pp = $('persistentPlayer');
+        if (cur) {
+          pp.classList.add('active');
+        } else {
+          pp.classList.remove('active');
+        }
+      }
+
+      engine.on('change', updatePlayerUI);
+      engine.on('loading', (data) => {
+        const cur = data.track;
+        if (cur) {
+          const cover = cur.cover || '';
+          $('playerTitle').textContent = cur.n ? `${cur.n} · ${cur.title.toUpperCase()}` : cur.title.toUpperCase();
+          $('playerArtist').textContent = cur.artist + ' · carregando...';
+          $('playerBtn').textContent = '⋯';
+          $('playerBtn').style.background = GOLD;
+          $('playerBtn').style.color = '#0E0B0A';
+          $('playerProgressWrap').style.display = 'flex';
+          $('playerNav').style.display = 'flex';
+          $('persistentPlayer').classList.add('active');
+        }
+      });
+      engine.on('error', () => {
+        $('playerBtn').textContent = '⚠';
+        $('playerBtn').style.background = 'transparent';
+        $('playerBtn').style.color = BLOOD;
+      });
+
+      // Poll progress every second while playing
+      let progressInterval = null;
+      engine.on('change', (state) => {
+        if (state.isPlaying && !progressInterval) {
+          progressInterval = setInterval(() => {
+            const fill = $('playerProgressFill');
+            if (fill && engine.getCurrent()) {
+              fill.style.width = (engine.getProgress() * 100) + '%';
+            }
+          }, 500);
+        } else if (!state.isPlaying && progressInterval) {
+          clearInterval(progressInterval);
+          progressInterval = null;
+        }
+      });
+
+      // Player button toggles engine
+      $('playerBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (engine.getCurrent()) {
+          engine.toggle();
+        } else if (SETS.length > 0) {
+          engine.play(0);
+        }
+      });
+
+      // Prev / Next
+      $('playerPrev').addEventListener('click', (e) => { e.stopPropagation(); engine.prev(); });
+      $('playerNext').addEventListener('click', (e) => { e.stopPropagation(); engine.next(); });
+
+      // Click progress bar to seek
+      const pwrap = $('playerProgressWrap');
+      if (pwrap) {
+        pwrap.addEventListener('click', (e) => {
+          const rect = pwrap.getBoundingClientRect();
+          const frac = (e.clientX - rect.left) / rect.width;
+          engine.seek(frac);
+        });
+      }
+    }
+
     /* ====== BOOT ====== */
     async function init(){
       initTheme();
@@ -1405,6 +1529,7 @@
       renderOwner(); renderFilms(); renderBooks(); renderCalendar(); renderPending();
       renderNotes(); renderCapsules(); renderGuests(); renderPhotos(); renderPoster();
       renderSets(); loadSets(); todayCard(); drawTarot(); updateDeckUI(); drawWave();
+      wireEngine();
       
       bindUploadListener();
       

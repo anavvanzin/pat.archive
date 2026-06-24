@@ -805,8 +805,8 @@ section.section-line-draw::after {
   cursor: pointer;
 }
 .crate-row-btns button:hover { border-color: var(--gold); color: var(--gold); }
-.crate-sc-btn { color: var(--gold) !important; border-color: var(--gold) !important; font-size: 9px !important; }
-.crate-sc-btn:hover { background: var(--gold) !important; color: var(--ink) !important; }
+.crate-play-btn { color: var(--blood) !important; border-color: var(--blood) !important; font-size: 11px !important; }
+.crate-play-btn:hover { background: var(--blood) !important; color: var(--paper) !important; }
 
 /* Flyer Generator Layout */
 .flyer-box {
@@ -1644,9 +1644,12 @@ section.section-line-draw::after {
   background: var(--player-bg, #0A0807);
   border-top: 1.5px solid var(--blood);
   padding: 11px 22px;
-  display: flex;
+  display: none;
   align-items: center;
   gap: 16px;
+}
+.persistent-player.active {
+  display: flex;
 }
 .player-play-btn {
   width: 38px;
