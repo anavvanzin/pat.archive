@@ -1379,6 +1379,18 @@
       renderSets(); loadSets(); todayCard(); drawTarot(); updateDeckUI(); drawWave();
       
       bindUploadListener();
+      
+      /* Section draw-line animation */
+      const secObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('section-line-draw');
+            secObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('section').forEach(s => secObs.observe(s));
+      
       await fetchTracks();
       updateDeckStatusUI();
       

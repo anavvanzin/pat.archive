@@ -257,6 +257,28 @@ section[data-rhythm="on"]::before {
   pointer-events: none;
 }
 
+/* Section draw-line animation — blood-red hairline at section top */
+section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--blood);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+}
+section.section-line-draw::after {
+  animation: drawLine 600ms ease-out forwards;
+  opacity: 1;
+}
+@keyframes drawLine {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
 /* CTA BUTTONS */
 .btn-outline {
   display: inline-block;
