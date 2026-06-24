@@ -12,11 +12,11 @@
   {
     "id": "002",
     "title": "oferenda",
-    "genre": "techno · industrial",
-    "duration": "55:40",
+    "genre": "techno · eletrônico",
+    "duration": "54:32",
     "date": "2026-04-22",
     "cover": "assets/portrait-atelier.png",
-    "url": "https://soundcloud.com/chdx/oferenda",
+    "url": "https://archive.org/download/phlow_mix_001/phlow_mix_001-mo.-netaudio_tape_vol_1.mp3",
     "live": false
   },
   {
@@ -32,11 +32,11 @@
   {
     "id": "004",
     "title": "ritual noturno",
-    "genre": "techno · ambient",
-    "duration": "58:12",
+    "genre": "techno · ambient · dub",
+    "duration": "86:42",
     "date": "2026-06-23",
     "cover": "assets/portrait-selfie.png",
-    "url": "https://soundcloud.com/chdx/ritual-noturno",
+    "url": "https://archive.org/download/Mel012/NetlabelMixWeek46.mp3",
     "live": false
   },
   {
@@ -52,11 +52,11 @@
   {
     "id": "006",
     "title": "pista vazia",
-    "genre": "dub · experimental",
-    "duration": "44:18",
+    "genre": "dub · tech house",
+    "duration": "87:08",
     "date": "2026-01-19",
     "cover": "assets/stilllife.png",
-    "url": "https://soundcloud.com/chdx/pista-vazia",
+    "url": "https://archive.org/download/gmix030_Domovoy_Summer_In_Soul/gmix030_Domovoy_Summer_In_Soul_vbr.mp3",
     "live": false
   },
   {
@@ -73,10 +73,10 @@
     "id": "008",
     "title": "still life",
     "genre": "ambient · drone",
-    "duration": "39:47",
+    "duration": "26:18",
     "date": "2026-06-08",
     "cover": "assets/IMG_7546.png",
-    "url": "https://soundcloud.com/chdx/still-life",
+    "url": "https://ftp.scene.org/pub/music/groups/ideology/mix/phlow-mix001_ambient_architextures_2.mp3",
     "live": false
   }
 ]
