@@ -1,0 +1,82 @@
+[
+  {
+    "id": "001",
+    "title": "aquecimento lento",
+    "genre": "deep house · minimal",
+    "duration": "62:15",
+    "date": "2026-05-10",
+    "cover": "assets/card-thedj.png",
+    "url": "https://soundcloud.com/chdx/aquecimento-lento",
+    "live": false
+  },
+  {
+    "id": "002",
+    "title": "oferenda",
+    "genre": "techno · industrial",
+    "duration": "55:40",
+    "date": "2026-04-22",
+    "cover": "assets/portrait-atelier.png",
+    "url": "https://soundcloud.com/chdx/oferenda",
+    "live": false
+  },
+  {
+    "id": "003",
+    "title": "pantera negra",
+    "genre": "breaks · electro",
+    "duration": "48:30",
+    "date": "2026-03-15",
+    "cover": "assets/panther-flash.png",
+    "url": "https://soundcloud.com/chdx/pantera-negra",
+    "live": false
+  },
+  {
+    "id": "004",
+    "title": "ritual noturno",
+    "genre": "techno · ambient",
+    "duration": "58:12",
+    "date": "2026-06-23",
+    "cover": "assets/portrait-selfie.png",
+    "url": "https://soundcloud.com/chdx/ritual-noturno",
+    "live": false
+  },
+  {
+    "id": "005",
+    "title": "after do after",
+    "genre": "house · acid",
+    "duration": "71:05",
+    "date": "2026-02-28",
+    "cover": "assets/studio-chdx.png",
+    "url": "https://soundcloud.com/chdx/after-do-after",
+    "live": true
+  },
+  {
+    "id": "006",
+    "title": "pista vazia",
+    "genre": "dub · experimental",
+    "duration": "44:18",
+    "date": "2026-01-19",
+    "cover": "assets/stilllife.png",
+    "url": "https://soundcloud.com/chdx/pista-vazia",
+    "live": false
+  },
+  {
+    "id": "007",
+    "title": "recent",
+    "genre": "techno · noise",
+    "duration": "52:33",
+    "date": "2026-06-15",
+    "cover": "assets/IMG_7549.jpg",
+    "url": "https://soundcloud.com/chdx/recent",
+    "live": false
+  },
+  {
+    "id": "008",
+    "title": "still life",
+    "genre": "ambient · drone",
+    "duration": "39:47",
+    "date": "2026-06-08",
+    "cover": "assets/IMG_7546.png",
+    "url": "https://soundcloud.com/chdx/still-life",
+    "live": false
+  }
+]
