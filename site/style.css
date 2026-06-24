@@ -372,81 +372,6 @@ section.section-line-draw::after {
   position: relative;
   overflow: hidden;
 }
-#home .hero-frame {
-  position: relative;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100vh;
-}
-#home .hero-photo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-position: center 60%;
-  background-size: cover;
-  filter: contrast(1.05) saturate(0.85);
-}
-#home .hero-grain {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.5;
-  mix-blend-mode: overlay;
-  background-image: radial-gradient(rgba(233,224,206,.5) .5px, transparent .7px);
-  background-size: 3px 3px;
-}
-#home .hero-vignette {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(14,11,10,0) 0%, rgba(14,11,10,0.25) 50%, rgba(14,11,10,0.85) 100%),
-    linear-gradient(90deg, rgba(14,11,10,0.55) 0%, rgba(14,11,10,0) 40%);
-}
-#home .hero-text {
-  position: relative;
-  z-index: 2;
-  align-self: end;
-  padding: 0 var(--bleed-pad) clamp(40px, 6vw, 80px);
-  max-width: min(880px, 92vw);
-}
-#home .hero-text .eyebrow { margin-bottom: 18px; display: block; }
-#home .hero-text h1 {
-  font-family: var(--display-font);
-  font-weight: 700;
-  font-size: clamp(64px, 9.5vw, 132px);
-  line-height: 0.85;
-  letter-spacing: -0.01em;
-  color: var(--cream);
-  margin: 0 0 14px;
-  text-transform: uppercase;
-}
-#home .hero-text h1 em {
-  display: block;
-  font-family: var(--serif-font);
-  font-style: italic;
-  font-weight: 500;
-  font-size: clamp(24px, 2.6vw, 38px);
-  letter-spacing: 0;
-  color: var(--gold);
-  text-transform: none;
-  margin-top: 10px;
-}
-#home .hero-text p {
-  max-width: 46ch;
-  color: var(--cream);
-  opacity: 0.88;
-  margin: 0 0 28px;
-}
-#home .hero-cta {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
 /* ============================================================
    Section 2 — MANIFESTO
    ============================================================ */
@@ -525,94 +450,86 @@ section.section-line-draw::after {
   letter-spacing: -0.01em;
   color: var(--cream);
 }
-#sets .sets-meta p { color: var(--soft); margin: 0 0 28px; max-width: 34ch; }
-#sets .sets-meta .play-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--display-font);
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: .42em;
-  text-transform: uppercase;
-  color: var(--paper);
-  background: var(--blood);
-  padding: 14px 22px;
-  border: 1.5px solid var(--blood);
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* SETS — numbered list layout */
+.set-list {
+  display: flex;
+  flex-direction: column;
 }
-#sets .sets-meta .play-cta:hover { background: var(--cream); color: var(--ink); border-color: var(--cream); }
-
-.masonry {
+.set-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(16px, 2vw, 24px);
-}
-.masonry .set {
-  background: var(--paper);
-  padding: 10px;
-  border: 1.5px solid var(--gold);
-  position: relative;
+  grid-template-columns: auto 64px 1fr auto auto;
+  gap: 20px;
+  align-items: center;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
   cursor: pointer;
-  transition: transform 0.25s ease;
+  transition: background 0.2s ease;
 }
-.masonry .set:nth-child(odd) { transform: rotate(var(--tA)); }
-.masonry .set:nth-child(even) { transform: rotate(var(--tB)); }
-.masonry .set:hover { transform: rotate(0) translateY(-4px); }
-.masonry .set .cover {
-  position: relative;
-  aspect-ratio: 1/1;
-  background: var(--ink);
-  overflow: hidden;
-}
-.masonry .set .cover img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: contrast(1.05) saturate(0.85);
-}
-.masonry .set .cover .num {
-  position: absolute;
-  left: 10px;
-  bottom: 10px;
+.set-row:hover { background: rgba(181,34,26,.06); }
+.set-row:last-child { border-bottom: 1px solid var(--line); }
+
+.set-number {
   font-family: var(--display-font);
   font-weight: 700;
-  font-size: 16px;
-  letter-spacing: .16em;
-  color: var(--paper);
-  background: rgba(14,11,10,0.7);
-  padding: 3px 6px;
+  font-size: 40px;
+  line-height: 1;
+  -webkit-text-stroke: 0;
+  min-width: 56px;
 }
-.masonry .set .meta {
-  padding-top: 10px;
+.set-thumb {
+  width: 64px;
+  height: 64px;
+  border: 1.5px solid var(--edge);
+  background-size: cover !important;
+  image-rendering: pixelated;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.set-thumb .bside-label {
+  font-family: var(--serif-font);
+  font-style: italic;
+  color: var(--gold);
+  font-size: 13px;
+}
+.set-info {
+  min-width: 0;
+}
+.set-title {
   font-family: var(--display-font);
   font-weight: 600;
-  font-size: 11px;
-  letter-spacing: .18em;
-  color: var(--ink);
+  font-size: clamp(18px, 2vw, 23px);
+  letter-spacing: .04em;
+  color: var(--cream);
   text-transform: uppercase;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
-.masonry .set .meta .play { color: var(--blood); font-size: 14px; }
-.masonry .set .meta .play.mute { color: var(--mute); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; }
-.masonry .set .meta .meta-line {
-  font-size: 9px;
-  letter-spacing: .08em;
+.set-genre {
+  font-family: var(--body-font);
+  font-size: 14px;
   color: var(--mute);
-  font-weight: 400;
-  text-transform: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-  text-align: center;
-  padding: 0 6px;
+  margin-top: 1px;
 }
+.set-duration {
+  font-family: var(--display-font);
+  font-size: 15px;
+  color: var(--mute);
+}
+.set-play-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1.5px solid var(--blood);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blood);
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  flex: 0 0 auto;
+}
+.set-play-btn:hover { background: var(--blood); color: var(--ink); }
 
 /* DJ Studio Cabine / Mixer Controls */
 .studio-cabine-wrap {
@@ -1849,9 +1766,14 @@ section.section-line-draw::after {
 @media (max-width: 860px) {
   section { padding: clamp(40px, 6vw, 64px) var(--bleed-pad); }
   
-  #sets .sets-container { grid-template-columns: 1fr; }
-  #sets .sets-meta { position: static; }
-  .masonry { grid-template-columns: 1fr 1fr; }
+  .herogrid { grid-template-columns: 1fr !important; gap: 30px !important; text-align: center; }
+  .herogrid > div:first-child { order: 2; }
+  .herogrid > div:last-child { order: 1; justify-self: center; }
+  .herogrid > div:last-child img { max-width: 55vw; }
+  
+  .set-row { grid-template-columns: auto 48px 1fr auto; gap: 14px; }
+  .set-thumb { width: 48px; height: 48px; }
+  .set-duration { display: none; }
   
   #galeria .atelier-container { grid-template-columns: 1fr; }
   #galeria .atelier-cluster { grid-template-columns: repeat(4, 1fr); }
@@ -1869,7 +1791,10 @@ section.section-line-draw::after {
 }
 
 @media (max-width: 580px) {
-  .masonry { grid-template-columns: 1fr; }
+  .set-row { grid-template-columns: auto 1fr auto; gap: 12px; }
+  .set-number { font-size: 28px; min-width: 36px; }
+  .set-thumb { display: none; }
+  
   #galeria .atelier-cluster { grid-template-columns: 1fr; }
   #galeria .atelier-cluster .crop { grid-column: span 1 !important; }
   
