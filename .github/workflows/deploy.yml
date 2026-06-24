@@ -2,7 +2,7 @@ name: Deploy to Cloudflare Pages
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -11,29 +11,13 @@ jobs:
     permissions:
       contents: read
       deployments: write
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v5
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: melovanzin/package-lock.json
-
-      - name: Install
-        working-directory: ./melovanzin
-        run: npm ci
-
-      - name: Build
-        working-directory: ./melovanzin
-        run: npm run build
-
-      - name: Deploy
+      - name: Deploy site/ to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || secrets.CF_ACCOUNT_ID }}
-          command: pages deploy melovanzin/dist --project-name=pixel-love
+          command: pages deploy site --project-name=pixel-love
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
