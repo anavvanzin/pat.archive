@@ -922,9 +922,19 @@
       o.start(t); o.stop(t + 0.1);
     }
     async function loadAudioBuffer(url) {
-      // Fetch direto — archive.org e maioria dos hosts de áudio livre têm CORS habilitado
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('Falha ao baixar arquivo de áudio (HTTP ' + res.status + ').');
+      // Tenta fetch direto primeiro (archive.org tem CORS *, funciona sem proxy)
+      let res;
+      try {
+        res = await fetch(url);
+      } catch (e) {
+        // CORS bloqueou — tenta via proxy do Cloudflare Worker
+        if (SYNC_URL) {
+          res = await fetch(SYNC_URL + '/audio-proxy?url=' + encodeURIComponent(url));
+        } else {
+          throw new Error('CORS bloqueado e sem proxy disponível.');
+        }
+      }
+      if (!res.ok) throw new Error('Falha ao baixar áudio (HTTP ' + res.status + ').');
       const arrayBuffer = await res.arrayBuffer();
       return new Promise((resolve, reject) => {
         A.audio.decodeAudioData(arrayBuffer, resolve, reject);

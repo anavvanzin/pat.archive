@@ -12,10 +12,25 @@
 
 const KEY = "v1";
 
+// Lista de hosts permitidos para o proxy de áudio (evita uso indevido)
+const AUDIO_HOSTS = [
+  "archive.org",
+  "ftp.scene.org",
+  "files.scene.org",
+  "scene.org",
+];
+
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
   "Access-Control-Allow-Headers": "content-type, x-edit-key",
+  "Access-Control-Max-Age": "86400",
+};
+
+const corsAudio = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "*",
   "Access-Control-Max-Age": "86400",
 };
 
@@ -65,6 +80,50 @@ export default {
       };
       await env.STATE.put(KEY, JSON.stringify(clean));
       return json({ ok: true, updatedAt: clean.updatedAt });
+    }
+
+    // --- Audio proxy ---
+    if (url.pathname === "/audio-proxy" && request.method === "GET") {
+      const target = url.searchParams.get("url");
+      if (!target) return json({ error: "parâmetro ?url= obrigatório" }, 400);
+
+      let targetUrl;
+      try {
+        targetUrl = new URL(target);
+      } catch (e) {
+        return json({ error: "url inválida" }, 400);
+      }
+
+      // Verifica se o host é permitido
+      const hostAllowed = AUDIO_HOSTS.some(h =>
+        targetUrl.hostname === h || targetUrl.hostname.endsWith("." + h)
+      );
+      if (!hostAllowed) {
+        return json({ error: "host não permitido" }, 403);
+      }
+
+      // Busca o áudio do servidor original
+      const audioResp = await fetch(targetUrl.href, {
+        headers: { "User-Agent": "CHDX-audio-proxy/1.0" },
+      });
+
+      if (!audioResp.ok) {
+        return new Response("erro ao buscar áudio", {
+          status: 502,
+          headers: corsAudio,
+        });
+      }
+
+      // Retorna o áudio com CORS aberto
+      const respHeaders = new Headers(corsAudio);
+      respHeaders.set("content-type", audioResp.headers.get("content-type") || "audio/mpeg");
+      respHeaders.set("content-length", audioResp.headers.get("content-length") || "");
+      respHeaders.set("cache-control", "public, max-age=86400");
+
+      return new Response(audioResp.body, {
+        status: 200,
+        headers: respHeaders,
+      });
     }
 
     return json({ error: "not found" }, 404);
