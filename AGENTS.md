@@ -50,3 +50,31 @@ npx wrangler dev   # run local worker
 - **Sync Path**: Integrated via Cloudflare Worker `chdx-sync` (KV namespace `STATE`).
 - **Partial Merge**: PUT method must perform partial updates to preserve independent fields (`camarim`, `guests`, `photos`, `planner`).
 - **Planner Security**: Access to the edit mode of `planejamento-vida.html` is gated behind the `?k=<EDIT_KEY>` URL query string. Non-authenticated users see a readonly version.
+
+## Redesign v2 (Codex branch)
+
+A redesigned 6-section scaffold lives alongside the canonical page as
+`site/index-v2.html` + `site/style-redesign.css`. It is the next iteration of the
+CHDX site (Mid Editorial hero, oversized `012` numeral, paper-cream atelier mode
+switch, 5 distinct CTA variations). It uses the canonical photos in
+`site/assets/` (with two new additions: `IMG_7546.png` and `IMG_7549.jpg`).
+
+To preview locally:
+
+```bash
+cd site
+python3.12 -m http.server 8080 --bind 127.0.0.1
+# open http://127.0.0.1:8080/index-v2.html
+```
+
+To promote v2 to the production root URL:
+
+```bash
+mv site/index.html site/index-v1.html
+mv site/index-v2.html site/index.html
+mv site/style-redesign.css site/style.css
+```
+
+Design brief, per-section spec, and verification captures live at
+`docs/chdx-redesign/`. The brief's standalone scaffold (with inline SVG
+placeholders) is at `docs/chdx-redesign/site/` for diff review.
