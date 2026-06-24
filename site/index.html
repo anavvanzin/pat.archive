@@ -900,6 +900,11 @@
     async function loadTrackToDeck(track, deck) {
       ensureAudio();
       if (!A.audio) return;
+      // SoundCloud URL — open in new tab instead of loading into deck buffer
+      if (track.url && track.id !== 'procedural') {
+        window.open(track.url, '_blank');
+        return;
+      }
       if (track.url === null) {
         if (deck === 'A') {
           deckABuffer = null;
@@ -973,8 +978,9 @@
       if (!list) return;
       list.innerHTML = crateTracks.map(t => {
         const isProcedural = t.url === null;
+        const scUrl = t.url && !isProcedural ? t.url : null;
         return `
-          <div class="crate-row">
+          <div class="crate-row${scUrl ? ' crate-has-url' : ''}">
             <span class="crate-row-dot${isProcedural ? ' procedural' : ''}"></span>
             <div class="crate-row-meta">
               <div class="crate-row-title">${esc(t.title)}</div>
@@ -982,8 +988,9 @@
             </div>
             <span class="crate-row-bpm">${t.bpm} BPM</span>
             <div class="crate-row-btns">
-              <button class="crate-load-btn" data-id="${t.id}" data-deck="A">DECK A</button>
-              <button class="crate-load-btn" data-id="${t.id}" data-deck="B">DECK B</button>
+              ${scUrl ? `<button class="crate-sc-btn" data-url="${esc(scUrl)}">▶ SC</button>` : ''}
+              <button class="crate-load-btn" data-id="${t.id}" data-deck="A">A</button>
+              <button class="crate-load-btn" data-id="${t.id}" data-deck="B">B</button>
             </div>
           </div>
         `;
@@ -996,6 +1003,13 @@
           if (track) {
             loadTrackToDeck(track, deck);
           }
+        });
+      });
+      list.querySelectorAll('.crate-sc-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          const url = btn.dataset.url;
+          if (url) window.open(url, '_blank');
         });
       });
     }
@@ -1038,14 +1052,22 @@
       });
     }
     async function fetchTracks() {
-      try {
-        const res = await fetch('/api/tracks');
-        if (res.ok) {
-          crateTracks = await res.json();
-        }
-      } catch(e) {}
-      renderCrate();
-    }
+   // Populate crate from SETS data (SoundCloud-linked sets) + procedural synth
+   crateTracks = [
+     { id: 'procedural', title: 'Sintetizador Procedural', artist: 'Cabine', len: 'Loop', url: null, bpm: 124 },
+     ...SETS.map(s => ({
+       id: s.n,
+       title: s.title,
+       artist: (s.genre || 'CHDX') + ' · ' + (s.duration || '—'),
+       len: s.duration || '—',
+       url: s.url || null,
+       bpm: 124,
+       cover: s.cover || null,
+       live: s.live || false,
+     })),
+   ];
+   renderCrate();
+ }
     function deckToggle(which){
       ensureAudio(); if(A.audio&&A.audio.state==='suspended'){ try{A.audio.resume();}catch(e){} }
       if(which==='A') {

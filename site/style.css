@@ -805,6 +805,8 @@ section.section-line-draw::after {
   cursor: pointer;
 }
 .crate-row-btns button:hover { border-color: var(--gold); color: var(--gold); }
+.crate-sc-btn { color: var(--gold) !important; border-color: var(--gold) !important; font-size: 9px !important; }
+.crate-sc-btn:hover { background: var(--gold) !important; color: var(--ink) !important; }
 
 /* Flyer Generator Layout */
 .flyer-box {
