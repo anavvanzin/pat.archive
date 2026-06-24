@@ -6,6 +6,16 @@
   <title>CHDX · pat · selectora</title>
   <meta name="theme-color" content="#0E0B0A">
   <meta name="description" content="CHDX — pat, selectora. Som que invoca: techno, ruído e pantera. Sets, ateliê e booking.">
+  <!-- Open Graph / SEO -->
+  <meta property="og:title" content="CHDX · pat · selectora">
+  <meta property="og:description" content="Som que invoca: techno, ruído e pantera. Sets, ateliê e booking.">
+  <meta property="og:image" content="assets/card-thedj.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://chdx.fm">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CHDX · pat · selectora">
+  <meta name="twitter:description" content="Som que invoca: techno, ruído e pantera. Sets, ateliê e booking.">
+  <meta name="twitter:image" content="assets/card-thedj.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Hanken Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -912,11 +922,9 @@
       o.start(t); o.stop(t + 0.1);
     }
     async function loadAudioBuffer(url) {
-      // For external audio URLs, use the CORS proxy
-      const isSameOrigin = url.startsWith('blob:') || url.startsWith('/') || url.startsWith(location.origin);
-      const effectiveUrl = isSameOrigin ? url : `/api/audio-proxy?url=${encodeURIComponent(url)}`;
-      const res = await fetch(effectiveUrl);
-      if (!res.ok) throw new Error('Falha ao baixar arquivo de áudio.');
+      // Fetch direto — archive.org e maioria dos hosts de áudio livre têm CORS habilitado
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Falha ao baixar arquivo de áudio (HTTP ' + res.status + ').');
       const arrayBuffer = await res.arrayBuffer();
       return new Promise((resolve, reject) => {
         A.audio.decodeAudioData(arrayBuffer, resolve, reject);
