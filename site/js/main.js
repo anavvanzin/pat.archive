@@ -673,22 +673,22 @@
       {num:'I',name:'The DJ',meaning:'domínio do som, presença',kind:'thedj',center:''},
       {num:'II',name:'A Sacerdotisa',meaning:'sabedoria, mistério interior',kind:'priestess',center:''},
       {num:'III',name:'A Imperatriz',meaning:'criação, abundância',kind:'empress',center:''},
-      {num:'V',name:'O Hierofante',meaning:'tradição, mentoria espiritual',kind:'type',center:'☤'},
+      {num:'V',name:'O Hierofante',meaning:'tradição, mentoria espiritual',kind:'hierophant',center:''},
       {num:'VI',name:'Os Amantes',meaning:'escolha do coração',kind:'lovers',center:''},
       {num:'VIII',name:'A Pantera',meaning:'força, instinto, desejo',kind:'panther',center:''},
       {num:'X',name:'A Roda',meaning:'ciclos, virada de sorte',kind:'wheel',center:''},
-      {num:'XI',name:'A Justiça',meaning:'equilíbrio, integridade, verdade',kind:'type',center:'⚖'},
+      {num:'XI',name:'A Justiça',meaning:'equilíbrio, integridade, verdade',kind:'justice',center:''},
       {num:'XIII',name:'A Morte',meaning:'fim que vira começo',kind:'death',center:''},
       {num:'XVI',name:'A Torre',meaning:'revolução repentina, libertação',kind:'tower',center:''},
       {num:'XVII',name:'A Estrela',meaning:'esperança, inspiração',kind:'star',center:''},
       {num:'XVIII',name:'A Lua',meaning:'sonho, mistério, intuição',kind:'moon',center:''},
       {num:'XIX',name:'O Sol',meaning:'alegria, clareza, vitalidade',kind:'sun',center:''},
-      {num:'XXI',name:'O Mundo',meaning:'realização, integração, dança',kind:'thedj',center:'❂'},
+      {num:'XXI',name:'O Mundo',meaning:'realização, integração, dança',kind:'world',center:''},
     ];
     function faceFor(kind){
       const base='flex:1; border:1px solid var(--line); display:flex; align-items:center; justify-content:center;';
-      if(kind==='thedj') return base+"background:url('assets/card-thedj.png') center/cover, url('"+THEDJ+"') center/cover;";
-      if(kind==='panther') return base+"background:#F2EAD9 url('assets/panther-flash.png') center/78% no-repeat, url('"+PANTHER+"') center/78% no-repeat var(--paper);";
+      if(kind==='thedj') return base+"background:url('assets/card-thedj.png') center/cover;";
+      if(kind==='panther') return base+"background:url('assets/card-panther.png') center/cover;";
       if(kind==='tower') return base+"background:url('assets/card-tower.png') center/cover;";
       if(kind==='fool') return base+"background:url('assets/card-fool.png') center/cover;";
       if(kind==='priestess') return base+"background:url('assets/card-priestess.png') center/cover;";
@@ -699,59 +699,23 @@
       if(kind==='wheel') return base+"background:url('assets/card-wheel.png') center/cover;";
       if(kind==='star') return base+"background:url('assets/card-star.png') center/cover;";
       if(kind==='sun') return base+"background:url('assets/card-sun.png') center/cover;";
+      if(kind==='hierophant') return base+"background:url('assets/card-hierophant.png') center/cover;";
+      if(kind==='justice') return base+"background:url('assets/card-justice.png') center/cover;";
+      if(kind==='world') return base+"background:url('assets/card-world.png') center/cover;";
       return base+'background-color:var(--ink); background-image:radial-gradient(rgba(199,154,75,.22) 1px, transparent 1.4px); background-size:8px 8px;';
     }
     let tarot=null;
     let isShuffling=false;
+    let isRevealing=false;
+    const POSITIONS = ['CORPO','ALMA','SOM'];
+    const POSITION_SUBS = ['o que o corpo traz','o que a alma busca','o que o som oferece'];
 
-    function drawTarot(){
-      if (isShuffling) return;
-      isShuffling = true;
-
-      const tarotRow = $('tarotRow');
-      // Vira as cartas de volta para baixo antes de embaralhar
-      document.querySelectorAll('.tcard-inner').forEach(inner => {
-        inner.style.transform = 'perspective(1000px) rotateY(0deg)';
-      });
-
-      tarotRow.classList.add('shuffling');
-
-      // Toca áudios simulando embaralhamento físico das cartas
-      playFlipSound();
-      setTimeout(playFlipSound, 200);
-      setTimeout(playFlipSound, 400);
-      setTimeout(playFlipSound, 600);
-
-      setTimeout(() => {
-        tarotRow.classList.remove('shuffling');
-        const idx=[];
-        while(idx.length<3){
-          const i=Math.floor(Math.random()*DECK.length);
-          if(!idx.includes(i)) idx.push(i);
-        }
-        tarot={drawn:idx.map(i=>DECK[i]),revealed:[false,false,false]};
-        isShuffling = false;
-        renderTarot();
-      }, 900);
-    }
-
-    function revealCard(k){
-      if(!tarot || isShuffling) return;
-      if(!tarot.revealed[k]) {
-        tarot.revealed[k]=true;
-        playFlipSound();
-        renderTarot();
-      }
-    }
-
-    function renderTarot(){
-      const drawn=tarot?tarot.drawn:DECK.slice(0,3);
-      const rev=tarot?tarot.revealed:[false,false,false];
-      $('tarotRow').innerHTML=drawn.map((c,k)=>`
-        <div class="tcard" data-k="${k}">
-          <div class="tcard-inner" style="transform:perspective(1000px) rotateY(${rev[k]?180:0}deg); transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);">
+    function buildCardHTML(c){
+      return `
+        <div class="tcard" data-k="">
+          <div class="tcard-inner" style="transform:perspective(1000px) rotateY(0deg);">
             <div class="tcard-face front">
-              <div class="star-mark">✶</div>
+              <div class="star-mark">\u2736</div>
             </div>
             <div class="tcard-face back">
               <div class="tcard-num">${c.num}</div>
@@ -760,42 +724,140 @@
               <div class="tcard-meaning">${esc(c.meaning)}</div>
             </div>
           </div>
-        </div>`).join('');
+        </div>`;
+    }
 
-      document.querySelectorAll('.tcard').forEach(card => {
-        const k = parseInt(card.dataset.k);
-        card.addEventListener('click', () => revealCard(k));
-
-        const cardInner = card.querySelector('.tcard-inner');
-        
-        // Efeito de Parallax / Tilt 3D Dinâmico ao mover o mouse
-        card.addEventListener('mousemove', (e) => {
-          if (isShuffling) return;
-          const isRevealed = tarot && tarot.revealed[k];
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const xc = rect.width / 2;
-          const yc = rect.height / 2;
-          // Ângulos máximos de rotação (até 12 graus)
-          const angleX = (yc - y) / 12;
-          const angleY = (x - xc) / 12;
-
-          cardInner.style.transition = 'none'; // desliga transições durante o rastreamento do mouse
-          cardInner.style.transform = `perspective(1000px) rotateY(${(isRevealed ? 180 : 0) + angleY}deg) rotateX(${angleX}deg)`;
-        });
-
-        // Retorna a carta para o repouso com transição suave
-        card.addEventListener('mouseleave', () => {
-          const isRevealed = tarot && tarot.revealed[k];
-          cardInner.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
-          cardInner.style.transform = `perspective(1000px) rotateY(${isRevealed ? 180 : 0}deg) rotateX(0deg)`;
-        });
+    function attachTilt(card, k){
+      const cardInner = card.querySelector('.tcard-inner');
+      card.addEventListener('mousemove', (e) => {
+        if (isShuffling || isRevealing) return;
+        const isRevealed = tarot && tarot.revealed[k];
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const xc = rect.width / 2;
+        const yc = rect.height / 2;
+        const angleX = (yc - y) / 12;
+        const angleY = (x - xc) / 12;
+        cardInner.style.transition = 'none';
+        cardInner.style.transform = `perspective(1000px) rotateY(${(isRevealed ? 180 : 0) + angleY}deg) rotateX(${angleX}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        const isRevealed = tarot && tarot.revealed[k];
+        cardInner.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        cardInner.style.transform = `perspective(1000px) rotateY(${isRevealed ? 180 : 0}deg) rotateX(0deg)`;
       });
     }
 
+    /* Draw 3 cards and render them face-down in the slots */
+    function drawTarot(){
+      if (isShuffling || isRevealing) return;
+      isShuffling = true;
+
+      // Hide reading
+      const readingEl = $('tarotReading');
+      if (readingEl) { readingEl.classList.remove('visible'); readingEl.innerHTML = ''; }
+
+      // Update button
+      const btn = $('shuffle');
+      btn.textContent = 'embaralhando...';
+      btn.style.pointerEvents = 'none';
+
+      // Pick 3 unique cards
+      const idx = [];
+      while(idx.length < 3){
+        const i = Math.floor(Math.random() * DECK.length);
+        if(!idx.includes(i)) idx.push(i);
+      }
+      tarot = { drawn: idx.map(i => DECK[i]), revealed: [false,false,false] };
+
+      // Render face-down cards into slots
+      for(let k = 0; k < 3; k++){
+        const slot = $('slot' + k);
+        slot.innerHTML = buildCardHTML(tarot.drawn[k]);
+        const card = slot.querySelector('.tcard');
+        card.dataset.k = k;
+        attachTilt(card, k);
+        // Remove glow from all slots
+        slot.classList.remove('awaiting-glow');
+      }
+
+      // Shuffle animation — add shuffling class to spread
+      const spread = $('tarotSpread');
+      spread.classList.add('shuffling');
+
+      // Play shuffle sounds
+      playFlipSound();
+      setTimeout(playFlipSound, 200);
+      setTimeout(playFlipSound, 400);
+      setTimeout(playFlipSound, 600);
+
+      // After shuffle settles, start sequential reveal
+      setTimeout(() => {
+        spread.classList.remove('shuffling');
+        isShuffling = false;
+        sequentialReveal();
+      }, 900);
+      isShuffling = true;
+    }
+
+    function sequentialReveal(){
+      isRevealing = true;
+      const btn = $('shuffle');
+      btn.textContent = '...';
+      btn.style.pointerEvents = 'none';
+
+      let delay = 0;
+      for(let k = 0; k < 3; k++){
+        // Show glow on the next card
+        setTimeout(() => {
+          const slot = $('slot' + k);
+          slot.classList.add('awaiting-glow');
+        }, delay);
+
+        // Flip the card
+        setTimeout(() => {
+          const slot = $('slot' + k);
+          slot.classList.remove('awaiting-glow');
+          const cardInner = slot.querySelector('.tcard-inner');
+          if(cardInner){
+            playFlipSound();
+            tarot.revealed[k] = true;
+            cardInner.style.transition = 'transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            cardInner.style.transform = 'perspective(1000px) rotateY(180deg)';
+          }
+
+          // After last card, show reading and reset button
+          if(k === 2){
+            setTimeout(() => {
+              showReading();
+              isRevealing = false;
+              btn.textContent = 'nova tiragem';
+              btn.style.pointerEvents = 'auto';
+            }, 800);
+          }
+        }, delay + 700);
+
+        delay += 1100; // 700ms glow + 400ms gap before next
+      }
+    }
+
+    function showReading(){
+      const reading = $('tarotReading');
+      if(!tarot || !tarot.drawn) return;
+      const names = tarot.drawn.map((c,i) => `<strong>${POSITIONS[i]}</strong>: ${esc(c.name)}`).join(' · ');
+      const meanings = tarot.drawn.map(c => esc(c.meaning)).join('; ');
+      reading.innerHTML = `
+        <span class="tarot-reading-label">a tiragem fala</span>
+        <span class="tarot-reading-text">${names} — ${meanings}</span>
+      `;
+      // Force reflow then add visible class
+      reading.offsetHeight;
+      reading.classList.add('visible');
+    }
+
     function todayCard(){ const n=new Date(); const doy=Math.floor((n-new Date(n.getFullYear(),0,0))/86400000); const c=DECK[doy%DECK.length]; $('todayCardName').textContent=c.name; $('todayCardMeaning').textContent='— '+c.meaning; }
-    $('shuffle').addEventListener('click',drawTarot);
+    $('shuffle').addEventListener('click', drawTarot);
 
     /* ====== CAMARIM: owner ====== */
     function renderOwner(){
@@ -1126,7 +1188,7 @@
       if (ok) updateSyncStatus('online');
       renderOwner(); renderFilms(); renderBooks(); renderCalendar(); renderPending();
       renderNotes(); renderCapsules(); renderGuests(); renderPhotos(); renderPoster();
-      renderSets(); loadSets(); todayCard(); drawTarot(); updateDeckUI(); drawWave();
+      renderSets(); loadSets(); todayCard(); updateDeckUI(); drawWave();
       wireEngine();
       
       bindUploadListener();

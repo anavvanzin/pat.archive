@@ -464,16 +464,34 @@
       <div class="tarot-header">
         <span class="eyebrow">TAROT</span>
         <h2>a tiragem da noite</h2>
-        <p>Três cartas para abrir o set. Toque pra revelar · embaralhe quantas vezes quiser.</p>
+        <p>Três posições — corpo, alma e som. Inicie o ritual pra revelar o que a noite escolheu.</p>
       </div>
       <div class="tarot-today-card">
         <span class="label">carta do dia</span>
         <span id="todayCardName">—</span>
         <span id="todayCardMeaning"></span>
       </div>
-      <div id="tarotRow" class="tarot-deck-row"></div>
+      <!-- RITUAL SPREAD — 3 positions -->
+      <div id="tarotSpread" class="tarot-spread">
+        <div class="tarot-position" data-pos="0">
+          <span class="tarot-position-label">CORPO</span>
+          <span class="tarot-position-sub">o que o corpo traz</span>
+          <div class="tarot-card-slot" id="slot0"></div>
+        </div>
+        <div class="tarot-position" data-pos="1">
+          <span class="tarot-position-label">ALMA</span>
+          <span class="tarot-position-sub">o que a alma busca</span>
+          <div class="tarot-card-slot" id="slot1"></div>
+        </div>
+        <div class="tarot-position" data-pos="2">
+          <span class="tarot-position-label">SOM</span>
+          <span class="tarot-position-sub">o que o som oferece</span>
+          <div class="tarot-card-slot" id="slot2"></div>
+        </div>
+      </div>
+      <div id="tarotReading" class="tarot-reading"></div>
       <div style="text-align:center; margin-top:36px;">
-        <button id="shuffle" class="btngold">↻ embaralhar</button>
+        <button id="shuffle" class="btngold">iniciar ritual</button>
       </div>
     </div>
   </section>

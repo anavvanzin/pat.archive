@@ -1399,11 +1399,86 @@ section.section-line-draw::after {
   font-size: 14px;
   color: var(--mute);
 }
-#tarot .tarot-deck-row {
+/* Tarot Spread — 3-position ritual layout */
+.tarot-spread {
   display: flex;
-  gap: 30px;
+  gap: clamp(24px, 4vw, 50px);
   justify-content: center;
+  align-items: flex-start;
   flex-wrap: wrap;
+  padding: 20px 0 10px;
+}
+.tarot-position {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.tarot-position[data-pos="0"] { transform: rotate(-1.8deg); }
+.tarot-position[data-pos="1"] { transform: rotate(0.4deg) translateY(14px); }
+.tarot-position[data-pos="2"] { transform: rotate(1.6deg); }
+.tarot-position-label {
+  font-family: var(--display-font);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--blood);
+}
+.tarot-position-sub {
+  font-family: var(--serif-font);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--mute);
+  margin-top: -4px;
+}
+.tarot-card-slot {
+  position: relative;
+}
+/* Glow pulse on next card to flip */
+.tarot-card-slot.awaiting-glow::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 1.5px solid var(--gold);
+  opacity: 0;
+  animation: cardGlow 1.4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+@keyframes cardGlow {
+  0%, 100% { opacity: 0; box-shadow: 0 0 0 rgba(199,154,75,0); }
+  50% { opacity: 1; box-shadow: 0 0 18px rgba(199,154,75,0.35); }
+}
+/* Combined reading line */
+.tarot-reading {
+  text-align: center;
+  margin-top: 28px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.tarot-reading.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.tarot-reading-text {
+  font-family: var(--serif-font);
+  font-style: italic;
+  font-size: clamp(17px, 2vw, 22px);
+  line-height: 1.45;
+  color: var(--cream);
+  max-width: 680px;
+  margin: 0 auto;
+}
+.tarot-reading-label {
+  display: block;
+  font-family: var(--display-font);
+  font-size: 10px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
 }
 .tcard {
   width: 240px;
@@ -2180,7 +2255,12 @@ body.light-theme.archive-page .poem-panel { background: rgba(14, 11, 10, .055); 
   .camarim-planner-grid { grid-template-columns: 1fr; }
   .mural-grid { grid-template-columns: 1fr; }
   .video-grid { grid-template-columns: 1fr; }
-  
+
+  .tarot-spread { gap: 20px; }
+  .tarot-position[data-pos="0"],
+  .tarot-position[data-pos="1"],
+  .tarot-position[data-pos="2"] { transform: none; }
+
   #s6-testimonials .quotes { grid-template-columns: 1fr; }
 }
 
@@ -2201,7 +2281,13 @@ body.light-theme.archive-page .poem-panel { background: rgba(14, 11, 10, .055); 
   
   .deck-grid { grid-template-columns: 1fr; }
   .flyer-grid { grid-template-columns: 1fr; }
-  
+
+  .tarot-spread { gap: 16px; }
+  .tarot-position[data-pos="0"],
+  .tarot-position[data-pos="1"],
+  .tarot-position[data-pos="2"] { transform: none; }
+  .tarot-position-sub { display: none; }
+
   .site-header { flex-direction: column; gap: 10px; text-align: center; }
   .site-header nav { justify-content: center; }
 }
