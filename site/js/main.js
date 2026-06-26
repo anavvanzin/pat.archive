@@ -923,6 +923,16 @@
         } else {
           pp.classList.remove('active');
         }
+        
+        // Spinning reel
+        const thumb = $('playerThumb');
+        if (thumb) {
+          if (state.isPlaying) {
+            thumb.classList.add('playing');
+          } else {
+            thumb.classList.remove('playing');
+          }
+        }
       }
 
       engine.on('change', updatePlayerUI);

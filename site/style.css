@@ -460,12 +460,17 @@ section.section-line-draw::after {
   grid-template-columns: auto 64px 1fr auto auto;
   gap: 20px;
   align-items: center;
-  padding: 20px 0;
+  padding: 20px 10px;
   border-top: 1px solid var(--line);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
+  border-left: 2px solid transparent;
 }
-.set-row:hover { background: rgba(181,34,26,.06); }
+.set-row:hover { 
+  background: rgba(181,34,26,.06); 
+  border-left-color: var(--blood); 
+  transform: translateX(4px); 
+}
 .set-row:last-child { border-bottom: 1px solid var(--line); }
 
 .set-number {
@@ -1670,6 +1675,13 @@ section.section-line-draw::after {
   height: 40px;
   border: 1px solid var(--edge);
   flex: 0 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.player-thumb.playing {
+  animation: spin360 4s linear infinite;
+  border-color: var(--gold);
 }
 .player-meta { min-width: 0; flex: 0 0 auto; }
 .player-title {
