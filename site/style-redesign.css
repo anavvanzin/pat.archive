@@ -319,6 +319,9 @@ section[data-rhythm="on"]::before{
 #s4 .atelier-cluster .crop:nth-child(2){ grid-column: 6 / span 3; transform:rotate(var(--tB)); margin-top:40px; }
 #s4 .atelier-cluster .crop:nth-child(3){ grid-column: 2 / span 4; transform:rotate(var(--tA)); margin-top:-10px; }
 #s4 .atelier-cluster .crop:nth-child(4){ grid-column: 7 / span 2; transform:rotate(var(--tB)); margin-top:20px; }
+#s4 .atelier-cluster .crop:nth-child(5){ grid-column: 1 / span 4; transform:rotate(var(--tA)); margin-top:30px; }
+#s4 .atelier-cluster .crop:nth-child(6){ grid-column: 5 / span 4; transform:rotate(var(--tB)); margin-top:10px; }
+#s4 .atelier-cluster .crop:nth-child(7){ grid-column: 3 / span 4; transform:rotate(var(--tA)); margin-top:20px; }
 #s4 .atelier-cluster .crop svg{ display:block; width:100%; height:auto; }
 #s4 .atelier-meta{ padding-top:8px; position:sticky; top: clamp(24px, 4vw, 56px); }
 #s4 .atelier-meta .eyebrow{ color:var(--blood); margin-bottom:18px; display:block; }
