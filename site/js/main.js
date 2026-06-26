@@ -665,19 +665,19 @@
 
     /* ====== TAROT ====== */
     const DECK=[
-      {num:'0',name:'O Louco',meaning:'recomeço, salto no escuro',kind:'type',center:'∞'},
+      {num:'0',name:'O Louco',meaning:'recomeço, salto no escuro',kind:'fool',center:''},
       {num:'I',name:'The DJ',meaning:'domínio do som, presença',kind:'thedj',center:''},
-      {num:'II',name:'A Sacerdotisa',meaning:'sabedoria, mistério interior',kind:'dots',center:'☯'},
+      {num:'II',name:'A Sacerdotisa',meaning:'sabedoria, mistério interior',kind:'priestess',center:''},
       {num:'III',name:'A Imperatriz',meaning:'criação, abundância',kind:'type',center:'♀'},
       {num:'V',name:'O Hierofante',meaning:'tradição, mentoria espiritual',kind:'type',center:'☤'},
       {num:'VI',name:'Os Amantes',meaning:'escolha do coração',kind:'type',center:'❤'},
       {num:'VIII',name:'A Pantera',meaning:'força, instinto, desejo',kind:'panther',center:''},
       {num:'X',name:'A Roda',meaning:'ciclos, virada de sorte',kind:'type',center:'◴'},
       {num:'XI',name:'A Justiça',meaning:'equilíbrio, integridade, verdade',kind:'type',center:'⚖'},
-      {num:'XIII',name:'A Morte',meaning:'fim que vira começo',kind:'type',center:'☥'},
+      {num:'XIII',name:'A Morte',meaning:'fim que vira começo',kind:'death',center:''},
       {num:'XVI',name:'A Torre',meaning:'revolução repentina, libertação',kind:'tower',center:''},
       {num:'XVII',name:'A Estrela',meaning:'esperança, inspiração',kind:'dots',center:'✶'},
-      {num:'XVIII',name:'A Lua',meaning:'sonho, mistério, intuição',kind:'dots',center:'☾'},
+      {num:'XVIII',name:'A Lua',meaning:'sonho, mistério, intuição',kind:'moon',center:''},
       {num:'XIX',name:'O Sol',meaning:'alegria, clareza, vitalidade',kind:'sun',center:'☀'},
       {num:'XXI',name:'O Mundo',meaning:'realização, integração, dança',kind:'thedj',center:'❂'},
     ];
@@ -686,6 +686,10 @@
       if(kind==='thedj') return base+"background:url('assets/card-thedj.png') center/cover, url('"+THEDJ+"') center/cover;";
       if(kind==='panther') return base+"background:#F2EAD9 url('assets/panther-flash.png') center/78% no-repeat, url('"+PANTHER+"') center/78% no-repeat var(--paper);";
       if(kind==='tower') return base+"background:url('assets/card-tower.png') center/cover;";
+      if(kind==='fool') return base+"background:url('assets/card-fool.png') center/cover;";
+      if(kind==='priestess') return base+"background:url('assets/card-priestess.png') center/cover;";
+      if(kind==='death') return base+"background:url('assets/card-death.png') center/cover;";
+      if(kind==='moon') return base+"background:url('assets/card-moon.png') center/cover;";
       if(kind==='sun') return base+'background-color:var(--ink); background-image:radial-gradient(circle, rgba(199,154,75,.32), transparent 60%);';
       return base+'background-color:var(--ink); background-image:radial-gradient(rgba(199,154,75,.22) 1px, transparent 1.4px); background-size:8px 8px;';
     }
