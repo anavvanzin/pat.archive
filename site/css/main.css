@@ -1856,11 +1856,16 @@ body:has(#home:target) .gift-gate,
   color: var(--gold);
   text-transform: uppercase;
 }
-.access-card__signal {
-  height: 6px;
-  margin-bottom: 28px;
-  background: repeating-linear-gradient(90deg, var(--blood) 0 18px, transparent 18px 28px, var(--gold) 28px 32px, transparent 32px 44px);
-  box-shadow: 0 0 26px rgba(181,34,26,.28);
+.access-card__visual {
+  width: 100%;
+  max-width: 240px;
+  margin: 0 auto 24px;
+  display: block;
+  filter: grayscale(1) contrast(1.2);
+  transition: filter 0.4s ease;
+}
+.access-card:hover .access-card__visual {
+  filter: grayscale(0) contrast(1.1) brightness(1.1);
 }
 .access-card__eyebrow {
   margin: 0 0 10px;
