@@ -384,6 +384,63 @@ section.section-line-draw::after {
   position: relative;
   overflow: hidden;
 }
+/* Hero contents (migrated from inline styles, 1:1 parity) */
+#home.hero-section { padding: 70px var(--bleed-pad) 90px; }
+.hero__dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(181,34,26,.18) 1px, transparent 1.4px);
+  background-size: 7px 7px;
+  opacity: .6;
+}
+.hero__glow {
+  position: absolute;
+  left: 50%;
+  top: -120px;
+  width: 520px;
+  height: 520px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(181,34,26,.30), transparent 65%);
+}
+.herogrid {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 50px;
+  align-items: center;
+}
+.hero__eyebrow { color: var(--blood); margin-bottom: 22px; display: block; }
+.hero__title {
+  font-family: var(--display-font);
+  font-weight: 700;
+  font-size: clamp(72px, 11vw, 156px);
+  line-height: .82;
+  letter-spacing: -.01em;
+  color: var(--cream);
+  margin: 0;
+  text-transform: uppercase;
+}
+.hero__title span { -webkit-text-stroke: 2px var(--gold); color: transparent; }
+.hero__rule {
+  height: 3px;
+  width: 78%;
+  background: var(--blood);
+  margin: 26px 0;
+  transform: rotate(var(--tA, -.5deg));
+}
+.hero__lead {
+  font-family: var(--body-font);
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--soft);
+  max-width: 430px;
+  margin: 0 0 32px;
+}
+.hero__actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.hero__plate { position: relative; justify-self: center; transform: rotate(var(--tB, 1.4deg)); }
 /* ============================================================
    Section 2 — MANIFESTO
    ============================================================ */
@@ -1674,7 +1731,7 @@ section.section-line-draw::after {
 .footer-dec-mark {
   font-family: var(--serif-font);
   font-size: 16px;
-  color: var(--edge);
+  color: var(--soft);
   margin-top: 10px;
 }
 
@@ -2152,6 +2209,71 @@ body.light-theme.archive-page .poem-panel { background: rgba(14, 11, 10, .055); 
   .archive-card:nth-child(2n),
   .archive-card:nth-child(2n):hover { transform: none; }
   .poem-panel { grid-column: span 1; }
+}
+
+/* ============================================================
+   ACCESSIBILITY & CONTROL PRIMITIVES
+   ============================================================ */
+/* Visible focus ring for keyboard users (not on mouse click) */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+/* Strip native chrome from controls that carry their own styling */
+button.deck-btn-play,
+button.deck-btn-cue,
+button.set-play-btn,
+button.player-play-btn,
+button.fx-chip {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* FX strip (migrated from inline styles) */
+.fx-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.fx-chip {
+  flex: 1;
+  min-width: 90px;
+  border: 1px solid var(--edge);
+  color: var(--mute);
+  background: transparent;
+  font-family: var(--display-font);
+  font-size: 11px;
+  letter-spacing: .12em;
+  padding: 7px 11px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+.fx-chip:hover { border-color: var(--cream); color: var(--cream); }
+.fx-bpm {
+  flex: 1;
+  min-width: 90px;
+  border: 1px solid var(--blood);
+  background: rgba(181, 34, 26, .18);
+  color: var(--cream);
+  font-family: var(--display-font);
+  font-size: 11px;
+  letter-spacing: .12em;
+  padding: 7px 11px;
+  text-align: center;
+}
+
+/* Reduced motion: calm every looping/decorative animation, not just the gate */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .player-thumb.playing { animation: none; }
+  section.section-line-draw::after { width: 100%; animation: none; }
 }
 
 /* ============================================================

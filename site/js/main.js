@@ -194,7 +194,7 @@
               <div class="set-genre">${esc(s.genre || '')}</div>
             </div>
             <span class="set-duration">${esc(s.duration || '')}</span>
-            <div class="set-play-btn" role="button" aria-label="Ouvir set ${s.n}">${isLive ? '●' : '▶'}</div>
+            <button type="button" class="set-play-btn" aria-label="Ouvir set ${s.n}">${isLive ? '●' : '▶'}</button>
           </div>
         `;
       }).join('');
@@ -362,7 +362,7 @@
     }
     function updateFXUI(){
       const e=$('fxEcho'), f=$('fxFilter'), r=$('fxReverb');
-      const s=(el,on)=>{ if(el){ el.style.border=on?'1.5px solid var(--blood)':'1px solid var(--edge)'; el.style.background=on?'rgba(181,34,26,.18)':'transparent'; el.style.color=on?'var(--cream)':'var(--mute)'; } };
+      const s=(el,on)=>{ if(el){ el.style.border=on?'1.5px solid var(--blood)':'1px solid var(--edge)'; el.style.background=on?'rgba(181,34,26,.18)':'transparent'; el.style.color=on?'var(--cream)':'var(--mute)'; el.setAttribute('aria-pressed', on?'true':'false'); } };
       s(e,echoOn); s(f,filterOn); s(r,reverbOn);
     }
     function maybeSchedule(){ const on=deckA||deckB; if(on&&!schedTimer&&A.audio){ nextNoteTime=A.audio.currentTime+0.06; step=0; schedTimer=setInterval(sched,25); } else if(!on&&schedTimer){ clearInterval(schedTimer); schedTimer=null; } }
@@ -660,6 +660,28 @@
     $('volA').addEventListener('pointermove',e=>{ if(e.buttons) setVolAFrom(e); });
     $('volB').addEventListener('pointerdown',setVolBFrom);
     $('volB').addEventListener('pointermove',e=>{ if(e.buttons) setVolBFrom(e); });
+
+    // Keyboard support for mixer sliders (arrow keys + home/end)
+    function nudge(key, cur, step){
+      if(key==='ArrowUp'||key==='ArrowRight') return Math.min(1, cur+step);
+      if(key==='ArrowDown'||key==='ArrowLeft') return Math.max(0, cur-step);
+      if(key==='Home') return 0;
+      if(key==='End') return 1;
+      return null;
+    }
+    function syncVol(id, handleId, val){
+      const r=$(id).getBoundingClientRect();
+      const h=$(id).clientHeight||r.height;
+      $(handleId).style.top=((1-val)*h - 4)+'px';
+      $(id).setAttribute('aria-valuenow', Math.round(val*100));
+    }
+    $('volA').addEventListener('keydown',e=>{ const v=nudge(e.key,volA,0.05); if(v==null)return; e.preventDefault(); ensureAudio(); volA=v; syncVol('volA','volAHandle',v); applyGains(); });
+    $('volB').addEventListener('keydown',e=>{ const v=nudge(e.key,volB,0.05); if(v==null)return; e.preventDefault(); ensureAudio(); volB=v; syncVol('volB','volBHandle',v); applyGains(); });
+    $('xfade').addEventListener('keydown',e=>{ const v=nudge(e.key,xfade==null?0.5:xfade,0.05); if(v==null)return; e.preventDefault(); ensureAudio(); xfade=v; $('xfadeHandle').style.left=(v*100)+'%'; $('xfade').setAttribute('aria-valuenow', Math.round(v*100)); applyGains(); });
+    // Initialize slider value semantics
+    $('volA').setAttribute('aria-valuenow', Math.round(volA*100));
+    $('volB').setAttribute('aria-valuenow', Math.round(volB*100));
+    $('xfade').setAttribute('aria-valuenow', Math.round((xfade==null?0.5:xfade)*100));
     function drawWave(){
       const cv=$('wf'); if(cv){ const ctx=cv.getContext('2d'); const w=cv.width=cv.clientWidth*2, h=cv.height=cv.clientHeight*2; ctx.clearRect(0,0,w,h);
         if(A.analyser&&(deckA||deckB)){ const buf=new Uint8Array(A.analyser.fftSize); A.analyser.getByteTimeDomainData(buf); ctx.lineWidth=2.4; ctx.strokeStyle=BLOOD; ctx.beginPath(); for(let i=0;i<buf.length;i++){ const x=i/buf.length*w; const y=(buf[i]/255)*h; if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.stroke(); }
