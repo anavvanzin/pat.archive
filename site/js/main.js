@@ -108,13 +108,43 @@
       return false;
     }
 
-    /* ====== SPLASH / DEDICATÓRIA ====== */
-    try{ if(sessionStorage.getItem('chdx_booted')) $('splash').style.display='none'; }catch(e){}
-    $('splash').addEventListener('click',()=>{ $('splash').style.display='none'; try{sessionStorage.setItem('chdx_booted','1');}catch(e){} });
-    let secretTaps=0;
-    $('secretPanther').addEventListener('click',()=>{ secretTaps++; if(secretTaps>=3){ $('ded').style.display='flex'; } });
-    $('ded').addEventListener('click',()=>{ $('ded').style.display='none'; secretTaps=0; });
-    $('dedcard').addEventListener('click',e=>e.stopPropagation());
+    /* ====== GIFT GATE / PRIVATE ARCHIVE ====== */
+    function initGiftGate(){
+      const gate = $('giftGate');
+      if (!gate) return;
+      const unlock = $('giftUnlock');
+      const pista = $('giftEnterPista');
+      gate.classList.add('is-locked');
+      if (unlock) {
+        unlock.setAttribute('aria-expanded', 'false');
+        unlock.addEventListener('click', () => {
+          gate.classList.remove('is-locked');
+          gate.classList.add('is-unlocked');
+          unlock.setAttribute('aria-expanded', 'true');
+        });
+      }
+      if (pista) {
+        pista.addEventListener('click', () => {
+          gate.classList.add('is-closed');
+        });
+      }
+    }
+    initGiftGate();
+
+    const splash = $('splash');
+    if (splash) {
+      try{ if(sessionStorage.getItem('chdx_booted')) splash.style.display='none'; }catch(e){}
+      splash.addEventListener('click',()=>{ splash.style.display='none'; try{sessionStorage.setItem('chdx_booted','1');}catch(e){} });
+    }
+    const secretPanther = $('secretPanther');
+    const ded = $('ded');
+    const dedcard = $('dedcard');
+    if (secretPanther && ded && dedcard) {
+      let secretTaps=0;
+      secretPanther.addEventListener('click',()=>{ secretTaps++; if(secretTaps>=3){ ded.style.display='flex'; } });
+      ded.addEventListener('click',()=>{ ded.style.display='none'; secretTaps=0; });
+      dedcard.addEventListener('click',e=>e.stopPropagation());
+    }
 
     /* ====== SETS LIST ====== */
     let SETS = [];

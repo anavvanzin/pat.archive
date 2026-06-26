@@ -35,18 +35,32 @@
   <div id="grain1"></div>
   <div id="grain2"></div>
 
-  <!-- SPLASH OVERLAY -->
-  <div id="splash" class="overlay-screen">
-    <div style="text-align:center;">
-      <div style="width:122px; height:122px; margin:0 auto 26px; background:var(--paper); border:3px solid var(--gold); padding:8px;">
-        <div class="aset-panther" style="width:100%; height:100%;"></div>
+  <!-- GIFT GATE / PRIVATE ARCHIVE -->
+  <section id="giftGate" class="gift-gate" aria-labelledby="giftGateTitle">
+    <div class="gift-gate__grid" aria-hidden="true"></div>
+    <article class="access-card" aria-describedby="giftGateDesc">
+      <div class="access-card__chrome">
+        <span>PRIVATE ARCHIVE</span>
+        <span>ACCESS: PAT</span>
       </div>
-      <div style="font-family:var(--display-font); font-weight:700; font-size:66px; letter-spacing:.2em; color:var(--cream); line-height:1;">CHDX</div>
-      <div style="font-family:var(--serif-font); font-style:italic; font-size:20px; color:var(--gold); margin-top:6px;">pat · selectora</div>
-      <div style="margin-top:42px; font-family:var(--display-font); font-weight:600; font-size:16px; letter-spacing:.4em; color:var(--blood); animation:blink 1.1s steps(2,end) infinite;">▸ PRESS START ◂</div>
-      <div style="margin-top:12px; font-family:var(--body-font); font-size:12px; letter-spacing:.1em; color:#6a5f52;">feito por ana</div>
+      <div class="access-card__signal" aria-hidden="true"></div>
+      <p class="access-card__eyebrow">AUDIO / BOOKS / POEMS</p>
+      <h1 id="giftGateTitle">arquivo secreto</h1>
+      <p id="giftGateDesc">um passe pequeno pra abrir as partes do site que são só presente.</p>
+      <button id="giftUnlock" class="access-card__unlock" type="button">
+        desbloquear <span aria-hidden="true">↵</span>
+      </button>
+    </article>
+
+    <div id="giftArchive" class="gift-archive" aria-live="polite">
+      <p class="gift-note">pat, fiz um arquivo secreto pra guardar teus sons, livros e poemas. — ana</p>
+      <nav class="archive-portals" aria-label="Arquivo privado">
+        <a id="giftEnterPista" href="#home"><span>01</span> pista</a>
+        <a href="biblioteca.html"><span>02</span> biblioteca</a>
+        <a href="poemas.html"><span>03</span> poemas</a>
+      </nav>
     </div>
-  </div>
+  </section>
 
   <!-- STICKY SITE HEADER -->
   <header class="site-header">
