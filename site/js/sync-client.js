@@ -18,6 +18,7 @@
   let internalState = {};
 
   const SyncClient = {
+    EDIT_KEY: new URLSearchParams(location.search).get("k") || "",
     /**
      * Initializes the client with configuration.
      * @param {Object} config - Configuration settings

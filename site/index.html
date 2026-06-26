@@ -26,6 +26,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
   <!-- Sync client (centralized) -->
   <script src="js/sync-client.js"></script>
+  <!-- Shared theme state for Pista / Ateliê across archive pages -->
+  <script src="js/theme.js" defer></script>
   <!-- Audio engine singleton -->
   <script src="audio/engine.js"></script>
 </head>
@@ -55,7 +57,7 @@
     <div id="giftArchive" class="gift-archive" aria-live="polite">
       <p class="gift-note">pat, fiz um arquivo secreto pra guardar teus sons, livros e poemas. — ana</p>
       <nav class="archive-portals" aria-label="Arquivo privado">
-        <a id="giftEnterPista" href="#home"><span>01</span> pista</a>
+        <a id="giftEnterPista" href="index.html#home"><span>01</span> pista</a>
         <a href="biblioteca.html"><span>02</span> biblioteca</a>
         <a href="poemas.html"><span>03</span> poemas</a>
       </nav>
@@ -78,15 +80,17 @@
       </div>
     </div>
     <nav aria-label="Navegação principal">
-      <a href="#home" class="navlink">HOME</a>
+      <a href="index.html#home" class="navlink">HOME</a>
       <a href="#s2" class="navlink">MANIFESTO</a>
       <a href="#sets" class="navlink">SETS</a>
       <a href="#studio" class="navlink hot">STUDIO ★</a>
+      <a href="biblioteca.html" class="navlink">BIBLIOTECA</a>
+      <a href="poemas.html" class="navlink">POEMAS</a>
       <a href="#galeria" class="navlink">GALERIA</a>
       <a href="#tarot" class="navlink">TAROT</a>
       <a href="#camarim" class="navlink">CAMARIM</a>
       <a href="#contato" class="navlink">CONTATO</a>
-      <button id="themeToggle" class="theme-switch-btn" aria-label="Mudar tema">
+      <button id="themeToggle" class="theme-switch-btn" type="button" data-theme-toggle aria-label="Mudar tema">
         pista <span style="color: var(--gold);">✦</span> ateliê
       </button>
     </nav>

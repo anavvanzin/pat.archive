@@ -15,7 +15,6 @@
 
     /* ====== SYNC LAYER (Centralized SyncClient) ====== */
     const syncClient = window.CHDX.SyncClient;
-
     function updateSyncStatus(status) {
       const light = $('syncStatusLight');
       const text = $('syncStatusText');
@@ -114,6 +113,10 @@
       if (!gate) return;
       const unlock = $('giftUnlock');
       const pista = $('giftEnterPista');
+      if (location.hash === '#home') {
+        gate.classList.add('is-closed');
+        return;
+      }
       gate.classList.add('is-locked');
       if (unlock) {
         unlock.setAttribute('aria-expanded', 'false');
@@ -410,8 +413,9 @@
         res = await fetch(url);
       } catch (e) {
         // CORS bloqueou — tenta via proxy do Cloudflare Worker
-        if (SYNC_URL) {
-          res = await fetch(SYNC_URL + '/audio-proxy?url=' + encodeURIComponent(url));
+        const proxyUrl = syncClient && syncClient.getAudioProxyUrl ? syncClient.getAudioProxyUrl(url) : null;
+        if (proxyUrl && proxyUrl !== url) {
+          res = await fetch(proxyUrl);
         } else {
           throw new Error('CORS bloqueado e sem proxy disponível.');
         }
@@ -929,6 +933,10 @@
     
     /* ====== THEME SWITCHER ====== */
     function initTheme() {
+      if (window.CHDXTheme) {
+        window.CHDXTheme.init();
+        return;
+      }
       const savedTheme = localStorage.getItem('chdx_theme') || 'pista';
       if (savedTheme === 'atelier') {
         document.body.classList.add('light-theme');
@@ -939,12 +947,20 @@
       }
     }
     function toggleTheme() {
+      if (window.CHDXTheme) {
+        window.CHDXTheme.toggle();
+        return;
+      }
       const isLight = document.body.classList.toggle('light-theme');
       const activeTheme = isLight ? 'atelier' : 'pista';
       localStorage.setItem('chdx_theme', activeTheme);
       updateThemeToggleUI(activeTheme);
     }
     function updateThemeToggleUI(theme) {
+      if (window.CHDXTheme) {
+        window.CHDXTheme.updateButtons(theme);
+        return;
+      }
       const btn = $('themeToggle');
       if (!btn) return;
       if (theme === 'atelier') {
@@ -954,7 +970,7 @@
       }
     }
     const tBtn = $('themeToggle');
-    if (tBtn) tBtn.addEventListener('click', toggleTheme);
+    if (tBtn && !window.CHDXTheme) tBtn.addEventListener('click', toggleTheme);
 
     /* ====== FLYER DOWNLOAD ====== */
     const fDlBtn = $('fDownload');
@@ -1101,11 +1117,9 @@
     async function init(){
       initTheme();
       loadLocal();
-      updateSyncStatus(SYNC_URL ? 'local' : 'local');
-      if (SYNC_URL) {
-        const ok = await pullRemote();
-        updateSyncStatus(ok ? 'online' : 'erro');
-      }
+      updateSyncStatus(syncClient.canEdit() ? 'online' : 'local');
+      const ok = await pullRemote();
+      if (ok) updateSyncStatus('online');
       renderOwner(); renderFilms(); renderBooks(); renderCalendar(); renderPending();
       renderNotes(); renderCapsules(); renderGuests(); renderPhotos(); renderPoster();
       renderSets(); loadSets(); todayCard(); drawTarot(); updateDeckUI(); drawWave();
@@ -1127,10 +1141,10 @@
       await fetchTracks();
       updateDeckStatusUI();
       
-      if (canEdit() && EDIT_KEY) {
+      if (syncClient.canEdit() && syncClient.EDIT_KEY) {
         const pLink = $('btnPlanner');
         if (pLink) {
-          pLink.href = 'planejamento-vida.html?k=' + encodeURIComponent(EDIT_KEY);
+          pLink.href = 'planejamento-vida.html?k=' + encodeURIComponent(syncClient.EDIT_KEY);
           pLink.style.display = 'inline-block';
         }
       }

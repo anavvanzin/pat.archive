@@ -91,7 +91,7 @@ body.light-theme #grain2 {
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body {
+body:not(.light-theme) {
   margin: 0;
   background: var(--ink);
   color: var(--cream);
@@ -102,6 +102,18 @@ body {
   text-rendering: optimizeLegibility;
   padding-bottom: 66px; /* Space for the persistent player */
 }
+body.light-theme {
+  margin: 0;
+  background: var(--ink); /* In Atelier mode, var(--ink) is mapped to #F2EAD9 */
+  color: var(--cream);   /* In Atelier mode, var(--cream) is mapped to #120D0B */
+  font-family: var(--body-font);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  padding-bottom: 66px;
+}
+
 ::selection { background: var(--blood); color: var(--paper); }
 
 /* Webkit Scrollbars (woodcut raw aesthetic) */
@@ -1758,6 +1770,13 @@ section.section-line-draw::after {
   --gate-z: 220;
 }
 .gift-gate {
+  --ink: #0E0B0A;
+  --paper: #F2EAD9;
+  --cream: #E9E0CE;
+  --blood: #B5221A;
+  --gold: #C79A4B;
+  --mute: #8a8174;
+  --soft: #b5ab98;
   position: fixed;
   inset: 0;
   z-index: var(--gate-z);
@@ -1951,13 +1970,16 @@ body:has(#home:target) .gift-gate,
 /* ============================================================
    PRIVATE ARCHIVE PAGES: Biblioteca and Poemas
    ============================================================ */
-body.archive-page {
+.archive-page {
   padding-bottom: 0;
   background:
     radial-gradient(circle at 18% 8%, rgba(181,34,26,.16), transparent 30%),
     linear-gradient(90deg, rgba(199,154,75,.06) 0 1px, transparent 1px 100%),
     var(--ink);
   background-size: auto, 34px 34px, auto;
+}
+body.light-theme.archive-page {
+  background: var(--ink) !important;
 }
 .archive-shell {
   width: min(1120px, calc(100% - 36px));
@@ -1971,6 +1993,29 @@ body.archive-page {
   gap: 18px;
   padding-bottom: 18px;
   border-bottom: 1px solid rgba(199,154,75,.32);
+}
+.archive-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.archive-nav a {
+  border: 1px solid rgba(199,154,75,.34);
+  padding: 8px 10px;
+  color: var(--gold);
+  font-family: var(--display-font);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.archive-nav a:hover,
+.archive-nav a:focus-visible,
+.archive-nav a[aria-current="page"] {
+  border-color: var(--blood);
+  background: rgba(181,34,26,.12);
+  color: var(--cream);
 }
 .archive-back {
   font-family: var(--display-font);
@@ -1987,6 +2032,7 @@ body.archive-page {
   color: var(--blood);
   text-transform: uppercase;
 }
+.archive-theme-toggle { flex: 0 0 auto; }
 .archive-hero {
   padding: clamp(52px, 10vw, 120px) 0 clamp(34px, 7vw, 80px);
   display: grid;
@@ -2032,6 +2078,11 @@ body.archive-page {
   box-shadow: 0 0 0 1px rgba(181,34,26,.14), 0 18px 46px rgba(0,0,0,.26);
   transition: transform 520ms var(--gate-ease), border-color 520ms var(--gate-ease), background 520ms var(--gate-ease);
 }
+body.light-theme.archive-page .archive-card {
+  background: rgba(14, 11, 10, .035);
+  border-color: rgba(156,124,61,.42);
+  box-shadow: 0 0 0 1px rgba(155,44,28,.10), 0 18px 46px rgba(14,11,10,.08);
+}
 .archive-card:nth-child(2n) { transform: translateY(18px); }
 .archive-card:hover {
   border-color: var(--blood);
@@ -2073,6 +2124,7 @@ body.archive-page {
   min-height: 320px;
   background: rgba(242,234,217,.06);
 }
+body.light-theme.archive-page .poem-panel { background: rgba(14, 11, 10, .055); }
 .poem-panel blockquote {
   margin: 0;
   font-family: var(--serif-font);

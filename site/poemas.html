@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
+  <script src="js/theme.js" defer></script>
 </head>
 <body class="archive-page">
   <div id="grain1"></div>
@@ -17,9 +18,15 @@
 
   <main class="archive-shell" aria-labelledby="pageTitle">
     <header class="archive-topbar">
-      <a class="archive-back" href="index.html#home">← voltar pra pista</a>
+      <nav class="archive-nav" aria-label="Arquivo privado">
+        <a href="index.html#home">pista</a>
+        <a href="biblioteca.html">biblioteca</a>
+        <a href="poemas.html" aria-current="page">poemas</a>
+      </nav>
       <span class="archive-kicker">private archive · poemas</span>
-      <a class="archive-back" href="biblioteca.html">biblioteca →</a>
+      <button class="theme-switch-btn archive-theme-toggle" type="button" data-theme-toggle aria-label="Mudar tema">
+        pista <span style="color: var(--gold);">✦</span> ateliê
+      </button>
     </header>
 
     <section class="archive-hero">
