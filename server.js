@@ -121,6 +121,9 @@ const ALLOWED_AUDIO_DOMAINS = [
   'archive.org',
   'anavanzin.com',
   'warholana.workers.dev',
+  'scene.org',
+  'ftp.scene.org',
+  'files.scene.org',
 ];
 function isAllowedAudioUrl(url) {
   try {

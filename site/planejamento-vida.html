@@ -422,6 +422,7 @@
   <div class="footnote">feito com carinho · dados ficam só neste navegador · use ↓ backup pra guardar uma cópia</div>
 </div>
 
+<script src="js/sync-client.js"></script>
 <script>
 "use strict";
 (function(){
@@ -429,56 +430,29 @@
   const fmtBRL = new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"});
   const BUDGET_CATS = ["Moradia","Alimentação","Transporte","Lazer","Saúde","Educação","Assinaturas","Trabalho/Freela","Beleza","Pets","Investimento","Outros"];
 
-  /* ====== SYNC LAYER (Cloudflare Worker; sincronização remota) ====== */
-  let SYNC_URL = "https://chdx-sync.warholana.workers.dev";
-  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-    SYNC_URL = "http://127.0.0.1:8787";
-  }
-  const EDIT_KEY = new URLSearchParams(location.search).get('k') || "";
-  const canEdit = () => !SYNC_URL || !!EDIT_KEY;
-  let pushTimer = null;
+  /* ====== SYNC LAYER (Centralized SyncClient) ====== */
+  const syncClient = window.CHDX.SyncClient;
 
-  function pushRemote() {
-    if (!SYNC_URL || !EDIT_KEY) return;
-    clearTimeout(pushTimer);
-    pushTimer = setTimeout(() => {
-      fetch(SYNC_URL + '/state', {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json', 'x-edit-key': EDIT_KEY },
-        body: JSON.stringify({ planner: state })
-      }).then(r => {
-        if (r.ok) updateSyncUI(true);
-      }).catch(() => {});
-    }, 500);
-  }
-
-  async function pullRemote() {
-    if (!SYNC_URL) return false;
-    try {
-      const r = await fetch(SYNC_URL + '/state');
-      if (!r.ok) return false;
-      const d = await r.json();
-      if (d && d.planner) {
-        state = Object.assign(state, d.planner);
-        return true;
-      }
-      return false;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function updateSyncUI(justPushed = false) {
+  function updateSyncUI(statusOrPushed) {
     const elSync = document.getElementById("syncStatus");
     if (!elSync) return;
-    if (!SYNC_URL) {
+
+    let status = statusOrPushed;
+    if (statusOrPushed === true) {
+      status = 'online';
+    }
+
+    if (!syncClient.getSyncUrl()) {
       elSync.textContent = "💻 local";
       elSync.title = "Salvo apenas neste dispositivo";
-    } else if (EDIT_KEY) {
-      elSync.textContent = justPushed ? "✓ salvo" : "🔒 nuvem";
-      elSync.title = "Sincronizado em nuvem (modo edição)";
-      if (justPushed) {
+    } else if (syncClient.getEditKey()) {
+      if (status === 'online') {
+        elSync.textContent = "✓ salvo";
+        elSync.title = "Sincronizado em nuvem (modo edição)";
         setTimeout(() => { elSync.textContent = "🔒 nuvem"; }, 2000);
+      } else {
+        elSync.textContent = "🔒 nuvem";
+        elSync.title = "Sincronizado em nuvem (modo edição)";
       }
     } else {
       elSync.textContent = "👁 leitura";
@@ -492,13 +466,27 @@
     return {events:{},budget:[],apts:[],dreams:[],sets:[],criteria:[],
             budgetMonth: now.toISOString().slice(0,7), aptSortAsc:true};
   }
-  let state;
-  try{ state = Object.assign(defaults(), JSON.parse(localStorage.getItem(KEY))||{}); }
-  catch(e){ state = defaults(); }
-  function save(){
-    localStorage.setItem(KEY, JSON.stringify(state));
-    pushRemote();
+
+  let state = syncClient.init({
+    key: KEY,
+    defaults: defaults(),
+    onStatusChange: (status) => updateSyncUI(status)
+  });
+
+  async function pullRemote() {
+    const success = await syncClient.pull('planner');
+    if (success) {
+      state = syncClient.getState();
+      return true;
+    }
+    return false;
   }
+
+  function save(){
+    syncClient.save(state, 'planner');
+  }
+
+  const canEdit = () => syncClient.canEdit();
   const uid = ()=> Date.now().toString(36)+Math.random().toString(36).slice(2,6);
   const el = (id)=>document.getElementById(id);
   const esc = (s)=> (s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));

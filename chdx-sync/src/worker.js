@@ -18,6 +18,10 @@ const AUDIO_HOSTS = [
   "ftp.scene.org",
   "files.scene.org",
   "scene.org",
+  "soundcloud.com",
+  "w.soundcloud.com",
+  "anavanzin.com",
+  "warholana.workers.dev",
 ];
 
 const cors = {

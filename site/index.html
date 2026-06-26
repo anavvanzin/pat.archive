@@ -24,6 +24,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- Howler.js audio engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <!-- Sync client (centralized) -->
+  <script src="js/sync-client.js"></script>
   <!-- Audio engine singleton -->
   <script src="audio/engine.js"></script>
 </head>
@@ -568,14 +570,9 @@
     const esc = s => (s==null?'':String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const BLOOD='#B5221A', GOLD='#C79A4B';
 
-    /* ====== SYNC LAYER (Cloudflare Worker; trava simples por chave) ====== */
-    let SYNC_URL = "https://chdx-sync.warholana.workers.dev";
-    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-      SYNC_URL = "http://127.0.0.1:8787";
-    }
-    const EDIT_KEY = new URLSearchParams(location.search).get('k') || "";
-    const canEdit = () => !SYNC_URL || !!EDIT_KEY; // sem backend, edita local; com backend, precisa de chave
-    let pushTimer=null;
+    /* ====== SYNC LAYER (Centralized SyncClient) ====== */
+    const syncClient = window.CHDX.SyncClient;
+
     function updateSyncStatus(status) {
       const light = $('syncStatusLight');
       const text = $('syncStatusText');
@@ -598,29 +595,16 @@
       }
     }
 
-    function pushRemote(){
-      if(!SYNC_URL || !EDIT_KEY) return;
-      clearTimeout(pushTimer);
-      pushTimer=setTimeout(()=>{
-        fetch(SYNC_URL+'/state',{method:'PUT',headers:{'content-type':'application/json','x-edit-key':EDIT_KEY},
-          body:JSON.stringify({camarim:camarim, guests:guests, photos:photos})})
-          .then(r => {
-            if(r.ok) updateSyncStatus('online');
-            else updateSyncStatus('erro');
-          })
-          .catch(()=>{ updateSyncStatus('erro'); });
-      },500);
-    }
     async function pullRemote(){
-      if(!SYNC_URL) return false;
-      try{
-        const r=await fetch(SYNC_URL+'/state'); if(!r.ok) return false;
-        const d=await r.json();
-        if(d && d.camarim){ camarim=Object.assign(camarim,d.camarim); }
-        if(d && Array.isArray(d.guests)) guests=d.guests;
-        if(d && d.photos) photos=d.photos;
+      const success = await syncClient.pull('camarim');
+      if (success) {
+        const state = syncClient.getState();
+        if (state.camarim) camarim = state.camarim;
+        if (state.guests) guests = state.guests;
+        if (state.photos) photos = state.photos;
         return true;
-      }catch(e){ return false; }
+      }
+      return false;
     }
 
     /* ====== STATE ====== */
@@ -643,18 +627,40 @@
     let flyer = { name:'RITUAL NOTURNO', date:'SEX · 12 JUL', venue:'CLUB SUBSOLO', variant:0 };
 
     function loadLocal(){
-      try{ const r=localStorage.getItem('chdx_camarim_v1'); if(r) camarim=Object.assign(camarim,JSON.parse(r)); }catch(e){}
-      try{ const g=localStorage.getItem('chdx_guests'); if(g) guests=JSON.parse(g); }catch(e){}
-      try{ const p=localStorage.getItem('chdx_photos'); if(p) photos=JSON.parse(p); }catch(e){}
+      // Fallback transition from legacy keys to unified client key
+      let localData = null;
+      try { localData = localStorage.getItem('chdx_index_state_v1'); } catch(e) {}
+      if (localData) {
+        const parsed = JSON.parse(localData);
+        if (parsed.camarim) camarim = parsed.camarim;
+        if (parsed.guests) guests = parsed.guests;
+        if (parsed.photos) photos = parsed.photos;
+      } else {
+        // Load legacy
+        try{ const r=localStorage.getItem('chdx_camarim_v1'); if(r) camarim=Object.assign(camarim,JSON.parse(r)); }catch(e){}
+        try{ const g=localStorage.getItem('chdx_guests'); if(g) guests=JSON.parse(g); }catch(e){}
+        try{ const p=localStorage.getItem('chdx_photos'); if(p) photos=JSON.parse(p); }catch(e){}
+      }
+
+      // Initialize sync client with current state
+      syncClient.init({
+        key: 'chdx_index_state_v1',
+        defaults: { camarim, guests, photos },
+        onStatusChange: updateSyncStatus
+      });
     }
+
     function saveCamarim(){
-      try{ localStorage.setItem('chdx_camarim_v1', JSON.stringify(camarim)); }catch(e){}
-      pushRemote();
+      syncClient.save({ camarim, guests, photos }, 'camarim');
     }
-    function saveGuests(){ try{ localStorage.setItem('chdx_guests', JSON.stringify(guests)); }catch(e){} pushRemote(); }
-    function savePhotos(){ try{ localStorage.setItem('chdx_photos', JSON.stringify(photos)); }catch(e){} pushRemote(); }
+    function saveGuests(){
+      syncClient.save({ camarim, guests, photos }, 'camarim');
+    }
+    function savePhotos(){
+      syncClient.save({ camarim, guests, photos }, 'camarim');
+    }
     function guardEdit(){
-      if(canEdit()) return true;
+      if(syncClient.canEdit()) return true;
       alert('Modo somente leitura. Pra editar, abra o site com a chave secreta no fim do link (?k=...).');
       return false;
     }
@@ -668,31 +674,34 @@
     $('dedcard').addEventListener('click',e=>e.stopPropagation());
 
     /* ====== SETS LIST ====== */
-    const SETS_FALLBACK = [
-      {n:'001', title:'aquecimento lento', genre:'deep house · minimal', duration:'72:28', date:'2026-05-10', cover:'assets/card-thedj.png', url:'https://archive.org/download/Michael_Renk_A_Eighth_Byte/Michael_Renk_A_Eighth_Byte_vbr.mp3'},
-      {n:'002', title:'oferenda', genre:'techno · eletrônico', duration:'54:32', date:'2026-04-22', cover:'assets/portrait-atelier.png', url:'https://archive.org/download/phlow_mix_001/phlow_mix_001-mo.-netaudio_tape_vol_1.mp3'},
-      {n:'003', title:'pantera negra', genre:'breaks · electro', duration:'83:44', date:'2026-03-15', cover:'assets/panther-flash.png', url:'https://archive.org/download/STADTGRUENLABEL_NET_SET/STADTGRUENLABEL_NET_SET_vbr.mp3'},
-      {n:'004', title:'ritual noturno', genre:'techno · ambient · dub', duration:'86:42', date:'2026-06-23', cover:'assets/portrait-selfie.png', url:'https://archive.org/download/Mel012/NetlabelMixWeek46.mp3'},
-      {n:'005', title:'after do after', genre:'house · acid', duration:'1:49:18', date:'2026-02-28', cover:'assets/studio-chdx.png', url:'https://archive.org/download/Maurizio_Miceli_-_Tribute_To_Netlabels_II/Tribute_To_Netlabels_II_-_Part_Two_Deep_House_Mix.mp3', live:true},
-      {n:'006', title:'pista vazia', genre:'dub · tech house', duration:'87:08', date:'2026-01-19', cover:'assets/stilllife.png', url:'https://archive.org/download/gmix030_Domovoy_Summer_In_Soul/gmix030_Domovoy_Summer_In_Soul_vbr.mp3'},
-      {n:'007', title:'recent', genre:'techno · noise', duration:'2:06:39', date:'2026-06-15', cover:'assets/IMG_7549.jpg', url:'https://archive.org/download/Maurizio_Miceli_-_Tribute_To_Netlabels_II/Tribute_To_Netlabels_II_-_Part_One_Dub_Techno_Mix.mp3'},
-      {n:'008', title:'still life', genre:'ambient · drone', duration:'26:18', date:'2026-06-08', cover:'assets/IMG_7546.png', url:'https://ftp.scene.org/pub/music/groups/ideology/mix/phlow-mix001_ambient_architextures_2.mp3'},
-    ];
-    let SETS = [...SETS_FALLBACK];
+    let SETS = [];
     
     async function loadSets() {
-   try {
-     const res = await fetch('data/sets.json');
-     if (res.ok) {
-       SETS = await res.json();
-       SETS.forEach(s => { if (!s.n && s.id) s.n = s.id; });
-     }
-   } catch(e) { /* fallback to hardcoded data */ }
-   renderSets();
-   // Feed SETS to AudioEngine
-   const engine = window.CHDX && window.CHDX.AudioEngine;
-   if (engine) engine.load(SETS);
- }
+      try {
+        const res = await fetch('data/sets.json');
+        if (res.ok) {
+          SETS = await res.json();
+        } else {
+          throw new Error('Falha ao carregar data/sets.json');
+        }
+      } catch(e) {
+        try {
+          const resFallback = await fetch('data/sets-fallback.json');
+          if (resFallback.ok) {
+            SETS = await resFallback.json();
+          }
+        } catch(err) {
+          console.error("Não foi possível carregar os sets do DJ.", err);
+        }
+      }
+
+      SETS.forEach(s => { if (!s.n && s.id) s.n = s.id; });
+      renderSets();
+      
+      // Feed SETS to AudioEngine
+      const engine = window.CHDX && window.CHDX.AudioEngine;
+      if (engine) engine.load(SETS);
+    }
     
     function renderSets() {
       $('setList').innerHTML = SETS.map((s,i)=>{

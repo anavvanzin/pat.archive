@@ -149,9 +149,13 @@
       this._unload();
       this._emit('loading', { index: idx, track });
 
-      // Use CORS proxy for external URLs
-      const isSameOrigin = track.url.startsWith('blob:') || track.url.startsWith('/') || track.url.startsWith(location.origin);
-      const src = isSameOrigin ? track.url : `/api/audio-proxy?url=${encodeURIComponent(track.url)}`;
+      // Use CORS proxy for external URLs via SyncClient
+      const syncClient = window.CHDX && window.CHDX.SyncClient;
+      const src = syncClient ? syncClient.getAudioProxyUrl(track.url) : (
+        (track.url.startsWith('blob:') || track.url.startsWith('/') || track.url.startsWith(location.origin))
+          ? track.url
+          : `/api/audio-proxy?url=${encodeURIComponent(track.url)}`
+      );
 
       this._howl = new Howl({
         src: [src],

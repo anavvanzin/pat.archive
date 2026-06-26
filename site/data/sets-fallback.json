@@ -1,0 +1,75 @@
+[
+  {
+    "n": "001",
+    "title": "aquecimento lento",
+    "genre": "deep house · minimal",
+    "duration": "72:28",
+    "date": "2026-05-10",
+    "cover": "assets/card-thedj.png",
+    "url": "https://archive.org/download/Michael_Renk_A_Eighth_Byte/Michael_Renk_A_Eighth_Byte_vbr.mp3"
+  },
+  {
+    "n": "002",
+    "title": "oferenda",
+    "genre": "techno · eletrônico",
+    "duration": "54:32",
+    "date": "2026-04-22",
+    "cover": "assets/portrait-atelier.png",
+    "url": "https://archive.org/download/phlow_mix_001/phlow_mix_001-mo.-netaudio_tape_vol_1.mp3"
+  },
+  {
+    "n": "003",
+    "title": "pantera negra",
+    "genre": "breaks · electro",
+    "duration": "83:44",
+    "date": "2026-03-15",
+    "cover": "assets/panther-flash.png",
+    "url": "https://archive.org/download/STADTGRUENLABEL_NET_SET/STADTGRUENLABEL_NET_SET_vbr.mp3"
+  },
+  {
+    "n": "004",
+    "title": "ritual noturno",
+    "genre": "techno · ambient · dub",
+    "duration": "86:42",
+    "date": "2026-06-23",
+    "cover": "assets/portrait-selfie.png",
+    "url": "https://archive.org/download/Mel012/NetlabelMixWeek46.mp3"
+  },
+  {
+    "n": "005",
+    "title": "after do after",
+    "genre": "house · acid",
+    "duration": "1:49:18",
+    "date": "2026-02-28",
+    "cover": "assets/studio-chdx.png",
+    "url": "https://archive.org/download/Maurizio_Miceli_-_Tribute_To_Netlabels_II/Tribute_To_Netlabels_II_-_Part_Two_Deep_House_Mix.mp3",
+    "live": true
+  },
+  {
+    "n": "006",
+    "title": "pista vazia",
+    "genre": "dub · tech house",
+    "duration": "87:08",
+    "date": "2026-01-19",
+    "cover": "assets/stilllife.png",
+    "url": "https://archive.org/download/gmix030_Domovoy_Summer_In_Soul/gmix030_Domovoy_Summer_In_Soul_vbr.mp3"
+  },
+  {
+    "n": "007",
+    "title": "recent",
+    "genre": "techno · noise",
+    "duration": "2:06:39",
+    "date": "2026-06-15",
+    "cover": "assets/IMG_7549.jpg",
+    "url": "https://archive.org/download/Maurizio_Miceli_-_Tribute_To_Netlabels_II/Tribute_To_Netlabels_II_-_Part_One_Dub_Techno_Mix.mp3"
+  },
+  {
+    "n": "008",
+    "title": "still life",
+    "genre": "ambient · drone",
+    "duration": "26:18",
+    "date": "2026-06-08",
+    "cover": "assets/IMG_7546.png",
+    "url": "https://ftp.scene.org/pub/music/groups/ideology/mix/phlow-mix001_ambient_architextures_2.mp3"
+  }
+]
