@@ -306,7 +306,6 @@
         
         A.reverbWet=A.audio.createGain();
         A.reverbWet.gain.value=reverbOn?0.6:0.0;
-        A.reverb.connect(A.reverbWet); // Wait, fix typo in original if any - reverbOn is target.
         A.reverbDelay.connect(A.reverbWet);
         
         A.filter.connect(A.reverbDelay);

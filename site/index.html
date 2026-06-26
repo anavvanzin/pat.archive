@@ -149,6 +149,20 @@
   </section>
 
   <!-- ============================================================
+       SACERDOTISA — Guardiã do Arquivo (permanent presence)
+       ============================================================ -->
+  <section id="sacerdotisa-presence" aria-label="A Sacerdotisa" style="position:relative; padding:clamp(30px,4vw,56px) var(--bleed-pad); text-align:center; background:var(--ink); border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden;">
+    <div style="position:absolute; inset:0; background:radial-gradient(circle, rgba(199,154,75,0.06), transparent 55%); pointer-events:none;"></div>
+    <div style="position:relative; z-index:2; display:inline-flex; flex-direction:column; align-items:center; gap:14px; max-width:320px;">
+      <div style="width:160px; height:240px; border:2px solid var(--gold); padding:4px; background:var(--ink); transform:rotate(-1.5deg); box-shadow:8px 8px 0 rgba(181,34,26,.25); overflow:hidden;">
+        <img src="assets/card-priestess.png" alt="A Sacerdotisa" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+      <span class="eyebrow" style="color:var(--gold); letter-spacing:.35em;">guardi&#231;&#227; do arquivo</span>
+      <p style="font-family:var(--serif-font); font-style:italic; font-size:clamp(14px,1.6vw,17px); color:var(--soft); line-height:1.45; max-width:280px; margin:0;">O arcano que observa. Tudo que est&#225; oculto passa por ela primeiro.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
        Section 2 of 6 — MANIFESTO
        ============================================================ -->
   <section id="s2" data-rhythm="on" aria-label="Manifesto">
@@ -161,6 +175,47 @@
         <cite>— pat, 2026</cite>
       </blockquote>
       <a class="link-underline" href="#sets">ouvir os sets e mixes →</a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TAROT — Tiragem da Noite
+       ============================================================ -->
+  <section id="tarot" aria-label="Tarot">
+    <div class="tarot-stars"></div>
+    <div class="tarot-inner">
+      <div class="tarot-header">
+        <span class="eyebrow">TAROT</span>
+        <h2>a tiragem da noite</h2>
+        <p>Três posições — corpo, alma e som. Inicie o ritual pra revelar o que a noite escolheu.</p>
+      </div>
+      <div class="tarot-today-card">
+        <span class="label">carta do dia</span>
+        <span id="todayCardName">—</span>
+        <span id="todayCardMeaning"></span>
+      </div>
+      <!-- RITUAL SPREAD — 3 positions -->
+      <div id="tarotSpread" class="tarot-spread">
+        <div class="tarot-position" data-pos="0">
+          <span class="tarot-position-label">CORPO</span>
+          <span class="tarot-position-sub">o que o corpo traz</span>
+          <div class="tarot-card-slot" id="slot0"></div>
+        </div>
+        <div class="tarot-position" data-pos="1">
+          <span class="tarot-position-label">ALMA</span>
+          <span class="tarot-position-sub">o que a alma busca</span>
+          <div class="tarot-card-slot" id="slot1"></div>
+        </div>
+        <div class="tarot-position" data-pos="2">
+          <span class="tarot-position-label">SOM</span>
+          <span class="tarot-position-sub">o que o som oferece</span>
+          <div class="tarot-card-slot" id="slot2"></div>
+        </div>
+      </div>
+      <div id="tarotReading" class="tarot-reading"></div>
+      <div style="text-align:center; margin-top:36px;">
+        <button id="shuffle" class="btngold">iniciar ritual</button>
+      </div>
     </div>
   </section>
 
@@ -456,48 +511,7 @@
   </section>
 
   <!-- ============================================================
-       Section 5 of 6 — TAROT
-       ============================================================ -->
-  <section id="tarot" aria-label="Tarot">
-    <div class="tarot-stars"></div>
-    <div class="tarot-inner">
-      <div class="tarot-header">
-        <span class="eyebrow">TAROT</span>
-        <h2>a tiragem da noite</h2>
-        <p>Três posições — corpo, alma e som. Inicie o ritual pra revelar o que a noite escolheu.</p>
-      </div>
-      <div class="tarot-today-card">
-        <span class="label">carta do dia</span>
-        <span id="todayCardName">—</span>
-        <span id="todayCardMeaning"></span>
-      </div>
-      <!-- RITUAL SPREAD — 3 positions -->
-      <div id="tarotSpread" class="tarot-spread">
-        <div class="tarot-position" data-pos="0">
-          <span class="tarot-position-label">CORPO</span>
-          <span class="tarot-position-sub">o que o corpo traz</span>
-          <div class="tarot-card-slot" id="slot0"></div>
-        </div>
-        <div class="tarot-position" data-pos="1">
-          <span class="tarot-position-label">ALMA</span>
-          <span class="tarot-position-sub">o que a alma busca</span>
-          <div class="tarot-card-slot" id="slot1"></div>
-        </div>
-        <div class="tarot-position" data-pos="2">
-          <span class="tarot-position-label">SOM</span>
-          <span class="tarot-position-sub">o que o som oferece</span>
-          <div class="tarot-card-slot" id="slot2"></div>
-        </div>
-      </div>
-      <div id="tarotReading" class="tarot-reading"></div>
-      <div style="text-align:center; margin-top:36px;">
-        <button id="shuffle" class="btngold">iniciar ritual</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       Section 6 of 6 — VOZES
+       Section 5 of 6 — VOZES
        ============================================================ -->
   <section id="s6-testimonials" aria-label="Vozes">
     <div class="testimonials-inner">
