@@ -382,7 +382,7 @@
     function bass(t,f){ const o=A.audio.createOscillator(),g=A.audio.createGain(),lp=A.audio.createBiquadFilter(); o.type='sawtooth'; o.frequency.value=f; lp.type='lowpass'; lp.frequency.value=520; g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.5,t+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+0.22); o.connect(lp); lp.connect(g); g.connect(A.gB); o.start(t); o.stop(t+0.24); }
     function playFlipSound() {
       ensureAudio();
-      if(!A.audio) return;
+      if(!A.audio || !A.noise) return;
       const t = A.audio.currentTime;
       const s = A.audio.createBufferSource();
       s.buffer = A.noise;

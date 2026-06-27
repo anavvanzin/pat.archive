@@ -2109,8 +2109,11 @@ body.light-theme.archive-page {
   font-family: var(--display-font);
   font-size: 11px;
   letter-spacing: .3em;
-  color: var(--blood);
+  color: var(--gold);
   text-transform: uppercase;
+}
+body.light-theme .archive-kicker {
+  color: var(--blood);
 }
 .archive-theme-toggle { flex: 0 0 auto; }
 .archive-hero {
@@ -2176,6 +2179,9 @@ body.light-theme.archive-page .archive-card {
   font-family: var(--display-font);
   font-size: 12px;
   letter-spacing: .26em;
+  color: var(--gold);
+}
+body.light-theme .archive-card__num {
   color: var(--blood);
 }
 .archive-card h2,
@@ -2214,10 +2220,212 @@ body.light-theme.archive-page .poem-panel { background: rgba(14, 11, 10, .055); 
   color: var(--paper);
 }
 
+/* --- Tarot Canvas Game and Oráculo Styles --- */
+.tarot-game-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px auto 60px auto;
+  max-width: 800px;
+  padding: 0 20px;
+  width: 100%;
+}
+.tarot-canvas-wrapper {
+  width: 100%;
+  border: 4px solid var(--line);
+  background: var(--ink);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+  margin-bottom: 24px;
+}
+#tarotCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 760 / 360;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+.tarot-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 30px;
+}
+.tarot-btn {
+  background: transparent;
+  color: var(--cream);
+  border: 2px solid var(--line);
+  padding: 10px 20px;
+  font-family: var(--display-font);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tarot-btn:hover, .tarot-btn.active {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+.tarot-btn.primary {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.tarot-btn.primary:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+body.light-theme .tarot-btn.primary {
+  border-color: var(--blood);
+  color: var(--blood);
+}
+body.light-theme .tarot-btn.primary:hover {
+  background: var(--blood);
+  color: var(--paper);
+}
+.oraculo-leitura-container {
+  width: 100%;
+  min-height: 120px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  text-align: center;
+}
+.reading-hint {
+  font-family: var(--serif-font);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--mute);
+}
+.reading-result {
+  text-align: left;
+}
+.single-reading {
+  max-width: 500px;
+  margin: 0 auto;
+  border: 1px solid var(--line);
+  padding: 20px;
+  background: rgba(14, 11, 10, 0.2);
+}
+body.light-theme .single-reading {
+  background: rgba(242, 234, 217, 0.2);
+}
+.triple-reading {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+.reading-triple-col {
+  border: 1px solid var(--line);
+  padding: 16px;
+  background: rgba(14, 11, 10, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+body.light-theme .reading-triple-col {
+  background: rgba(242, 234, 217, 0.2);
+}
+.reading-triple-pos {
+  font-family: var(--display-font);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+}
+.reading-triple-placeholder {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  font-family: var(--serif-font);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--mute);
+}
+.reading-card-header {
+  margin-bottom: 12px;
+}
+.reading-card-num {
+  font-family: var(--display-font);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blood);
+}
+.reading-card-header h3 {
+  font-family: var(--serif-font);
+  font-size: 26px;
+  margin: 4px 0;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--paper);
+}
+.reading-card-meta {
+  font-size: 11px;
+  color: var(--mute);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.reading-card-desc {
+  font-family: var(--serif-font);
+  font-size: 17px;
+  line-height: 1.45;
+  font-style: italic;
+  color: var(--cream);
+  margin: 10px 0 0 0;
+}
+.archive-divider-text {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 60px 0 30px 0;
+  font-family: var(--display-font);
+  font-size: 14px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+body.light-theme .archive-divider-text {
+  color: var(--blood);
+}
+.archive-divider-text::before, .archive-divider-text::after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  background: var(--line);
+  margin: 0 20px;
+}
+
+/* Animação Fade In */
+.fade-in {
+  animation: fadeInEffect 0.5s ease forwards;
+}
+@keyframes fadeInEffect {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade Mídia */
 @media (max-width: 860px) {
   .archive-hero { grid-template-columns: 1fr; align-items: start; }
   .archive-grid { grid-template-columns: 1fr 1fr; }
   .poem-panel { grid-column: span 2; }
+}
+
+@media (max-width: 768px) {
+  .triple-reading {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 }
 
 @media (max-width: 580px) {

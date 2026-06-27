@@ -1,0 +1,133 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - link "pista" [ref=e5] [cursor=pointer]:
+        - /url: index.html#home
+      - link "planejador" [ref=e6] [cursor=pointer]:
+        - /url: planejamento-vida.html
+      - link "biblioteca" [ref=e7] [cursor=pointer]:
+        - /url: biblioteca.html
+      - link "tarot" [ref=e8] [cursor=pointer]:
+        - /url: tarot.html
+      - link "poemas" [ref=e9] [cursor=pointer]:
+        - /url: poemas.html
+    - generic [ref=e10]: private archive · oráculo
+  - generic [ref=e11]:
+    - heading "Arcanos do Limiar O Oráculo Visual" [level=1] [ref=e12]:
+      - text: Arcanos do Limiar
+      - text: O Oráculo Visual
+    - paragraph [ref=e13]: uma leitura visual, fragmentada, desenhada em madeira e sombra. aqui os arcanos não prevêem o futuro; eles iluminam a estrutura do agora.
+  - region "Tarot Interativo" [ref=e14]:
+    - generic "Mesa do Oráculo de Tarot. Clique nas cartas viradas para revelá-las." [ref=e16]
+    - generic [ref=e17]:
+      - button "Conselho Rápido (1 Carta)" [ref=e18] [cursor=pointer]
+      - button "O Caminho (3 Cartas)" [ref=e19] [cursor=pointer]
+      - button "Embaralhar & Tirar" [ref=e20] [cursor=pointer]
+    - paragraph [ref=e22]: Respire fundo, faça sua pergunta e vire as cartas reveladas...
+  - generic [ref=e24]: Gabinete de Arcanos (15 Lâminas)
+  - region "Glossário de Arcanos" [ref=e25]:
+    - article [ref=e26]:
+      - img "O Louco" [ref=e27]
+      - generic [ref=e28]:
+        - generic [ref=e29]: 00 · o louco
+        - heading "O Louco" [level=2] [ref=e30]
+        - paragraph [ref=e31]: O início, o salto, o risco de ser livre. Não é falta de juízo, é a coragem de começar do zero sem saber onde o terreno termina.
+      - generic [ref=e32]: salto · início
+    - article [ref=e33]:
+      - img "O DJ" [ref=e34]
+      - generic [ref=e35]:
+        - generic [ref=e36]: I · o dj
+        - heading "O DJ" [level=2] [ref=e37]
+        - paragraph [ref=e38]: O regente das frequências, o controle da tensão. Ele manipula o tempo e a percepção na pista, lembrando que você escolhe a próxima transição.
+      - generic [ref=e39]: frequência · controle
+    - article [ref=e40]:
+      - img "A Sacerdotisa" [ref=e41]
+      - generic [ref=e42]:
+        - generic [ref=e43]: II · a sacerdotisa
+        - heading "A Sacerdotisa" [level=2] [ref=e44]
+        - paragraph [ref=e45]: O véu, o saber silencioso, o limiar. O convite é para parar e ouvir a intuição que o barulho da pista geralmente silencia.
+      - generic [ref=e46]: limiar · mistério
+    - article [ref=e47]:
+      - img "A Imperatriz" [ref=e48]
+      - generic [ref=e49]:
+        - generic [ref=e50]: III · a imperatriz
+        - heading "A Imperatriz" [level=2] [ref=e51]
+        - paragraph [ref=e52]: A criação abundante, a matéria viva, a força do ateliê. A fertilidade não é passiva; é o ato de dar forma e textura às ideias brutas.
+      - generic [ref=e53]: criação · matéria
+    - article [ref=e54]:
+      - img "O Hierofante" [ref=e55]
+      - generic [ref=e56]:
+        - generic [ref=e57]: V · o hierofante
+        - heading "O Hierofante" [level=2] [ref=e58]
+        - paragraph [ref=e59]: A tradição, os rituais antigos, a estrutura invisível. A ordem que protege o caos. O respeito à linhagem e à técnica que precedem o ruído.
+      - generic [ref=e60]: estrutura · ritual
+    - article [ref=e61]:
+      - img "Os Namorados" [ref=e62]
+      - generic [ref=e63]:
+        - generic [ref=e64]: VI · os namorados
+        - heading "Os Namorados" [level=2] [ref=e65]
+        - paragraph [ref=e66]: A escolha, a bifurcação das frequências. A sintonia fina entre o ateliê e a pista, onde cada atração exige um sacrifício de caminho.
+      - generic [ref=e67]: bifurcação · sintonia
+    - article [ref=e68]:
+      - img "A Roda da Fortuna" [ref=e69]
+      - generic [ref=e70]:
+        - generic [ref=e71]: X · a roda da fortuna
+        - heading "A Roda da Fortuna" [level=2] [ref=e72]
+        - paragraph [ref=e73]: O loop, o compasso que gira sem parar. Altas frequências, baixas frequências. Nada é estático; aprenda a dançar tanto na subida quanto na queda.
+      - generic [ref=e74]: loop · compasso
+    - article [ref=e75]:
+      - img "A Justiça" [ref=e76]
+      - generic [ref=e77]:
+        - generic [ref=e78]: XI · a justiça
+        - heading "A Justiça" [level=2] [ref=e79]
+        - paragraph [ref=e80]: A precisão do corte, o equilíbrio estrito. A verdade crua despida de ornamentos. O peso exato de cada escolha no layout ou na mixagem.
+      - generic [ref=e81]: corte · precisão
+    - article [ref=e82]:
+      - img "A Morte" [ref=e83]
+      - generic [ref=e84]:
+        - generic [ref=e85]: XIII · a morte
+        - heading "A Morte" [level=2] [ref=e86]
+        - paragraph [ref=e87]: A transformação, o fechamento de ciclo. Nada acaba de verdade; a forma apenas se desfaz para algo novo poder emergir.
+      - generic [ref=e88]: transformação · fim/início
+    - article [ref=e89]:
+      - img "A Torre" [ref=e90]
+      - generic [ref=e91]:
+        - generic [ref=e92]: XVI · a torre
+        - heading "A Torre" [level=2] [ref=e93]
+        - paragraph [ref=e94]: A queda necessária. Tudo o que foi construído sobre bases falsas precisa ruir para que o espaço respire novamente.
+      - generic [ref=e95]: ruptura · purificação
+    - article [ref=e96]:
+      - img "A Estrela" [ref=e97]
+      - generic [ref=e98]:
+        - generic [ref=e99]: XVII · a estrela
+        - heading "A Estrela" [level=2] [ref=e100]
+        - paragraph [ref=e101]: A esperança fria, a luz distante que guia o fim da noite. Um lampejo de clareza em meio à neblina da pista. O prenúncio do amanhecer.
+      - generic [ref=e102]: lampejo · clareza
+    - article [ref=e103]:
+      - img "A Lua" [ref=e104]
+      - generic [ref=e105]:
+        - generic [ref=e106]: XVIII · a lua
+        - heading "A Lua" [level=2] [ref=e107]
+        - paragraph [ref=e108]: O inconsciente, os medos, os reflexos que brilham no escuro. A verdade não está na superfície, mas na sombra que ela projeta.
+      - generic [ref=e109]: sombra · reflexo
+    - article [ref=e110]:
+      - img "O Sol" [ref=e111]
+      - generic [ref=e112]:
+        - generic [ref=e113]: XIX · o sol
+        - heading "O Sol" [level=2] [ref=e114]
+        - paragraph [ref=e115]: A clareza absoluta, o calor da exposição. A luz que revela todos os segredos do ateliê e dissipa as ilusões da noite. A energia pura do fazer.
+      - generic [ref=e116]: exposição · energia
+    - article [ref=e117]:
+      - img "O Mundo" [ref=e118]
+      - generic [ref=e119]:
+        - generic [ref=e120]: XXI · o mundo
+        - heading "O Mundo" [level=2] [ref=e121]
+        - paragraph [ref=e122]: A integração total, a faixa perfeitamente mixada. A fusão do ateliê e da pista. O ciclo completo onde tudo faz sentido e se resolve.
+      - generic [ref=e123]: integração · totalidade
+    - article [ref=e124]:
+      - img "A Pantera" [ref=e125]
+      - generic [ref=e126]:
+        - generic [ref=e127]: Especial · a pantera
+        - heading "A Pantera" [level=2] [ref=e128]
+        - paragraph [ref=e129]: O silêncio à espreita, a presença vigilante. Ela se move nas sombras sem deixar rastros, ensinando a agir com precisão, instinto e mistério absoluto.
+      - generic [ref=e130]: silêncio · instinto
