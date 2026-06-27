@@ -1,0 +1,4 @@
+[     426ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://chdx-sync.warholana.workers.dev/state:0
+[    2061ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://anavanzin.com/favicon.ico:0
+[   97721ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://chdx-sync.warholana.workers.dev/state:0
+[   98308ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://anavanzin.com/favicon.ico:0
