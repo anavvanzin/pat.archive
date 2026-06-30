@@ -1,0 +1,11 @@
+[     655ms] [ERROR] Failed to load resource: net::ERR_CONTENT_LENGTH_MISMATCH @ http://127.0.0.1:8080/assets/card-priestess.png:0
+[     655ms] [WARNING] Erro ao carregar imagem: assets/card-priestess.png @ http://127.0.0.1:8080/js/tarot-game.js:166
+[     656ms] [ERROR] Failed to load resource: net::ERR_CONTENT_LENGTH_MISMATCH @ http://127.0.0.1:8080/assets/card-fool.png:0
+[     657ms] [ERROR] Failed to load resource: net::ERR_CONTENT_LENGTH_MISMATCH @ http://127.0.0.1:8080/assets/card-tower.png:0
+[     657ms] [WARNING] Erro ao carregar imagem: assets/card-fool.png @ http://127.0.0.1:8080/js/tarot-game.js:166
+[     657ms] [WARNING] Erro ao carregar imagem: assets/card-tower.png @ http://127.0.0.1:8080/js/tarot-game.js:166
+[     661ms] [ERROR] Failed to load resource: net::ERR_CONTENT_LENGTH_MISMATCH @ http://127.0.0.1:8080/assets/card-panther.png:0
+[     661ms] [WARNING] Erro ao carregar imagem: assets/card-panther.png @ http://127.0.0.1:8080/js/tarot-game.js:166
+[     692ms] [ERROR] Failed to load resource: net::ERR_CONTENT_LENGTH_MISMATCH @ http://127.0.0.1:8080/assets/panther-flash.png:0
+[     692ms] [ERROR] Failed to load resource: net::ERR_CONTENT_LENGTH_MISMATCH @ http://127.0.0.1:8080/assets/portrait-selfie.png:0
+[     709ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://127.0.0.1:8080/favicon.ico:0

@@ -80,13 +80,13 @@
     </div>
     <nav aria-label="Navegação principal">
       <a href="index.html#home" class="navlink">HOME</a>
-      <a href="#s2" class="navlink">MANIFESTO</a>
+      <a href="#manifesto-hero" class="navlink">MANIFESTO</a>
       <a href="#sets" class="navlink">SETS</a>
       <a href="#studio" class="navlink hot">STUDIO ★</a>
       <a href="biblioteca.html" class="navlink">BIBLIOTECA</a>
       <a href="poemas.html" class="navlink">POEMAS</a>
       <a href="#galeria" class="navlink">GALERIA</a>
-      <a href="#tarot" class="navlink">TAROT</a>
+      <a href="#tarot-glossary" class="navlink">TAROT</a>
       <a href="#camarim" class="navlink">CAMARIM</a>
       <a href="#contato" class="navlink">CONTATO</a>
       <button id="themeToggle" class="theme-switch-btn" type="button" data-theme-toggle aria-label="Mudar tema">
@@ -96,9 +96,198 @@
   </header>
 
   <!-- ============================================================
-       Section 1 of 6 — HERO
+       Section 1 — INTERACTIVE TAROT GAME (HOME)
        ============================================================ -->
-  <section id="home" aria-label="Hero" style="position:relative; padding:70px var(--bleed-pad) 90px; overflow:hidden;">
+  <section id="home" class="tarot-game-section" aria-label="Tarot Interativo" style="position:relative; padding:100px var(--bleed-pad) 60px; overflow:hidden; border-bottom:1.5px solid var(--line);">
+    <div class="tarot-stars"></div>
+    <div style="position:relative; max-width:1180px; margin:0 auto; text-align:center;">
+      <span class="eyebrow" style="color:var(--blood); margin-bottom:12px; display:block;">ORÁCULO VISUAL · ARCANOS DO LIMIAR</span>
+      <h2 style="font-family:var(--display-font); font-weight:700; font-size:clamp(40px,6vw,84px); line-height:.9; letter-spacing:-.01em; color:var(--cream); margin:0 0 20px; text-transform:uppercase;">
+        A Tiragem da Noite
+      </h2>
+      <p style="font-family:var(--serif-font); font-size:20px; color:var(--soft); max-width:640px; margin:0 auto 40px; font-style:italic;">
+        Faça sua pergunta mentalmente, escolha a tiragem e clique nas cartas para revelar os arcanos do agora.
+      </p>
+
+      <div class="tarot-canvas-wrapper" style="margin: 0 auto 30px; max-width: 900px;">
+        <canvas id="tarotCanvas" aria-label="Mesa do Oráculo de Tarot. Clique nas cartas viradas para revelá-las."></canvas>
+      </div>
+      
+      <div class="tarot-controls" style="display:flex; justify-content:center; gap:16px; margin-bottom:30px; flex-wrap:wrap;">
+        <button id="btnSpread1" class="tarot-btn active" type="button">Conselho Rápido (1 Carta)</button>
+        <button id="btnSpread3" class="tarot-btn" type="button">O Caminho (3 Cartas)</button>
+        <button id="btnShuffle" class="tarot-btn primary" type="button">Embaralhar & Tirar</button>
+      </div>
+
+      <div id="oraculo-leitura" class="oraculo-leitura-container" style="max-width:800px; margin: 0 auto;">
+        <p class="reading-hint" style="color:var(--mute); font-family:var(--serif-font); font-size:18px;">Respire fundo, faça sua pergunta e vire as cartas reveladas...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Section 1B — GABINETE DE ARCANOS (15 LÂMINAS)
+       ============================================================ -->
+  <div id="tarot-glossary" class="archive-divider-text" style="margin-top: 40px;">
+    <span>Gabinete de Arcanos (15 Lâminas)</span>
+  </div>
+
+  <section class="archive-grid" aria-label="Glossário de Arcanos" style="padding: 40px var(--bleed-pad) 80px; max-width:1180px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:30px;">
+    <article class="archive-card">
+      <img src="assets/card-fool.png" alt="O Louco">
+      <div class="archive-card__content">
+        <span class="archive-card__num">00 · o louco</span>
+        <h2>O Louco</h2>
+        <p>O início, o salto, o risco de ser livre. Não é falta de juízo, é a coragem de começar do zero sem saber onde o terreno termina.</p>
+      </div>
+      <div class="archive-card__meta">salto · início</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-thedj.png" alt="O DJ">
+      <div class="archive-card__content">
+        <span class="archive-card__num">I · o dj</span>
+        <h2>O DJ</h2>
+        <p>O regente das frequências, o controle da tensão. Ele manipula o tempo e a percepção na pista, lembrando que você escolhe a próxima transição.</p>
+      </div>
+      <div class="archive-card__meta">frequência · controle</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-priestess.png" alt="A Sacerdotisa">
+      <div class="archive-card__content">
+        <span class="archive-card__num">II · a sacerdotisa</span>
+        <h2>A Sacerdotisa</h2>
+        <p>O véu, o saber silencioso, o limiar. O convite é para parar e ouvir a intuição que o barulho da pista geralmente silencia.</p>
+      </div>
+      <div class="archive-card__meta">limiar · mistério</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-empress.png" alt="A Imperatriz">
+      <div class="archive-card__content">
+        <span class="archive-card__num">III · a imperatriz</span>
+        <h2>A Imperatriz</h2>
+        <p>A criação abundante, a matéria viva, a força do ateliê. A fertilidade não é passiva; é o ato de dar forma e textura às ideias brutas.</p>
+      </div>
+      <div class="archive-card__meta">criação · matéria</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-hierophant.png" alt="O Hierofante">
+      <div class="archive-card__content">
+        <span class="archive-card__num">V · o hierofante</span>
+        <h2>O Hierofante</h2>
+        <p>A tradição, os rituais antigos, a estrutura invisível. A ordem que protege o caos. O respeito à linhagem e à técnica que precedem o ruído.</p>
+      </div>
+      <div class="archive-card__meta">estrutura · ritual</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-lovers.png" alt="Os Namorados">
+      <div class="archive-card__content">
+        <span class="archive-card__num">VI · os namorados</span>
+        <h2>Os Namorados</h2>
+        <p>A escolha, a bifurcação das frequências. A sintonia fina entre o ateliê e a pista, onde cada atração exige um sacrifício de caminho.</p>
+      </div>
+      <div class="archive-card__meta">bifurcação · sintonia</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-wheel.png" alt="A Roda da Fortuna">
+      <div class="archive-card__content">
+        <span class="archive-card__num">X · a roda da fortuna</span>
+        <h2>A Roda da Fortuna</h2>
+        <p>O loop, o compasso que gira sem parar. Altas frequências, baixas frequências. Nada é estático; aprenda a dançar tanto na subida quanto na queda.</p>
+      </div>
+      <div class="archive-card__meta">loop · compasso</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-justice.png" alt="A Justiça">
+      <div class="archive-card__content">
+        <span class="archive-card__num">XI · a justiça</span>
+        <h2>A Justiça</h2>
+        <p>A precisão do corte, o equilíbrio estrito. A verdade crua despida de ornamentos. O peso exato de cada escolha no layout ou na mixagem.</p>
+      </div>
+      <div class="archive-card__meta">corte · precisão</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-death.png" alt="A Morte">
+      <div class="archive-card__content">
+        <span class="archive-card__num">XIII · a morte</span>
+        <h2>A Morte</h2>
+        <p>A transformação, o fechamento de ciclo. Nada acaba de verdade; a forma apenas se desfaz para algo novo poder emergir.</p>
+      </div>
+      <div class="archive-card__meta">transformação · fim/início</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-tower.png" alt="A Torre">
+      <div class="archive-card__content">
+        <span class="archive-card__num">XVI · a torre</span>
+        <h2>A Torre</h2>
+        <p>A queda necessária. Tudo o que foi construído sobre bases falsas precisa ruir para que o espaço respire novamente.</p>
+      </div>
+      <div class="archive-card__meta">ruptura · purificação</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-star.png" alt="A Estrela">
+      <div class="archive-card__content">
+        <span class="archive-card__num">XVII · a estrela</span>
+        <h2>A Estrela</h2>
+        <p>A esperança fria, a luz distante que guia o fim da noite. Um lampejo de clareza em meio à neblina da pista. O prenúncio do amanhecer.</p>
+      </div>
+      <div class="archive-card__meta">lampejo · clareza</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-moon.png" alt="A Lua">
+      <div class="archive-card__content">
+        <span class="archive-card__num">XVIII · a lua</span>
+        <h2>A Lua</h2>
+        <p>O inconsciente, os medos, os reflexos que brilham no escuro. A verdade não está na superfície, mas na sombra que ela projeta.</p>
+      </div>
+      <div class="archive-card__meta">sombra · reflexo</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-sun.png" alt="O Sol">
+      <div class="archive-card__content">
+        <span class="archive-card__num">XIX · o sol</span>
+        <h2>O Sol</h2>
+        <p>A clareza absoluta, o calor da exposição. A luz que reveals todos os segredos do ateliê e dissipa as ilusões da noite. A energia pura do fazer.</p>
+      </div>
+      <div class="archive-card__meta">exposição · energia</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-world.png" alt="O Mundo">
+      <div class="archive-card__content">
+        <span class="archive-card__num">XXI · o mundo</span>
+        <h2>O Mundo</h2>
+        <p>A integração total, a faixa perfeitamente mixada. A fusão do ateliê e da pista. O ciclo completo onde tudo faz sentido e se resolve.</p>
+      </div>
+      <div class="archive-card__meta">integração · totalidade</div>
+    </article>
+
+    <article class="archive-card">
+      <img src="assets/card-panther.png" alt="A Pantera">
+      <div class="archive-card__content">
+        <span class="archive-card__num">Especial · a pantera</span>
+        <h2>A Pantera</h2>
+        <p>O silêncio à espreita, a presença vigilante. Ela se move nas sombras sem deixar rastros, ensinando a agir com precisão, instinto e mistério absoluto.</p>
+      </div>
+      <div class="archive-card__meta">silêncio · instinto</div>
+    </article>
+  </section>
+
+  <!-- ============================================================
+       Section 2 of 6 — HERO / MANIFESTO INTRO
+       ============================================================ -->
+  <section id="manifesto-hero" aria-label="Hero" style="position:relative; padding:70px var(--bleed-pad) 90px; overflow:hidden; border-top:1.5px solid var(--line);">
     <div style="position:absolute; inset:0; background-image:radial-gradient(rgba(181,34,26,.18) 1px, transparent 1.4px); background-size:7px 7px; opacity:.6;"></div>
     <div style="position:absolute; left:50%; top:-120px; width:520px; height:520px; transform:translateX(-50%); border-radius:50%; background:radial-gradient(circle, rgba(181,34,26,.30), transparent 65%);"></div>
 
@@ -126,6 +315,7 @@
       </div>
     </div>
   </section>
+
 
   <!-- RITUAL INSET (kept in my heart loop) -->
   <section id="ritual-inset" aria-label="Ritual" style="position:relative; padding:60px var(--bleed-pad); border-top:1.5px solid var(--line); background:#0a0807;">
@@ -178,46 +368,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       TAROT — Tiragem da Noite
-       ============================================================ -->
-  <section id="tarot" aria-label="Tarot">
-    <div class="tarot-stars"></div>
-    <div class="tarot-inner">
-      <div class="tarot-header">
-        <span class="eyebrow">TAROT</span>
-        <h2>a tiragem da noite</h2>
-        <p>Três posições — corpo, alma e som. Inicie o ritual pra revelar o que a noite escolheu.</p>
-      </div>
-      <div class="tarot-today-card">
-        <span class="label">carta do dia</span>
-        <span id="todayCardName">—</span>
-        <span id="todayCardMeaning"></span>
-      </div>
-      <!-- RITUAL SPREAD — 3 positions -->
-      <div id="tarotSpread" class="tarot-spread">
-        <div class="tarot-position" data-pos="0">
-          <span class="tarot-position-label">CORPO</span>
-          <span class="tarot-position-sub">o que o corpo traz</span>
-          <div class="tarot-card-slot" id="slot0"></div>
-        </div>
-        <div class="tarot-position" data-pos="1">
-          <span class="tarot-position-label">ALMA</span>
-          <span class="tarot-position-sub">o que a alma busca</span>
-          <div class="tarot-card-slot" id="slot1"></div>
-        </div>
-        <div class="tarot-position" data-pos="2">
-          <span class="tarot-position-label">SOM</span>
-          <span class="tarot-position-sub">o que o som oferece</span>
-          <div class="tarot-card-slot" id="slot2"></div>
-        </div>
-      </div>
-      <div id="tarotReading" class="tarot-reading"></div>
-      <div style="text-align:center; margin-top:36px;">
-        <button id="shuffle" class="btngold">iniciar ritual</button>
-      </div>
-    </div>
-  </section>
+
 
   <!-- ============================================================
        Section 3 of 6 — SETS & DJ STUDIO
@@ -595,6 +746,7 @@
   </div>
 
   <!-- CLIENT CODE SCRIPT BLOCK -->
+  <script src="js/tarot-game.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

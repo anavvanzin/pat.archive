@@ -1,0 +1,268 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - link "CHDX / pat" [ref=e4] [cursor=pointer]:
+      - /url: "#home"
+      - generic [ref=e7]: CHDX
+      - generic [ref=e8]: / pat
+    - navigation "Navegação principal" [ref=e9]:
+      - link "HOME" [ref=e10] [cursor=pointer]:
+        - /url: "#home"
+      - link "MANIFESTO" [ref=e11] [cursor=pointer]:
+        - /url: "#s1"
+      - link "SETS" [ref=e12] [cursor=pointer]:
+        - /url: "#s3"
+      - link "ATELIÊ" [ref=e13] [cursor=pointer]:
+        - /url: "#s4"
+      - link "VOZES" [ref=e14] [cursor=pointer]:
+        - /url: "#s5"
+      - link "CONTATO" [ref=e15] [cursor=pointer]:
+        - /url: "#s6"
+  - region "Tarot Interativo" [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]: ORÁCULO VISUAL · ARCANOS DO LIMIAR
+      - heading "A Tiragem da Noite" [level=2] [ref=e19]
+      - paragraph [ref=e20]: Faça sua pergunta mentalmente, escolha a tiragem e clique nas cartas para revelar os arcanos do agora.
+      - generic "Mesa do Oráculo de Tarot. Clique nas cartas viradas para revelá-las." [ref=e22]
+      - generic [ref=e23]:
+        - button "Conselho Rápido (1 Carta)" [ref=e24] [cursor=pointer]
+        - button "O Caminho (3 Cartas)" [ref=e25] [cursor=pointer]
+        - button "Embaralhar & Tirar" [ref=e26] [cursor=pointer]
+      - paragraph [ref=e28]: Respire fundo, faça sua pergunta e vire as cartas reveladas...
+  - generic [ref=e30]: Gabinete de Arcanos (15 Lâminas)
+  - region "Glossário de Arcanos" [ref=e31]:
+    - article [ref=e32]:
+      - img "O Louco" [ref=e33]
+      - generic [ref=e34]:
+        - generic [ref=e35]: 00 · o louco
+        - heading "O Louco" [level=2] [ref=e36]
+        - paragraph [ref=e37]: O início, o salto, o risco de ser livre. Não é falta de juízo, é a coragem de começar do zero sem saber onde o terreno termina.
+      - generic [ref=e38]: salto · início
+    - article [ref=e39]:
+      - img "O DJ" [ref=e40]
+      - generic [ref=e41]:
+        - generic [ref=e42]: I · o dj
+        - heading "O DJ" [level=2] [ref=e43]
+        - paragraph [ref=e44]: O regente das frequências, o controle da tensão. Ele manipula o tempo e a percepção na pista, lembrando que você escolhe a próxima transição.
+      - generic [ref=e45]: frequência · controle
+    - article [ref=e46]:
+      - img "A Sacerdotisa" [ref=e47]
+      - generic [ref=e48]:
+        - generic [ref=e49]: II · a sacerdotisa
+        - heading "A Sacerdotisa" [level=2] [ref=e50]
+        - paragraph [ref=e51]: O véu, o saber silencioso, o limiar. O convite é para parar e ouvir a intuição que o barulho da pista geralmente silencia.
+      - generic [ref=e52]: limiar · mistério
+    - article [ref=e53]:
+      - img "A Imperatriz" [ref=e54]
+      - generic [ref=e55]:
+        - generic [ref=e56]: III · a imperatriz
+        - heading "A Imperatriz" [level=2] [ref=e57]
+        - paragraph [ref=e58]: A criação abundante, a matéria viva, a força do ateliê. A fertilidade não é passiva; é o ato de dar forma e textura às ideias brutas.
+      - generic [ref=e59]: criação · matéria
+    - article [ref=e60]:
+      - img "O Hierofante" [ref=e61]
+      - generic [ref=e62]:
+        - generic [ref=e63]: V · o hierofante
+        - heading "O Hierofante" [level=2] [ref=e64]
+        - paragraph [ref=e65]: A tradição, os rituais antigos, a estrutura invisível. A ordem que protege o caos. O respeito à linhagem e à técnica que precedem o ruído.
+      - generic [ref=e66]: estrutura · ritual
+    - article [ref=e67]:
+      - img "Os Namorados" [ref=e68]
+      - generic [ref=e69]:
+        - generic [ref=e70]: VI · os namorados
+        - heading "Os Namorados" [level=2] [ref=e71]
+        - paragraph [ref=e72]: A escolha, a bifurcação das frequências. A sintonia fina entre o ateliê e a pista, onde cada atração exige um sacrifício de caminho.
+      - generic [ref=e73]: bifurcação · sintonia
+    - article [ref=e74]:
+      - img "A Roda da Fortuna" [ref=e75]
+      - generic [ref=e76]:
+        - generic [ref=e77]: X · a roda da fortuna
+        - heading "A Roda da Fortuna" [level=2] [ref=e78]
+        - paragraph [ref=e79]: O loop, o compasso que gira sem parar. Altas frequências, baixas frequências. Nada é estático; aprenda a dançar tanto na subida quanto na queda.
+      - generic [ref=e80]: loop · compasso
+    - article [ref=e81]:
+      - img "A Justiça" [ref=e82]
+      - generic [ref=e83]:
+        - generic [ref=e84]: XI · a justiça
+        - heading "A Justiça" [level=2] [ref=e85]
+        - paragraph [ref=e86]: A precisão do corte, o equilíbrio estrito. A verdade crua despida de ornamentos. O peso exato de cada escolha no layout ou na mixagem.
+      - generic [ref=e87]: corte · precisão
+    - article [ref=e88]:
+      - img "A Morte" [ref=e89]
+      - generic [ref=e90]:
+        - generic [ref=e91]: XIII · a morte
+        - heading "A Morte" [level=2] [ref=e92]
+        - paragraph [ref=e93]: A transformação, o fechamento de ciclo. Nada acaba de verdade; a forma apenas se desfaz para algo novo poder emergir.
+      - generic [ref=e94]: transformação · fim/início
+    - article [ref=e95]:
+      - img "A Torre" [ref=e96]
+      - generic [ref=e97]:
+        - generic [ref=e98]: XVI · a torre
+        - heading "A Torre" [level=2] [ref=e99]
+        - paragraph [ref=e100]: A queda necessária. Tudo o que foi construído sobre bases falsas precisa ruir para que o espaço respire novamente.
+      - generic [ref=e101]: ruptura · purificação
+    - article [ref=e102]:
+      - img "A Estrela" [ref=e103]
+      - generic [ref=e104]:
+        - generic [ref=e105]: XVII · a estrela
+        - heading "A Estrela" [level=2] [ref=e106]
+        - paragraph [ref=e107]: A esperança fria, a luz distante que guia o fim da noite. Um lampejo de clareza em meio à neblina da pista. O prenúncio do amanhecer.
+      - generic [ref=e108]: lampejo · clareza
+    - article [ref=e109]:
+      - img "A Lua" [ref=e110]
+      - generic [ref=e111]:
+        - generic [ref=e112]: XVIII · a lua
+        - heading "A Lua" [level=2] [ref=e113]
+        - paragraph [ref=e114]: O inconsciente, os medos, os reflexos que brilham no escuro. A verdade não está na superfície, mas na sombra que ela projeta.
+      - generic [ref=e115]: sombra · reflexo
+    - article [ref=e116]:
+      - img "O Sol" [ref=e117]
+      - generic [ref=e118]:
+        - generic [ref=e119]: XIX · o sol
+        - heading "O Sol" [level=2] [ref=e120]
+        - paragraph [ref=e121]: A clareza absoluta, o calor da exposição. A luz que reveals todos os segredos do ateliê e dissipa as ilusões da noite. A energia pura do fazer.
+      - generic [ref=e122]: exposição · energia
+    - article [ref=e123]:
+      - img "O Mundo" [ref=e124]
+      - generic [ref=e125]:
+        - generic [ref=e126]: XXI · o mundo
+        - heading "O Mundo" [level=2] [ref=e127]
+        - paragraph [ref=e128]: A integração total, a faixa perfeitamente mixada. A fusão do ateliê e da pista. O ciclo completo onde tudo faz sentido e se resolve.
+      - generic [ref=e129]: integração · totalidade
+    - article [ref=e130]:
+      - img "A Pantera" [ref=e131]
+      - generic [ref=e132]:
+        - generic [ref=e133]: Especial · a pantera
+        - heading "A Pantera" [level=2] [ref=e134]
+        - paragraph [ref=e135]: O silêncio à espreita, a presença vigilante. Ela se move nas sombras sem deixar rastros, ensinando a agir com precisão, instinto e mistério absoluto.
+      - generic [ref=e136]: silêncio · instinto
+  - region "Hero" [ref=e137]:
+    - generic [ref=e138]:
+      - img "DJ Pat na cabine, luz âmbar, fumaça" [ref=e139]
+      - generic [ref=e140]:
+        - generic [ref=e141]: CHDX · pat · selectora
+        - heading "SOM QUE INVOCA pista · ritual · ruído" [level=1] [ref=e142]:
+          - text: SOM QUE
+          - text: INVOCA
+          - emphasis [ref=e143]: pista · ritual · ruído
+        - paragraph [ref=e144]: Floripa · techno · tech house · noise — DJ sets para pista, festival e after-hours. Booking direto, sem intermediário, sem editora.
+        - generic [ref=e145]:
+          - link "booking & contato" [ref=e146] [cursor=pointer]:
+            - /url: mailto:pat@chdx.fm?subject=booking
+          - link "ler manifesto ↓" [ref=e147] [cursor=pointer]:
+            - /url: "#s2"
+  - region "Manifesto" [ref=e148]:
+    - generic [ref=e149]:
+      - generic [ref=e150]: MANIFESTO
+      - blockquote [ref=e151]:
+        - text: "\"Eu não procuro batida certa. Procuro o momento em que a pista para de fingir. CHDX é isso: oferenda sonora pra quem veio dançar, não pra quem veio posar.\""
+        - generic [ref=e152]: — pat, 2026
+      - link "ler manifesto completo →" [ref=e153] [cursor=pointer]:
+        - /url: "#s3"
+  - region "Sets" [ref=e154]:
+    - generic [ref=e155]:
+      - generic [ref=e156]: SETS · 2026
+      - heading "012 RITUAL NOTURNO" [level=2] [ref=e157]:
+        - generic [ref=e158]: "012"
+        - generic [ref=e159]: RITUAL NOTURNO
+      - paragraph [ref=e160]: Onze noites de pista, dois after-hours ao vivo. Cada set é uma carta de tarô que a pat joga pra pista. Sem playlist, sem fórmula.
+      - link "▶ play set 012" [ref=e161] [cursor=pointer]:
+        - /url: https://soundcloud.com/chdx
+    - generic [ref=e162]:
+      - generic [ref=e163] [cursor=pointer]:
+        - generic [ref=e164]:
+          - img "Set 001 — aquecimento lento" [ref=e165]
+          - generic [ref=e166]: "001"
+        - generic [ref=e167]:
+          - generic [ref=e168]: aquecimento lento
+          - button "Tocar set 001" [ref=e169]: ▶
+      - generic [ref=e170] [cursor=pointer]:
+        - generic [ref=e171]:
+          - img "Set 002 — oferenda" [ref=e172]
+          - generic [ref=e173]: "002"
+        - generic [ref=e174]:
+          - generic [ref=e175]: oferenda
+          - button "Tocar set 002" [ref=e176]: ▶
+      - generic [ref=e177] [cursor=pointer]:
+        - generic [ref=e178]:
+          - img "Set 003 — pantera negra" [ref=e179]
+          - generic [ref=e180]: "003"
+        - generic [ref=e181]:
+          - generic [ref=e182]: pantera negra
+          - button "Tocar set 003" [ref=e183]: ▶
+      - generic [ref=e184] [cursor=pointer]:
+        - generic [ref=e185]:
+          - img "Set 004 — ritual noturno" [ref=e186]
+          - generic [ref=e187]: "004"
+        - generic [ref=e188]:
+          - generic [ref=e189]: ritual noturno
+          - button "Tocar set 004" [ref=e190]: ▶
+      - generic [ref=e191] [cursor=pointer]:
+        - generic [ref=e192]:
+          - img "Set 005 — after do after (ao vivo)" [ref=e193]
+          - generic [ref=e194]: "005"
+        - generic [ref=e195]:
+          - generic [ref=e196]: after do after
+          - generic [ref=e197]: ● ao vivo
+      - generic [ref=e198] [cursor=pointer]:
+        - generic [ref=e199]:
+          - img "Set 006 — pista vazia" [ref=e200]
+          - generic [ref=e201]: "006"
+        - generic [ref=e202]:
+          - generic [ref=e203]: pista vazia
+          - button "Tocar set 006" [ref=e204]: ▶
+      - generic [ref=e205] [cursor=pointer]:
+        - generic [ref=e206]:
+          - img "Set 007 — recent" [ref=e207]
+          - generic [ref=e208]: "007"
+        - generic [ref=e209]:
+          - generic [ref=e210]: recent
+          - button "Tocar set 007" [ref=e211]: ▶
+      - generic [ref=e212] [cursor=pointer]:
+        - generic [ref=e213]:
+          - img "Set 008 — still life" [ref=e214]
+          - generic [ref=e215]: "008"
+        - generic [ref=e216]:
+          - generic [ref=e217]: still life
+          - button "Tocar set 008" [ref=e218]: ▶
+  - region "Ateliê" [ref=e219]:
+    - generic [ref=e220]:
+      - img "Xilogravura 'pantera'" [ref=e222]
+      - img "Serigrafia 'oferenda'" [ref=e224]
+      - img "Acrílica 'pista vazia'" [ref=e226]
+      - img "Carvão 'ritual'" [ref=e228]
+      - img "Still life" [ref=e230]
+      - img "Xilogravura 'A Pantera e a Pickup'" [ref=e232]
+      - img "Xilogravura 'O Som e a Prensa'" [ref=e234]
+    - generic [ref=e235]:
+      - generic [ref=e236]: ATELIÊ · XILOGRAVURA
+      - heading "MANUFATURA DE IMAGEM o outro ofício da pat" [level=2] [ref=e237]:
+        - text: MANUFATURA
+        - text: DE IMAGEM
+        - emphasis [ref=e238]: o outro ofício da pat
+      - paragraph [ref=e239]: Xilogravura, serigrafia e acrílica sobre papel algodão. Edições curtas, feitas à mão em Floripa. Sem reprint, sem loja aberta — só quando a peça pede.
+      - link "conhecer ateliê →" [ref=e240] [cursor=pointer]:
+        - /url: mailto:pat@chdx.fm?subject=ateli%C3%AA
+  - region "Vozes" [ref=e241]:
+    - generic [ref=e242]:
+      - generic [ref=e243]: VOZES
+      - generic [ref=e244]:
+        - article [ref=e245]:
+          - paragraph [ref=e246]: "\"Pat lê a pista como quem lê partitura. Cada set é uma carta de tarô que ela joga pra pista.\""
+          - text: — DJ CARMEN MARIA · Radio Beats Floripa
+        - article [ref=e247]:
+          - paragraph [ref=e248]: "\"O ateliê dela imprime o que a música dela toca: marcas de madeira, silêncio entre traços, oferenda visual.\""
+          - text: — ARNO DAL RI JÚNIOR · UFSC
+  - region "Contato e rodapé" [ref=e249]:
+    - generic "Marca CHDX — pantera de xilogravura" [ref=e250]
+    - generic [ref=e251]: CHDX
+    - heading "pat · selectora" [level=2] [ref=e252]:
+      - text: pat ·
+      - text: selectora
+    - paragraph [ref=e253]: pista · ritual · ateliê
+    - link "→ pat@chdx.fm" [ref=e254] [cursor=pointer]:
+      - /url: mailto:pat@chdx.fm
+    - generic [ref=e255]:
+      - generic [ref=e256]: florianópolis · sc · brasil
+      - generic [ref=e257]: soundcloud / instagram / bandcamp — @chdx
+      - img "Selo do Ateliê CHDX" [ref=e259]
+      - generic [ref=e260]: © 2026 — feito por ana
