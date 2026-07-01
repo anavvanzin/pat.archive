@@ -325,6 +325,7 @@
       y=Math.max(0,Math.min(1,y));
       volA = 1 - y;
       $('volAHandle').style.top=(y*r.height - 4)+'px';
+      $('volA').setAttribute('aria-valuenow', Math.round(volA*100));
       applyGains();
     }
     function setVolBFrom(e){
@@ -334,6 +335,7 @@
       y=Math.max(0,Math.min(1,y));
       volB = 1 - y;
       $('volBHandle').style.top=(y*r.height - 4)+'px';
+      $('volB').setAttribute('aria-valuenow', Math.round(volB*100));
       applyGains();
     }
     
@@ -653,7 +655,7 @@
     $('fxEcho').addEventListener('click',()=>{ ensureAudio(); toggleEcho(); });
     $('fxFilter').addEventListener('click',()=>{ ensureAudio(); toggleFilter(); });
     $('fxReverb').addEventListener('click',()=>{ ensureAudio(); toggleReverb(); });
-    function setXfadeFrom(e){ const r=$('xfade').getBoundingClientRect(); let x=(e.clientX-r.left)/r.width; x=Math.max(0,Math.min(1,x)); xfade=x; $('xfadeHandle').style.left=(x*100)+'%'; applyGains(); }
+    function setXfadeFrom(e){ const r=$('xfade').getBoundingClientRect(); let x=(e.clientX-r.left)/r.width; x=Math.max(0,Math.min(1,x)); xfade=x; $('xfadeHandle').style.left=(x*100)+'%'; $('xfade').setAttribute('aria-valuenow', Math.round(x*100)); applyGains(); }
     $('xfade').addEventListener('pointerdown',setXfadeFrom);
     $('xfade').addEventListener('pointermove',e=>{ if(e.buttons) setXfadeFrom(e); });
     $('volA').addEventListener('pointerdown',setVolAFrom);

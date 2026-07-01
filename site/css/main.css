@@ -2227,6 +2227,7 @@ button.player-play-btn,
 button.fx-chip {
   -webkit-appearance: none;
   appearance: none;
+  background: transparent;
 }
 
 /* FX strip (migrated from inline styles) */
