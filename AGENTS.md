@@ -78,3 +78,30 @@ mv site/style-redesign.css site/style.css
 Design brief, per-section spec, and verification captures live at
 `docs/chdx-redesign/`. The brief's standalone scaffold (with inline SVG
 placeholders) is at `docs/chdx-redesign/site/` for diff review.
+
+## Cursor Cloud specific instructions
+
+Dependencies are refreshed automatically on startup (`npm install` from the repo
+root). Node 22 is available; `server.js` needs Node 18+ (native `fetch`/Web
+Streams).
+
+- **Primary dev service**: the root Express server (`npm run dev`, port 8080).
+  It both serves the static `site/` folder AND provides the `/api/*` endpoints
+  (`/api/tracks`, `/api/upload`, `/api/audio-proxy`). This is the one service to
+  run to develop/test the site end to end — commands are in the "Backend (root)"
+  section above.
+- Serving `site/` with `python3 -m http.server` (as noted in the redesign
+  section) is fine for pure static preview but SKIPS all `/api/*` endpoints, so
+  audio track listing/upload won't work that way. Use `npm run dev` instead when
+  you need the APIs.
+- `site/uploads/` is created at runtime by the server and is gitignored; uploaded
+  audio there is not tracked.
+- **No lint or automated test setup exists** in this repo (no test/lint scripts
+  in `package.json`, no test framework or config). Verify changes by running the
+  server and exercising the pages/APIs manually.
+- The `chdx-sync/` Worker and `npm run pages:dev` are OPTIONAL — the frontend
+  works from `localStorage` alone. They run via `npx wrangler` (downloaded
+  on-demand, needs network); local dev uses a simulated KV so no Cloudflare
+  account is required, and `PUT /state` needs an `EDIT_KEY` (`.dev.vars` or
+  `wrangler secret`). Only run these to exercise cross-device sync or R2-backed
+  uploads.
