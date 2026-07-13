@@ -671,19 +671,28 @@
       if(key==='End') return 1;
       return null;
     }
+    function setAriaNow(id, val){ $(id).setAttribute('aria-valuenow', Math.round(val*100)); }
     function syncVol(id, handleId, val){
-      const r=$(id).getBoundingClientRect();
-      const h=$(id).clientHeight||r.height;
+      const el=$(id);
+      const r=el.getBoundingClientRect();
+      const h=el.clientHeight||r.height;
       $(handleId).style.top=((1-val)*h - 4)+'px';
-      $(id).setAttribute('aria-valuenow', Math.round(val*100));
+      setAriaNow(id, val);
     }
+    // Keep aria-valuenow in sync for pointer interactions too
+    $('volA').addEventListener('pointerdown',()=>setAriaNow('volA',volA));
+    $('volA').addEventListener('pointermove',e=>{ if(e.buttons) setAriaNow('volA',volA); });
+    $('volB').addEventListener('pointerdown',()=>setAriaNow('volB',volB));
+    $('volB').addEventListener('pointermove',e=>{ if(e.buttons) setAriaNow('volB',volB); });
+    $('xfade').addEventListener('pointerdown',()=>setAriaNow('xfade',xfade==null?0.5:xfade));
+    $('xfade').addEventListener('pointermove',e=>{ if(e.buttons) setAriaNow('xfade',xfade==null?0.5:xfade); });
     $('volA').addEventListener('keydown',e=>{ const v=nudge(e.key,volA,0.05); if(v==null)return; e.preventDefault(); ensureAudio(); volA=v; syncVol('volA','volAHandle',v); applyGains(); });
     $('volB').addEventListener('keydown',e=>{ const v=nudge(e.key,volB,0.05); if(v==null)return; e.preventDefault(); ensureAudio(); volB=v; syncVol('volB','volBHandle',v); applyGains(); });
-    $('xfade').addEventListener('keydown',e=>{ const v=nudge(e.key,xfade==null?0.5:xfade,0.05); if(v==null)return; e.preventDefault(); ensureAudio(); xfade=v; $('xfadeHandle').style.left=(v*100)+'%'; $('xfade').setAttribute('aria-valuenow', Math.round(v*100)); applyGains(); });
+    $('xfade').addEventListener('keydown',e=>{ const v=nudge(e.key,xfade==null?0.5:xfade,0.05); if(v==null)return; e.preventDefault(); ensureAudio(); xfade=v; $('xfadeHandle').style.left=(v*100)+'%'; setAriaNow('xfade', v); applyGains(); });
     // Initialize slider value semantics
-    $('volA').setAttribute('aria-valuenow', Math.round(volA*100));
-    $('volB').setAttribute('aria-valuenow', Math.round(volB*100));
-    $('xfade').setAttribute('aria-valuenow', Math.round((xfade==null?0.5:xfade)*100));
+    setAriaNow('volA', volA);
+    setAriaNow('volB', volB);
+    setAriaNow('xfade', (xfade==null?0.5:xfade));
     function drawWave(){
       const cv=$('wf'); if(cv){ const ctx=cv.getContext('2d'); const w=cv.width=cv.clientWidth*2, h=cv.height=cv.clientHeight*2; ctx.clearRect(0,0,w,h);
         if(A.analyser&&(deckA||deckB)){ const buf=new Uint8Array(A.analyser.fftSize); A.analyser.getByteTimeDomainData(buf); ctx.lineWidth=2.4; ctx.strokeStyle=BLOOD; ctx.beginPath(); for(let i=0;i<buf.length;i++){ const x=i/buf.length*w; const y=(buf[i]/255)*h; if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.stroke(); }

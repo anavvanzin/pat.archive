@@ -2222,9 +2222,13 @@ body.light-theme.archive-page .poem-panel { background: rgba(14, 11, 10, .055); 
 /* Strip native chrome from controls that carry their own styling */
 button.deck-btn-play,
 button.deck-btn-cue,
-button.set-play-btn,
-button.player-play-btn,
 button.fx-chip {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+button.set-play-btn,
+button.player-play-btn {
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
