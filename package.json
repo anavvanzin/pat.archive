@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+    "build": "echo \"Static site — nothing to build; site/ is the output dir\" && exit 0",
     "pages:dev": "wrangler pages dev site"
   },
   "dependencies": {
