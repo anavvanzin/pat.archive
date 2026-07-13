@@ -605,6 +605,28 @@ section.section-line-draw::after {
 }
 .set-play-btn:hover { background: var(--blood); color: var(--ink); }
 
+/* SoundCloud featured set player */
+.soundcloud-set { margin: 0 0 40px; }
+.soundcloud-set__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.soundcloud-set__sub {
+  font-family: var(--body-font);
+  font-size: 13px;
+  color: var(--mute);
+}
+.soundcloud-frame {
+  border: 3px solid var(--gold);
+  padding: 6px;
+  background: var(--ink);
+  box-shadow: 10px 10px 0 rgba(181, 34, 26, .30);
+}
+.soundcloud-frame iframe { display: block; width: 100%; }
+
 /* DJ Studio Cabine / Mixer Controls */
 .studio-cabine-wrap {
   margin-top: 48px;

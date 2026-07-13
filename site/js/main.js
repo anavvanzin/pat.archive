@@ -229,7 +229,7 @@
     function renderPoster(){
       const v=FLVARS[(flyer.variant||0)%3];
       $('poster').innerHTML=`<div style="position:relative; width:100%; max-width:340px; aspect-ratio:3/4; background:${v.bg}; background-image:radial-gradient(${v.dots} 1px, transparent 1.6px); background-size:6px 6px; border:3px solid ${v.fg}; padding:22px; display:flex; flex-direction:column; justify-content:space-between; overflow:hidden;">
-        <div style="font-family:var(--display-font); font-weight:600; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:${v.acc};">CHDX · pat apresenta</div>
+        <div style="font-family:var(--display-font); font-weight:600; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:${v.acc};">CHÊDA apresenta</div>
         <div>
           <div style="font-family:var(--display-font); font-weight:700; font-size:42px; line-height:.9; text-transform:uppercase; color:${v.fg}; word-break:break-word;">${esc(flyer.name)}</div>
           <div style="height:3px; background:${v.acc}; margin:12px 0; width:70%;"></div>
@@ -593,7 +593,7 @@
      ...SETS.map(s => ({
        id: s.n,
        title: s.title,
-       artist: (s.genre || 'CHDX') + ' · ' + (s.duration || '—'),
+       artist: (s.genre || 'CHÊDA') + ' · ' + (s.duration || '—'),
        len: s.duration || '—',
        url: s.url || null,
        bpm: 124,
