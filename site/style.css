@@ -144,12 +144,25 @@ section[data-rhythm="on"]::before{
   padding: clamp(20px, 3vw, 36px) var(--bleed-pad);
   background:linear-gradient(180deg, rgba(14,11,10,.72) 0%, rgba(14,11,10,.0) 100%);
 }
+#s1 .hero-nav .brand{ display:flex; align-items:center; gap:14px; }
+#s1 .hero-nav .panther-mark{
+  width:54px; height:54px;
+  background:var(--paper) url('assets/panther-mark.svg') center/contain no-repeat;
+  border:1.5px solid var(--gold);
+  padding:6px;
+}
+#s1 .hero-nav .wordmark{
+  font-family:var(--display-font);
+  font-weight:700; font-size:24px; letter-spacing:.18em; color:var(--cream);
+}
+#s1 .hero-nav nav{ display:flex; gap:24px; }
 #s1 .hero-nav nav a{
   font-family:var(--display-font); font-weight:500; font-size:13px;
   letter-spacing:.16em; color:var(--cream);
   padding:6px 0; border-bottom:1.5px solid transparent;
   text-shadow:0 1px 8px rgba(14,11,10,.55);
 }
+#s1 .hero-nav nav a:hover{ color:var(--cream); border-bottom-color:var(--blood); }
 
 #s1 .hero-text{
   position:relative; z-index:2;

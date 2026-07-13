@@ -31,8 +31,8 @@ npx wrangler dev   # run local worker
 **Navigation model**: Single-page static structures. The app uses vanilla JavaScript and `localStorage` to persist state locally, with remote backup and synchronization integrated via the worker.
 
 **UI pages** (`site/`):
-- `index.html` — main CHDX portfolio and player hub for Patricia.
-- `planejamento-vida.html` — interactive life planner with calendar, budgeting, apartment hunting, goals, and DJ sets.
+- `index.html` — public CHDX digital press kit (bio, sets, press photos, tech rider, booking).
+- Personal/private pages live in `archive-private/` (not deployed).
 
 ## Deployment
 

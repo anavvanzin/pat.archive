@@ -31,8 +31,8 @@ npx wrangler dev   # run local worker
 **Navigation model**: Single-page static structures. The app uses vanilla JavaScript and `localStorage` to persist state locally, with remote backup and synchronization integrated via the worker.
 
 **UI pages** (`site/`):
-- `index.html` — main CHDX portfolio and player hub for Patricia.
-- `planejamento-vida.html` — interactive life planner with calendar, budgeting, apartment hunting, goals, and DJ sets.
+- `index.html` — public CHDX **digital press kit** (bio, sets, press photos, tech rider, booking).
+- Personal/private pages live in `archive-private/` (not deployed).
 
 **Design Aesthetics**:
 - **Aesthetic Theme**: Woodcut/xilogravura contemporary art, tarot card layouts, punk serigrafia.
@@ -51,33 +51,22 @@ npx wrangler dev   # run local worker
 - **Partial Merge**: PUT method must perform partial updates to preserve independent fields (`camarim`, `guests`, `photos`, `planner`).
 - **Planner Security**: Access to the edit mode of `planejamento-vida.html` is gated behind the `?k=<EDIT_KEY>` URL query string. Non-authenticated users see a readonly version.
 
-## Redesign v2 (Codex branch)
+## Public press kit
 
-A redesigned 6-section scaffold lives alongside the canonical page as
-`site/index-v2.html` + `site/style-redesign.css`. It is the next iteration of the
-CHDX site (Mid Editorial hero, oversized `012` numeral, paper-cream atelier mode
-switch, 5 distinct CTA variations). It uses the canonical photos in
-`site/assets/` (with two new additions: `IMG_7546.png` and `IMG_7549.jpg`).
+`site/index.html` + `site/style.css` is the deployed digital press kit
+(hero → bio → sets → press photos → tech rider → booking). Visual language
+still follows the woodcut / ink / blood system documented in
+`docs/chdx-redesign/`.
 
-To preview locally:
-
-```bash
-cd site
-python3.12 -m http.server 8080 --bind 127.0.0.1
-# open http://127.0.0.1:8080/index-v2.html
-```
-
-To promote v2 to the production root URL:
+Preview:
 
 ```bash
-mv site/index.html site/index-v1.html
-mv site/index-v2.html site/index.html
-mv site/style-redesign.css site/style.css
+npm run dev
+# open http://127.0.0.1:8080/
 ```
 
-Design brief, per-section spec, and verification captures live at
-`docs/chdx-redesign/`. The brief's standalone scaffold (with inline SVG
-placeholders) is at `docs/chdx-redesign/site/` for diff review.
+Personal archive HTML/media (poems, planner, gift gate, etc.) lives in
+`archive-private/` and is excluded from Cloudflare Pages deploy.
 
 ## Cursor Cloud specific instructions
 
