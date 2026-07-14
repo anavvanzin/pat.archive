@@ -347,40 +347,6 @@ section[data-rhythm="on"]::before{
 #s4 .atelier-meta p{ color:var(--ink); opacity:.78; margin:0 0 28px; max-width:34ch; }
 
 /* ============================================================
-   Section 5 — TESTIMONIALS
-   ============================================================ */
-#s5{
-  background:
-    radial-gradient(rgba(199,154,75,.04) 1px, transparent 1.4px) 0 0/14px 14px,
-    var(--ink);
-  min-height:80vh;
-  display:flex; align-items:center;
-}
-#s5 .testimonials-inner{
-  width:100%; max-width:min(1200px, 100%);
-  margin:0 auto;
-}
-#s5 .eyebrow{ display:block; margin-bottom:40px; }
-#s5 .quotes{
-  display:grid; grid-template-columns: 1fr 1fr;
-  gap: clamp(32px, 5vw, 80px);
-}
-#s5 .quote{
-  border-top:1px solid var(--line);
-  padding-top:28px;
-}
-#s5 .quote p{
-  font-family:var(--serif-font); font-style:italic; font-weight:500;
-  font-size:clamp(22px, 2.4vw, 30px); line-height:1.4;
-  color:var(--cream); margin:0 0 22px;
-}
-#s5 .quote cite{
-  font-family:var(--display-font); font-style:normal; font-weight:500;
-  font-size:12px; letter-spacing:.42em; text-transform:uppercase;
-  color:var(--mute);
-}
-
-/* ============================================================
    Section 6 — CTA + footer
    ============================================================ */
 #s6.mini{
@@ -431,7 +397,6 @@ section[data-rhythm="on"]::before{
   .masonry{ grid-template-columns: 1fr 1fr; }
   #s4 .atelier-cluster{ grid-template-columns: 1fr 1fr; }
   #s4 .atelier-cluster .crop{ grid-column: auto !important; margin-top:0 !important; }
-  #s5 .quotes{ grid-template-columns: 1fr; }
 }
 
 /* ============================================================
