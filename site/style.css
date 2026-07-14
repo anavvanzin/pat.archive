@@ -28,6 +28,10 @@
 
 *,*::before,*::after{ box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .will-reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+}
 body{
   margin:0;
   background:var(--ink);
