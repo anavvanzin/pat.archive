@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CHÊDA · Patrícia Cheda · Press Kit</title>
+  <meta name="theme-color" content="#0E0B0A">
+  <meta name="description" content="Press kit — CHÊDA / Patrícia Cheda. DJ e selectora de techno denso e hipnótico, Florianópolis. Som que invoca: cada set é um ritual, não uma playlist.">
+  <meta property="og:title" content="CHÊDA · Patrícia Cheda · Press Kit">
+  <meta property="og:description" content="DJ e selectora de techno denso e hipnótico — Florianópolis, BR. Som que invoca.">
+  <meta property="og:image" content="assets/press/portrait.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://chdx.fm/press-kit.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CHÊDA · Patrícia Cheda · Press Kit">
+  <meta name="twitter:description" content="DJ e selectora de techno denso e hipnótico — Florianópolis, BR. Som que invoca.">
+  <meta name="twitter:image" content="assets/press/portrait.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#B5221A;   /* blood red (single tweakable token) */
+      --bg:#0E0B0A;       /* near-black sheet */
+      --desk:#141110;     /* page desk */
+      --cream:#E9E0CE;
+      --gold:#C79A4B;
+      --body:#c9c0af;
+      --muted:#8a8174;
+      --dim:#6a5f52;
+      --hair:#241f1b;
+      --hair2:#2a241f;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{
+      background:var(--desk);
+      color:var(--cream);
+      font-family:'Hanken Grotesk',sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:var(--accent);text-decoration:none;}
+    a:hover{color:var(--cream);}
+
+    /* ---- web chrome (hidden in print) ---- */
+    .kit-bar{
+      display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+      max-width:794px;margin:0 auto;padding:26px 20px 10px;
+    }
+    .kit-bar .brand{
+      font:600 15px 'Oswald',sans-serif;letter-spacing:.22em;color:var(--cream);text-transform:uppercase;
+    }
+    .kit-bar .brand small{display:block;font:italic 400 13px 'Cormorant Garamond',serif;letter-spacing:0;color:var(--muted);text-transform:none;margin-top:2px;}
+    .kit-actions{display:flex;gap:10px;align-items:center;}
+    .btn{
+      font:600 11px 'Oswald',sans-serif;letter-spacing:.16em;text-transform:uppercase;
+      padding:9px 15px;border:1px solid var(--accent);color:var(--accent);background:transparent;cursor:pointer;
+      transition:background .18s ease,color .18s ease;
+    }
+    .btn:hover{background:var(--accent);color:var(--bg);}
+
+    .sheets{padding:14px 20px 60px;}
+    .sheet-cap{
+      max-width:794px;margin:34px auto 10px;
+      display:flex;align-items:baseline;gap:12px;
+    }
+    .sheet-cap .tag{font:600 11px 'Oswald',sans-serif;letter-spacing:.2em;padding:4px 9px;background:var(--accent);color:var(--bg);text-transform:uppercase;}
+    .sheet-cap .desc{font:italic 400 15px 'Cormorant Garamond',serif;color:var(--muted);}
+
+    /* ---- responsive A4 scaling ---- */
+    .frame{width:100%;max-width:794px;margin:0 auto;overflow:hidden;}
+    .sheet{
+      width:794px;height:1123px;background:var(--bg);position:relative;overflow:hidden;
+      transform-origin:top left;box-shadow:0 24px 60px rgba(0,0,0,.5);
+    }
+
+    /* rings */
+    .ring{position:absolute;left:50%;transform:translateX(-50%);border-radius:50%;}
+
+    /* shared type helpers */
+    .eyebrow{font:500 12px 'Oswald',sans-serif;letter-spacing:.4em;color:var(--dim);text-transform:uppercase;}
+    .kicker{font:500 13px 'Oswald',sans-serif;letter-spacing:.42em;color:var(--accent);text-transform:uppercase;}
+    .biglabel{font:600 11px 'Oswald',sans-serif;letter-spacing:.3em;text-transform:uppercase;}
+
+    /* footer bar */
+    .footbar{position:absolute;bottom:0;left:0;right:0;background:var(--accent);display:flex;justify-content:space-between;align-items:center;}
+    .footbar a{color:var(--bg);}
+    .footbar a:hover{color:var(--cream);}
+    .footbar .fmail{font:600 16px 'Oswald',sans-serif;letter-spacing:.03em;color:var(--bg);}
+    .footbar .fmeta{font:600 12px 'Oswald',sans-serif;letter-spacing:.14em;color:var(--bg);text-transform:uppercase;}
+
+    /* sets list */
+    .setrow{display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--hair);}
+    .setrow .n{font:700 14px 'Oswald',sans-serif;color:var(--accent);min-width:26px;}
+    .setrow .t{font:600 12.5px 'Oswald',sans-serif;letter-spacing:.05em;color:var(--cream);text-transform:uppercase;flex:1;}
+    .setrow .m{font:11px 'Hanken Grotesk',sans-serif;color:var(--dim);}
+
+    @media (max-width:520px){
+      .sheet-cap .desc{display:none;}
+    }
+
+    /* ---- print: true A4, one sheet per page ---- */
+    @page{size:A4;margin:0;}
+    @media print{
+      body{background:#fff;}
+      .kit-bar,.sheet-cap{display:none !important;}
+      .sheets{padding:0;}
+      .frame{max-width:none;width:794px;height:1123px;}
+      .sheet{transform:none !important;box-shadow:none;break-after:page;page-break-after:always;}
+      .frame:last-child .sheet{break-after:auto;page-break-after:auto;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- web-only header -->
+  <header class="kit-bar">
+    <div class="brand">CHÊDA · Press Kit
+      <small>Patrícia Cheda — DJ / selectora · Florianópolis, BR</small>
+    </div>
+    <div class="kit-actions">
+      <a class="btn" href="mailto:patriciavchedach@gmail.com?subject=Booking%20CH%C3%8ADA">booking</a>
+      <button class="btn" type="button" onclick="window.print()">salvar pdf</button>
+    </div>
+  </header>
+
+  <div class="sheets">
+
+    <!-- ============================================================
+         4a — RITUAL  (concentric red rings + duotone portrait)
+         ============================================================ -->
+    <div class="sheet-cap"><span class="tag">A</span><span class="desc">Ritual — anéis concêntricos, retrato em duotone vermelho</span></div>
+    <div class="frame">
+      <div class="sheet" data-sheet>
+        <!-- ring system, centered on the portrait -->
+        <div class="ring" style="top:-206px;width:1500px;height:1500px;border:1px solid rgba(181,34,26,.18);"></div>
+        <div class="ring" style="top:-46px;width:1180px;height:1180px;border:1px solid rgba(181,34,26,.28);"></div>
+        <div class="ring" style="top:104px;width:880px;height:880px;border:2px solid rgba(181,34,26,.4);"></div>
+        <div class="ring" style="top:214px;width:600px;height:600px;border:2px solid rgba(181,34,26,.55);"></div>
+        <div class="ring" style="top:294px;width:440px;height:440px;border:3px solid var(--accent);"></div>
+
+        <!-- header row -->
+        <div style="position:absolute;top:26px;left:40px;" class="eyebrow">press kit · 2026</div>
+        <div style="position:absolute;top:26px;right:40px;letter-spacing:.3em;" class="eyebrow">Florianópolis · BR</div>
+
+        <!-- title -->
+        <div style="position:absolute;top:58px;left:0;right:0;text-align:center;">
+          <div class="kicker">DJ · SELECTORA · TECHNO</div>
+          <div style="font:700 126px/1 'Oswald',sans-serif;color:var(--cream);text-transform:uppercase;letter-spacing:.01em;padding-top:.14em;">CHÊDA</div>
+        </div>
+
+        <!-- duotone portrait -->
+        <div style="position:absolute;top:322px;left:50%;transform:translateX(-50%);width:384px;height:384px;border-radius:50%;overflow:hidden;border:3px solid var(--accent);background:var(--accent);">
+          <img src="assets/press/portrait.jpg" alt="Patrícia Cheda nas pickups" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%;filter:grayscale(1) contrast(1.2) brightness(.92);mix-blend-mode:multiply;">
+        </div>
+        <div style="position:absolute;top:380px;left:52px;width:150px;text-align:right;font:italic 600 17px 'Cormorant Garamond',serif;color:var(--gold);">som que<br>invoca</div>
+        <div style="position:absolute;top:540px;right:48px;width:160px;font:italic 600 17px 'Cormorant Garamond',serif;color:var(--gold);">cada set,<br>um ritual</div>
+
+        <!-- bio band -->
+        <div style="position:absolute;top:752px;left:40px;right:40px;display:grid;grid-template-columns:1fr 1fr;gap:26px;">
+          <p style="font:13.5px/1.65 'Hanken Grotesk',sans-serif;color:var(--body);margin:0;"><span class="biglabel" style="color:var(--accent);display:block;margin-bottom:7px;">PT</span>Patrícia Cheda é DJ e selectora radicada em Florianópolis. Sets de techno densos e hipnóticos — ruído, groove e tensão em camadas que crescem sem pressa.</p>
+          <p lang="en" style="font:13.5px/1.65 'Hanken Grotesk',sans-serif;color:var(--muted);margin:0;"><span class="biglabel" style="color:var(--dim);display:block;margin-bottom:7px;">EN</span>DJ and selector based in Florianópolis, Brazil. Dense, hypnotic techno — noise, groove and tension layered with patience. Every set a ritual.</p>
+        </div>
+
+        <!-- sets + press photos -->
+        <div style="position:absolute;top:906px;left:40px;right:40px;display:grid;grid-template-columns:1.4fr 1fr;gap:20px;">
+          <div>
+            <div class="biglabel" style="color:var(--accent);margin-bottom:6px;">Sets · Listen</div>
+            <div class="setrow" style="padding:7px 0;"><span class="n">01</span><span class="t">Ritual Noturno</span><span class="m">live set · 58 min · techno</span></div>
+            <div class="setrow" style="padding:7px 0;"><span class="n">02</span><span class="t">Som Que Invoca</span><span class="m">studio mix · 62 min · hypnotic</span></div>
+            <div class="setrow" style="padding:7px 0;"><span class="n">03</span><span class="t">Pista Aberta</span><span class="m">club recording · 74 min · peak time</span></div>
+          </div>
+          <div>
+            <div class="biglabel" style="color:var(--accent);margin-bottom:6px;">Press photos</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <img src="assets/press/night.jpg" alt="Press · noite" style="width:100%;height:96px;object-fit:cover;object-position:50% 18%;display:block;filter:grayscale(1) contrast(1.12);">
+              <img src="assets/press/portrait.jpg" alt="Press · cabine" style="width:100%;height:96px;object-fit:cover;object-position:50% 22%;display:block;filter:grayscale(1) contrast(1.15);">
+            </div>
+            <div style="font:11px 'Hanken Grotesk',sans-serif;color:var(--dim);margin-top:6px;">hi-res em pedido · on request</div>
+          </div>
+        </div>
+
+        <!-- footer bar -->
+        <div class="footbar" style="padding:20px 40px;">
+          <a class="fmail" href="mailto:patriciavchedach@gmail.com?subject=Booking%20CH%C3%8ADA">patriciavchedach@gmail.com</a>
+          <a class="fmeta" href="https://www.instagram.com/patriciacheda_/" target="_blank" rel="noopener">@patriciacheda_ · Florianópolis</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         4b — POSTER  (type wall + b&w plate + gold ink notes)
+         ============================================================ -->
+    <div class="sheet-cap"><span class="tag">B</span><span class="desc">Poster — muro tipográfico, placa p&amp;b, notas em ouro</span></div>
+    <div class="frame">
+      <div class="sheet" data-sheet>
+        <!-- full-page type wall -->
+        <div style="position:absolute;top:-10px;left:0;right:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;padding:30px 0 26px;">
+          <div style="font:700 158px/0.8 'Oswald',sans-serif;letter-spacing:-.01em;color:var(--cream);text-transform:uppercase;white-space:nowrap;margin-left:24px;padding-top:.16em;">CHÊDA</div>
+          <div style="font:700 158px/0.8 'Oswald',sans-serif;letter-spacing:-.01em;color:transparent;-webkit-text-stroke:2px var(--accent);text-transform:uppercase;white-space:nowrap;margin-left:24px;">CHÊDA</div>
+          <div style="font:700 158px/0.8 'Oswald',sans-serif;letter-spacing:-.01em;color:var(--accent);text-transform:uppercase;white-space:nowrap;margin-left:24px;">CHÊDA</div>
+          <div style="font:700 158px/0.8 'Oswald',sans-serif;letter-spacing:-.01em;color:transparent;-webkit-text-stroke:1.5px rgba(233,224,206,.35);text-transform:uppercase;white-space:nowrap;margin-left:24px;">CHÊDA</div>
+          <div style="font:700 158px/0.8 'Oswald',sans-serif;letter-spacing:-.01em;color:transparent;-webkit-text-stroke:1.5px rgba(181,34,26,.4);text-transform:uppercase;white-space:nowrap;margin-left:24px;">CHÊDA</div>
+          <div style="font:700 158px/0.8 'Oswald',sans-serif;letter-spacing:-.01em;color:rgba(233,224,206,.16);text-transform:uppercase;white-space:nowrap;margin-left:24px;">CHÊDA</div>
+        </div>
+
+        <!-- photo plate -->
+        <div style="position:absolute;top:112px;right:44px;width:300px;height:392px;background:var(--bg);padding:9px;box-shadow:14px 14px 0 var(--accent);transform:rotate(1.4deg);">
+          <img src="assets/press/portrait.jpg" alt="Patrícia Cheda" style="width:100%;height:100%;object-fit:cover;object-position:50% 16%;display:block;filter:grayscale(1) contrast(1.25);">
+          <div style="position:absolute;bottom:-30px;right:2px;font:italic 600 19px 'Cormorant Garamond',serif;color:var(--gold);transform:rotate(-1.4deg);">a selectora</div>
+        </div>
+        <div style="position:absolute;top:64px;right:44px;font:500 13px 'Oswald',sans-serif;letter-spacing:.42em;color:var(--muted);text-transform:uppercase;">DJ · SELECTORA · TECHNO</div>
+        <div style="position:absolute;top:566px;left:44px;font:italic 600 20px 'Cormorant Garamond',serif;color:var(--gold);">som que invoca — Florianópolis, BR</div>
+
+        <!-- content card -->
+        <div style="position:absolute;left:44px;right:44px;bottom:96px;background:rgba(14,11,10,.93);border:1px solid var(--hair2);padding:24px 28px;">
+          <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:26px;">
+            <div>
+              <p style="font:13px/1.6 'Hanken Grotesk',sans-serif;color:var(--body);margin:0 0 12px;"><span class="biglabel" style="color:var(--accent);display:block;margin-bottom:6px;">PT</span>Patrícia Cheda é DJ e selectora radicada em Florianópolis. Sets de techno densos e hipnóticos — ruído, groove e tensão em camadas que crescem sem pressa.</p>
+              <p lang="en" style="font:13px/1.6 'Hanken Grotesk',sans-serif;color:var(--muted);margin:0 0 14px;"><span class="biglabel" style="color:var(--dim);display:block;margin-bottom:6px;">EN</span>DJ and selector based in Florianópolis, Brazil. Dense, hypnotic techno — every set a ritual, not a playlist.</p>
+              <div style="display:flex;gap:8px;">
+                <img src="assets/press/portrait.jpg" alt="Press · cabine" style="width:86px;height:64px;object-fit:cover;object-position:50% 20%;display:block;filter:grayscale(1) contrast(1.15);">
+                <img src="assets/press/night.jpg" alt="Press · noite" style="width:86px;height:64px;object-fit:cover;object-position:50% 18%;display:block;filter:grayscale(1) contrast(1.12);">
+                <div style="width:86px;height:64px;border:1px solid var(--hair2);display:flex;align-items:center;justify-content:center;font:10px monospace;color:var(--dim);">+ hi-res</div>
+              </div>
+            </div>
+            <div>
+              <div class="biglabel" style="color:var(--accent);margin-bottom:4px;">Sets · Listen</div>
+              <div class="setrow" style="padding:9px 0;"><span class="n" style="font-size:15px;min-width:28px;">01</span><span class="t">Ritual Noturno</span><span class="m">live · 58min</span></div>
+              <div class="setrow" style="padding:9px 0;"><span class="n" style="font-size:15px;min-width:28px;">02</span><span class="t">Som Que Invoca</span><span class="m">studio · 62min</span></div>
+              <div class="setrow" style="padding:9px 0;"><span class="n" style="font-size:15px;min-width:28px;">03</span><span class="t">Pista Aberta</span><span class="m">club · 74min</span></div>
+              <div style="font:12px/1.7 'Hanken Grotesk',sans-serif;color:var(--muted);margin-top:12px;">Sets: 1–3h · club &amp; festival<br>Techno — denso, hipnótico</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- footer bar -->
+        <div class="footbar" style="padding:20px 44px;">
+          <a class="fmail" href="mailto:patriciavchedach@gmail.com?subject=Booking%20CH%C3%8ADA">patriciavchedach@gmail.com</a>
+          <a class="fmeta" href="https://www.instagram.com/patriciacheda_/" target="_blank" rel="noopener">@patriciacheda_ · Florianópolis</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Scale each A4 sheet to fit its column on screen; print uses true A4.
+    (function () {
+      var W = 794, H = 1123;
+      function fit() {
+        var printing = window.matchMedia && window.matchMedia('print').matches;
+        document.querySelectorAll('.frame').forEach(function (frame) {
+          var sheet = frame.querySelector('.sheet');
+          if (!sheet) return;
+          if (printing) { sheet.style.transform = 'none'; frame.style.height = ''; return; }
+          var scale = Math.min(1, frame.clientWidth / W);
+          sheet.style.transform = 'scale(' + scale + ')';
+          frame.style.height = (H * scale) + 'px';
+        });
+      }
+      window.addEventListener('resize', fit);
+      window.addEventListener('load', fit);
+      if (window.matchMedia) {
+        var mq = window.matchMedia('print');
+        (mq.addEventListener ? mq.addEventListener('change', fit) : mq.addListener(fit));
+      }
+      fit();
+    })();
+  </script>
+</body>
+</html>
