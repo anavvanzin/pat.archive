@@ -1,0 +1,26 @@
+name: Preview Deploy to Cloudflare Pages
+
+# Deploys site/ as a Cloudflare Pages *preview* for pull requests and manual
+# runs. Any non-production branch gets its own URL
+# (https://<branch>.pixel-love.pages.dev), so this never touches production.
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Deploy preview of site/ to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN || secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || secrets.CF_ACCOUNT_ID }}
+          command: pages deploy site --project-name=pixel-love --branch=${{ github.head_ref || github.ref_name }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
